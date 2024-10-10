@@ -1,0 +1,52 @@
+{"properties": [
+  {
+    "name": "stk.push.api.url",
+    "type": "java.lang.String",
+    "description": "A description for 'stk.push.api.url'"
+  },
+  {
+    "name": "stk.push.api.key",
+    "type": "java.lang.String",
+    "description": "A description for 'stk.push.api.key'"
+  },
+  {
+    "name": "mpesa.consumer-key",
+    "type": "java.lang.String",
+    "description": "A description for 'mpesa.consumer-key'"
+  },
+  {
+    "name": "mpesa.consumer-secret",
+    "type": "java.lang.String",
+    "description": "A description for 'mpesa.consumer-secret'"
+  },
+  {
+    "name": "mpesa.shortcode",
+    "type": "java.lang.String",
+    "description": "A description for 'mpesa.shortcode'"
+  },
+  {
+    "name": "mpesa.lipa-shortcode",
+    "type": "java.lang.String",
+    "description": "A description for 'mpesa.lipa-shortcode'"
+  },
+  {
+    "name": "mpesa.lipa-shortcode-shortcode",
+    "type": "java.lang.String",
+    "description": "A description for 'mpesa.lipa-shortcode-shortcode'"
+  },
+  {
+    "name": "mpesa.lipa-shortcode-initiator",
+    "type": "java.lang.String",
+    "description": "A description for 'mpesa.lipa-shortcode-initiator'"
+  },
+  {
+    "name": "mpesa.consumer-passkey",
+    "type": "java.lang.String",
+    "description": "A description for 'mpesa.consumer-passkey'"
+  },
+  {
+    "name": "mpesa.consumer-secret",
+    "type": "java.lang.String",
+    "description": "A description for 'mpesa.consumer-secret'"
+  }
+]}

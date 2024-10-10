@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>SosoniDisp</artifactId>
+	<artifactId>MfanoFleet</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SosoniDisp</name>
-	<description>School Management System</description>
+	<description>Fleet Management System</description>
 	<properties>
 		<java.version>21</java.version>
 	</properties>
@@ -28,6 +28,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
