@@ -659,7 +659,6 @@
 					<p>Select "Logout" below if you are ready to end your current session.</p>
 				</div>
 				<div class="modal-footer justify-content-center">
-					<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
 					<a class="btn btn-primary" th:href="@{/logout}">Logout</a>
 				</div>
 			</div>
@@ -667,7 +666,7 @@
 	</div>
 
 	<div class="modal fade" id="lipaModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-		<form th:action="@{/mTKPush}" method="post">
+		<form th:action="@{/mPush}" method="post">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="card-header d-flex justify-content-between">
@@ -677,19 +676,10 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<div class="form-group" hidden>
-							<label for="idAdd" class="col-form-label">Id:</label>
-							<input type="text" class="form-control" id="idAdd" name="id" readonly>
-						</div>
-
 						<div class="form-group">
 							<label for="phoneAdd" class="col-form-label">Phone Number:</label>
 							<input type="Number" placeholder="254 7345 44643" class="form-control" id="phoneAdd"
 								name="phone" required>
-						</div>
-						<div class="form-group">
-							<label for="accountAdd" class="col-form-label">Account:</label>
-							<input type="text" placeholder="Nuru Acc" class="form-control" id="accountAdd" name="account" required>
 						</div>
 						<div class="form-group">
 							<label for="amountAdd" class="col-form-label">Amount:</label>

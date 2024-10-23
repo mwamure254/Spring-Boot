@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,10 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import net.minidev.json.JSONObject;
+import com.mfano.mfano.security.ConstantS;
 
 @Service
-public class PesaService {
+public class PesaService {    
+    HttpEntity<String> request;
+    RestTemplate restTemplate = new RestTemplate();
+    ResponseEntity<String> response;
+
     public static String toBase64String(String value) {
         return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.ISO_8859_1));
     }
@@ -32,64 +36,52 @@ public class PesaService {
         return dateFormat.format(new Date());
     }
 
-    @Value("${mpesa.consumer-key}")
-    private String consumerKey;
-    @Value("${mpesa.consumer-secret}")
-    private String consumerSecret;
-
-    @Value("${mpesa.lipa-shortcode}")
-    private String lipaShortcode;
-    @Value("${mpesa.lipa-shortcode-initiator}")
-    private String lipaShortcodeInitiator;
-    @Value("${mpesa.shortcode}")
-    private String shortcode;
-    @Value("${mpesa.consumer-passkey}")
-    private String passKey;
-
-    private String getAccessToken() {
-        String url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
-        String auth = consumerKey + ":" + consumerSecret;
+    public String getAccessToken() {
+        String auth = ConstantS.consumerKey + ":" + ConstantS.consumerSecret;
         String encodedAuth = toBase64String(auth);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Basic " + encodedAuth);
+        headers.set("Content-Type", "application/json");
 
-        JSONObject jsonResponse = new JSONObject();
+		request = new HttpEntity<>(new JSONObject().toString(), headers);
+		response = restTemplate.exchange(ConstantS.TOKEN_URL, HttpMethod.GET, request, String.class);
 
-        HttpEntity<String> request = new HttpEntity<>(jsonResponse.toString(),headers);
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return jsonResponse.getAsString("access-token");
-        }
-        return null;
+		if (response.getStatusCode() == HttpStatus.OK) {
+			JSONObject jsonResponse = new JSONObject(response.getBody());
+			
+			return jsonResponse.getString("access_token");
+		} else {
+			// Handle error
+			return "Error: " + response.getStatusCode() + " - " + response.getBody();
+		}
+
     }
 
-    public String initiateSTKPush(String phoneNumber, String amount, String accountNumber) {
+    public String initiateSTKPush(String phoneNumber, String amount) {
         String token = getAccessToken();
-        if (token == null) {
-            return "Failed to get access token";
-        }
-        String url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Basic " + token);
+        headers.set("Authorization", "Bearer " + token);
         headers.set("Content-Type", "application/json");
 
         JSONObject body = new JSONObject();
-        body.put("BusinessShortCode", lipaShortcode);
-        body.put("Password", getStkPushPassword(shortcode, passKey, getTransactionTimestamp())); // Encode correctly
+        body.put("BusinessShortCode", ConstantS.shortcode);
+        body.put("Password", getStkPushPassword(ConstantS.shortcode, ConstantS.passKey, getTransactionTimestamp())); // Encode correctly
         body.put("Timestamp", getTransactionTimestamp()); // Generate correctly
         body.put("TransactionType", "CustomerPayBillOnline");
         body.put("Amount", amount);
         body.put("PartyA", phoneNumber);
-        body.put("PartyB", lipaShortcode);
+        body.put("PartyB", ConstantS.shortcode);
         body.put("PhoneNumber", phoneNumber);
         body.put("CallBackURL", "https://yourdomain.com/callback");
-        body.put("AccountReference", accountNumber);
+        body.put("AccountReference", "test");
         body.put("TransactionDesc", "Payment for testing");
 
-        HttpEntity<String> request = new HttpEntity<>(body.toString(), headers);
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+        request = new HttpEntity<>(body.toString(), headers);
+        response = restTemplate.exchange(ConstantS.LIPA_NA_MPESA_URL, HttpMethod.POST, request, String.class);
+
+        if (response.getStatusCode() != HttpStatus.OK) {
+        	return "Error: " + response.getStatusCode() + " - " + response.getBody();
+        }
 
         return response.getBody();
     }
