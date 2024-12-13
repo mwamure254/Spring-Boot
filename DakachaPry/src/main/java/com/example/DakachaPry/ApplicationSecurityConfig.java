@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+
 //import com.example.DakachaPry.services.MyUserDetailsService;
 
 
@@ -29,15 +31,24 @@ public class ApplicationSecurityConfig {
                 .requestMatchers("/register", "/resources/**", "/css/**", "/fonts/**", "/img/**", "/js/**")
                 .permitAll()
                 .requestMatchers("/error", "/resources/**", "/css/**", "/scss/**", "/vendor/**").permitAll()
+                .requestMatchers("/forgetPassword", "/resources/**", "/css/**", "/scss/**", "/vendor/**").permitAll()
                 .requestMatchers("/users/addNew").permitAll()
                 .anyRequest().authenticated())
                 .formLogin(login -> login.loginPage("/login").permitAll().defaultSuccessUrl("/index"))
                 .exceptionHandling(handling -> handling.accessDeniedPage("/error"))
                 .logout(logout -> logout.invalidateHttpSession(true).clearAuthentication(true)
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
-                        .permitAll());
+                        .permitAll())
+                .sessionManagement(management -> management
+                        .maximumSessions(1)
+                        .expiredUrl("/login?expired=true"));;
         return http.build();
     }
+    
+    @Bean
+	HttpSessionEventPublisher httpSessionEventPublisher() {
+	return new HttpSessionEventPublisher();
+	}
 
     @Bean
     PasswordEncoder passwordEncoder() {

@@ -67,7 +67,7 @@ public class PesaService {
         body.put("BusinessShortCode", ConstantS.shortcode);
         body.put("Password", getStkPushPassword(ConstantS.shortcode, ConstantS.passKey, getTransactionTimestamp())); // Encode correctly
         body.put("Timestamp", getTransactionTimestamp()); // Generate correctly
-        body.put("TransactionType", "CustomerPayBillOnline");
+        body.put("TransactionType", "CustomerPayBillOnline");//"CustomerBuyGoodsOnline"//CustomerPayBillOnline
         body.put("Amount", amount);
         body.put("PartyA", phoneNumber);
         body.put("PartyB", ConstantS.shortcode);
