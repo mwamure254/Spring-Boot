@@ -23,7 +23,7 @@ $('document').ready(function() {
 			$('#ddlVehicleModelEdit').val(vehicle.vehiclemodelid);			
 			$('#txtVehicleNumberEdit').val(vehicle.vehicleNumber);			
 			$('#ddlVehicleStatusEdit').val(vehicle.vehiclestatusid);			
-			$('#ddlVehicleTypeEdit').val(vehicle.vehicletypeid);	
+			$('#ddlvehicleEdit').val(vehicle.vehicleid);	
 		});			
 		$('#editModal').modal();		
 	});
@@ -31,12 +31,12 @@ $('document').ready(function() {
 	$('.table #detailsButton').on('click',function(event) {
 		event.preventDefault();		
 		var href= $(this).attr('href');		
-		$.get(href, function(vehicleType){
-			$('#idDetails').val(vehicleType.id);
-			$('#descriptionDetails').val(vehicleType.description);
-			$('#detailsDetails').val(vehicleType.details);
-			$('#lastModifiedByDetails').val(vehicleType.lastModifiedBy);
-			$('#lastModifiedDateDetails').val(vehicleType.lastModifiedDate.substr(0,19).replace("T", " "));
+		$.get(href, function(vehicle){
+			$('#idDetails').val(vehicle.id);
+			$('#descriptionDetails').val(vehicle.description);
+			$('#detailsDetails').val(vehicle.details);
+			$('#lastModifiedByDetails').val(vehicle.lastModifiedBy);
+			$('#lastModifiedDateDetails').val(vehicle.lastModifiedDate.substr(0,19).replace("T", " "));
 		});			
 		$('#detailsModal').modal();		
 	});	

@@ -34,11 +34,11 @@
     ======================================================= -->
 </head>
 
-<body class="login-img3-body">
+<body class="login-img-body">
 
 	<div class="container">
 
-		<form class="login-form" th:action="@{/users/addNew}" method="post">
+		<form class="login-form" action="/users/addNew" method="post">
 			<div class="login-wrap">
 				<p class="login-img"><i class="icon_lock_alt"></i></p>
 
@@ -68,8 +68,8 @@
 				</div>
 
 				<label class="checkbox">
-					<span><a th:href="@{/login}"> Login Page</a></span>
-					<span class="pull-right"> <a th:href="@{/forgotPassword}"> Forgot Password?</a></span>
+					<span><a class="hover" href="/login"> Login Page</a></span>
+					<span class="pull-right"> <a class="hover" href="/forgotPassword"> Forgot Password?</a></span>
 				</label>
 				<button class="btn btn-primary btn-lg btn-block" type="submit">Register</button>
 			</div>

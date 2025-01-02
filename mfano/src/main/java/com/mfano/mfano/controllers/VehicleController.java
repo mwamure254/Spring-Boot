@@ -1,5 +1,7 @@
 package com.mfano.mfano.controllers;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mfano.mfano.models.Vehicle;
 import com.mfano.mfano.services.EmployeeService;
@@ -22,6 +26,9 @@ import com.mfano.mfano.services.VehicleTypeService;
 
 @Controller
 public class VehicleController {
+
+	private static String baseDirectory = "C:\\Users\\mwamu\\git\\repository\\DakachaPry\\src\\main\\resources\\static\\img\\uploads\\vehicles\\";
+
 	@Autowired
 	private VehicleService vehicleService;
 	@Autowired
@@ -61,6 +68,16 @@ public class VehicleController {
 	@PostMapping(value = "vehicles/addNew")
 	public String addNew(Vehicle vehicle) {
 		vehicleService.save(vehicle);
+		return "redirect:/vehicles";
+	}
+
+	// Add Vehicle Image
+	@PostMapping(value = "vehicles/addImage")
+	public String addImage(@RequestParam("photo") MultipartFile file, @RequestParam("id") String id)
+			throws IllegalStateException, IOException {
+
+		file.transferTo(new File(baseDirectory + id + ".jpg"));
+
 		return "redirect:/vehicles";
 	}
 
