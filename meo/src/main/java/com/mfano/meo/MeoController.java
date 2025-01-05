@@ -1,0 +1,19 @@
+package com.mfano.meo;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class MeoController {
+	
+	@GetMapping("/home")
+    public String goHome() {
+        return "index";
+    }
+
+	@GetMapping("/blank")
+    public String goBlank() {
+        return "security/blank";
+    }
+	
+}

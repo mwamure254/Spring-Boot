@@ -26,6 +26,7 @@ public class ApplicationSecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // Customize your security configuration
+    	http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers("/login", "/resources/**", "/css/**", "/fonts/**", "/img/**").permitAll()
                 .requestMatchers("/register", "/resources/**", "/css/**", "/fonts/**", "/img/**", "/js/**")

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<th:block th:replace="~{partials/_header :: common_header(~{::title/text()},~{::link},~{::meta})}">
+
+
+	<!-- Custom meta data for this template-->
+
+	<title>Meo | Blank</title>
+
+	<!-- Custom styles for this template-->
+
+</th:block>
+
+<body>
+
+	<!-- ======= Header ======= -->
+	<th:block th:insert="~{partials/_topbar}" />
+	<!-- =====End Header===== -->
+
+	<!-- ======= Sidebar ======= -->
+	<th:block th:insert="~{partials/_sidebar}" />
+	<!-- =====End Sidebar=====-->
+
+	<!-- ======Main===== -->
+	<main id="main" class="main">
+
+		<div class="pagetitle">
+			<h1>Blank Page</h1>
+			<nav>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+					<li class="breadcrumb-item">Pages</li>
+					<li class="breadcrumb-item active">Blank</li>
+				</ol>
+			</nav>
+		</div><!-- End Page Title -->
+
+		<section class="section">
+			<div class="row">
+				<div class="col-lg-6">
+
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Example Card</h5>
+							<p>This is an examle page with no content. You can use it as a starter for your custom
+								pages.</p>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="col-lg-6">
+
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Example Card</h5>
+							<p>This is an examle page with no content. You can use it as a starter for your custom
+								pages.</p>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+
+		<div class="card">
+			<div class="card-body">
+				<h1 class="card-title">Food Ordering</h1>
+				<form action="/api/users/add" method="post" enctype="multipart/form-data">
+					<input type="text" name="name" placeholder="Food Name" required><br>
+					<input type="text" name="description" placeholder="Food Description" required><br>
+					<input type="number" name="price" placeholder="Price" required><br>
+					<input type="file" name="image" required><br>
+					<button type="submit">Add Food</button>
+				</form>
+			</div>
+		</div>
+	</main><!-- End #main -->
+	<h1></h1>
+	<th:block th:insert="~{partials/_footer}" />
+
+</body>
+
+</html>
