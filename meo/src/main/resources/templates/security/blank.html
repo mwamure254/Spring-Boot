@@ -67,14 +67,42 @@
 		<div class="card">
 			<div class="card-body">
 				<h1 class="card-title">Food Ordering</h1>
-				<form action="/api/users/add" method="post" enctype="multipart/form-data">
-					<input type="text" name="name" placeholder="Food Name" required><br>
+				<form th:action="@{/users/add}"  method="post" enctype="multipart/form-data">
+					<input type="text" name="name" placeholder="Food Name" title="Enter a name" required><br>
 					<input type="text" name="description" placeholder="Food Description" required><br>
 					<input type="number" name="price" placeholder="Price" required><br>
-					<input type="file" name="image" required><br>
+					<input type="file" name="image" accept="image/*" required><br>
 					<button type="submit">Add Food</button>
 				</form>
 			</div>
+		</div>
+		<div>
+			<table>
+				<thead>
+					<h1>Food Ordering</h1>
+				</thead>
+				<tbody>
+					<tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Image</th>
+                        <th>Action</th>
+					</tr>
+					<tr th:each="user:${users}">
+						<td th:text="${userStat.index} + ${'1'}">#</td>
+                        <td th:text="${user.name}">Name</td>
+                        <td th:text="${user.description}">Description</td>
+                        <td th:text="${user.price}">Price</td>
+                        <td><img th:src="@{'../img/uploads/users/' + ${user.image}} ?: '../img/slides-1.jpg'" width="40" height="40">
+							</td>
+                        <td><a class="btn" th:href="@{/users/delete/(id=${user.id})}">
+							<i class="fas fa-edit"></i></a>
+							</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</main><!-- End #main -->
 	<h1></h1>

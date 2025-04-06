@@ -1,56 +1,74 @@
 package com.mfano.meo.hois;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/users")
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+@Controller
 public class UserController {
 	@Autowired
 	private UserService foodService;
-	private final String UPLOAD_DIR = "/..img/uploads/users";
+	
+	private final String UPLOAD_DIR = "src/main/resources/static/img/uploads/users/";
+	
+	@GetMapping("/users")
+	public String getAllFoods(Model model) {
+		model.addAttribute("users", foodService.findAll());
 
-	@GetMapping
-	public ResponseEntity<?> getAllFoods() {
-		return ResponseEntity.ok(foodService.getAllFoods());
+		return "security/blank";
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<?> getFoodById(@PathVariable Long id) {
-		UserModel food = foodService.getFoodById(id);
-		if (food != null) {
-			return ResponseEntity.ok(food);
-		}
-		return ResponseEntity.notFound().build();
+	@GetMapping("/users/")
+	public Optional<User> getFoodById(@PathVariable int id) {
+		return foodService.findById(id);
 	}
 
-	@PostMapping("/add")
-	public ResponseEntity<?> addUser(@RequestParam String name, @RequestParam String description,
-			@RequestParam double price, @RequestParam MultipartFile image) {
+	@PostMapping("/users/add")
+	public String addUser(
+			@RequestParam("name") String name,
+			@RequestParam("description") String desc, 
+			@RequestParam("price") double price,
+			@RequestParam("image") MultipartFile image) {
+		
+		User client = new User();
+		client.setDescription(desc);
+		client.setName(name);
+		client.setPrice(price);
+		
 		try {
-			String imageFilename = saveImage(image);
-			UserModel food = new UserModel();
-			food.setName(name);
-			food.setDescription(description);
-			food.setPrice(price);
-			food.setImageFilename(imageFilename);
-			UserModel savedFood = foodService.saveFood(food);
-			return ResponseEntity.ok(savedFood);
+			String imagename=saveImage(image);
+			client.setImage(imagename);
 		} catch (IOException e) {
-			return ResponseEntity.status(500).body("Failed to upload image");
+			e.printStackTrace();
 		}
+		
+		foodService.save(client);
+		return "redirect:/users";
+	}
+
+	@RequestMapping(value = "/users/update", method = { RequestMethod.PUT, RequestMethod.GET })
+	public String update(User country) {
+		foodService.save(country);
+		return "redirect:/users";
+	}
+
+	@RequestMapping(value = "/users/delete/", method = { RequestMethod.DELETE, RequestMethod.GET })
+	public String delete(int id) {
+		foodService.delete(id);
+		return "redirect:/users";
 	}
 
 	private String saveImage(MultipartFile image) throws IOException {
@@ -58,6 +76,7 @@ public class UserController {
 		Path path = Paths.get(UPLOAD_DIR + filename);
 		Files.createDirectories(path.getParent());
 		Files.write(path, image.getBytes());
+		
 		return filename;
 	}
 }

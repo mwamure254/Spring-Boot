@@ -6,6 +6,7 @@ import java.util.Base64;
 import java.util.Date;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -72,7 +73,7 @@ public class PesaService {
         body.put("PartyA", phoneNumber);
         body.put("PartyB", ConstantS.shortcode);
         body.put("PhoneNumber", phoneNumber);
-        body.put("CallBackURL", "https://yourdomain.com/callback");
+        body.put("CallBackURL", "http://localhost:8080/mpesa/callback");
         body.put("AccountReference", "test");
         body.put("TransactionDesc", "Payment for testing");
 
@@ -80,9 +81,30 @@ public class PesaService {
         response = restTemplate.exchange(ConstantS.LIPA_NA_MPESA_URL, HttpMethod.POST, request, String.class);
 
         if (response.getStatusCode() != HttpStatus.OK) {
-        	return "Error: " + response.getStatusCode() + " - " + response.getBody();
+        	//return "Error: " + response.getStatusCode() + " - " + response.getBody();
         }
 
-        return response.getBody();
+        //return response.getBody();
+        return "redirect:/index";
     }
+    
+    @Autowired
+    private CallRepository callRepository;
+    
+    public void saveTransactionResponse(JSONObject resultJson) {
+    	CallData transaction = new CallData();
+    	
+    	transaction.setMerchantRequestID(resultJson.getString("MerchantRequestID"));
+    	transaction.setCheckoutRequestID(resultJson.getString("CheckoutRequestID"));
+    	transaction.setMpesaReceiptNumber(resultJson.getString("MpesaReceiptNumber"));
+    	transaction.setResultCode(resultJson.getInt("ResultCode"));
+    	transaction.setResultDesc(resultJson.getString("ResultDesc"));
+    	transaction.setAmount(resultJson.getInt("Amount"));
+    	transaction.setPhoneNumber(resultJson.getString("PhoneNumber"));
+    	transaction.setTransactionDate(resultJson.getString("TransactionDate"));
+    	
+    	// Save to database
+    	callRepository.save(transaction);
+    }
+
 }

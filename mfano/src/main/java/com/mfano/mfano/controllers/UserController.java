@@ -22,6 +22,7 @@ public class UserController {
 	// Get All Users
 	@GetMapping("users")
 	public String findAll(Model model) {
+		model.addAttribute("users", userService.findAll());
 		return "user";
 	}
 

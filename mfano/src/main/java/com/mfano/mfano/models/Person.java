@@ -1,5 +1,6 @@
 package com.mfano.mfano.models;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.hibernate.annotations.Formula;
@@ -43,7 +44,7 @@ public class Person {
 	private Integer stateid;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date dateOfBirth;
+	private LocalDate dateOfBirth;
 	private String city;
 	private String address;
 	private String phone;
@@ -134,10 +135,10 @@ public class Person {
 	public void setStateid(Integer stateid) {
 		this.stateid = stateid;
 	}
-	public Date getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 	public String getCity() {

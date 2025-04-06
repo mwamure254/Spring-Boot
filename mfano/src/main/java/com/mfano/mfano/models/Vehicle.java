@@ -24,8 +24,8 @@ public class Vehicle {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-
 	private String name;
+	private String photo;
 	@ManyToOne
 	@JoinColumn(name = "vehicletypeid", insertable = false, updatable = false)
 	private VehicleType vehicleType;
@@ -68,6 +68,13 @@ public class Vehicle {
 	private Location currentLocation;
 	private Integer locationid;
 	private String remarks;
+	
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 	public int getId() {
 		return id;
 	}

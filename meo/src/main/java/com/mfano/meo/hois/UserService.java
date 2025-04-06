@@ -9,19 +9,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 	@Autowired
-	private UserRepository foodRepository;
+	private UserRepository clientRepository;
 
-	public List<UserModel> getAllFoods() {
-		return foodRepository.findAll();
+	// Get All Clients
+	public List<User> findAll() {
+		return clientRepository.findAll();
 	}
 
-	public UserModel getFoodById(Long id) {
-		Optional<UserModel> food = foodRepository.findById(id);
-		return food.orElse(null);
+	// Get Client By Id
+	public Optional<User> findById(int id) {
+		return clientRepository.findById(id);
 	}
 
-	public UserModel saveFood(UserModel food) {
-		return foodRepository.save(food);
+	// Delete Client
+	public void delete(int id) {
+		clientRepository.deleteById(id);
 	}
 
+	// Update Client
+	public void save(User client) {
+		clientRepository.save(client);
+	}
 }

@@ -29,8 +29,9 @@ public class VehicleService {
 		vehicleRepository.deleteById(id);
 	}
 
-	// Update Vehicle
+	// Save + Update Vehicle
 	public void save(Vehicle vehicle) {
 		vehicleRepository.save(vehicle);
 	}
+	
 }

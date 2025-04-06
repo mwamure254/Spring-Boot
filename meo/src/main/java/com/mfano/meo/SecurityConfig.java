@@ -17,20 +17,24 @@ public class SecurityConfig {
     	http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers("/home", "/resources/**", "/css/**", "/fonts/**", "/img/**").permitAll()
-                .requestMatchers("/", "/resources/**", "/css/**", "/fonts/**", "/img/**", "/js/**")
+                .requestMatchers("/users", "/resources/**", "/css/**", "/fonts/**", "/img/**", "/js/**")
                 .permitAll()
+                .requestMatchers("/users/**", "/resources/**", "/css/**", "/scss/**", "/vendor/**").permitAll()
                 .requestMatchers("/", "/resources/**", "/css/**", "/scss/**", "/vendor/**").permitAll()
-                .requestMatchers("/blank", "/resources/**", "/css/**", "/scss/**", "/vendor/**").permitAll()
                 .requestMatchers("/").permitAll()
                 .anyRequest().authenticated())
+        
                 .formLogin(login -> login.loginPage("/home").permitAll().defaultSuccessUrl("/home"))
                 .exceptionHandling(handling -> handling.accessDeniedPage("/"))
+                
                 .logout(logout -> logout.invalidateHttpSession(true).clearAuthentication(true)
                         .logoutRequestMatcher(new AntPathRequestMatcher("/")).logoutSuccessUrl("/")
                         .permitAll())
+                
                 .sessionManagement(management -> management
                         .maximumSessions(1)
                         .expiredUrl("/login?expired=true"));
+        
         return http.build();
     }
 	

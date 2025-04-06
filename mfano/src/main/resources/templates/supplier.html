@@ -610,7 +610,7 @@
 											<select class="form-control" id="ddlCountryEdit" name="countryid">
 												<option>-SELECT-</option>
 												<option th:each="country : ${countries}" th:value="${country.id}"
-													th:text="${country.description}">
+													th:text="${country.name}">
 												</option>
 											</select>
 										</div>

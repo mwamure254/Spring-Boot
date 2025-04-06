@@ -1,9 +1,21 @@
 package com.example.DakachaPry.hr.controllers;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.Principal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.DakachaPry.hr.models.Employee;
 import com.example.DakachaPry.hr.services.EmployeeService;
@@ -11,14 +23,6 @@ import com.example.DakachaPry.hr.services.EmployeeTypeService;
 import com.example.DakachaPry.hr.services.JobTitleService;
 import com.example.DakachaPry.parameters.services.CountryService;
 import com.example.DakachaPry.parameters.services.StateService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class EmployeeController {
@@ -33,6 +37,8 @@ public class EmployeeController {
 	private EmployeeTypeService employeeTypeService;
 	@Autowired
 	private CountryService countryService;
+	
+	private final String baseDirectory = "src/main/resources/static/img/uploads/employees/";
 
 	public Model addModelAttributes(Model model) {
 		model.addAttribute("countries", countryService.findAll());
@@ -65,9 +71,51 @@ public class EmployeeController {
 		return "/hr/employee" + op; // returns employeeEdit or employeeDetails
 	}
 
-	// Add Employee
+	// Add Employee (value="yyyy-mm-dd")
 	@PostMapping("/hr/employees")
-	public String addNew(Employee employee) {
+	public String addNew(
+			@RequestParam("title") String title, @RequestParam("initials") String initials
+			, @RequestParam("socialSecurityNumber") String ssn, @RequestParam("firstname") String firstname
+			, @RequestParam("lastname") String lastname, @RequestParam("othername") String othername
+			, @RequestParam("gender") String gender, @RequestParam("countryid") int countryid
+			, @RequestParam("address") String address, @RequestParam("employeetypeid") int employeetypeid
+			, @RequestParam("dateOfBirth") String dob, @RequestParam("hireDate") String hd
+			, @RequestParam("stateid") int si, @RequestParam("city") String city
+			, @RequestParam("phone") String phone, @RequestParam("mobile") String mobile
+			, @RequestParam("maritalStatus") String ms, @RequestParam("email") String email
+			, @RequestParam("jobtitleid") int jti, @RequestParam("photo") MultipartFile file) {
+		
+		Employee employee=new Employee();
+		
+		employee.setTitle(title);
+		employee.setInitials(initials);
+		employee.setAddress(address);
+		employee.setCity(city);
+		employee.setStateid(si);
+		employee.setCountryid(countryid);
+		employee.setEmployeetypeid(employeetypeid);
+		employee.setJobtitleid(jti);
+		
+		employee.setDateOfBirth(LocalDate.parse(dob));
+		employee.setHireDate(LocalDate.parse(hd));
+		
+		employee.setEmail(email);
+		employee.setFirstname(firstname);
+		employee.setLastname(lastname);
+		employee.setOthername(othername);
+		employee.setGender(gender);
+		employee.setMaritalStatus(ms);
+		employee.setSocialSecurityNumber(ssn);
+		employee.setPhone(phone);
+		employee.setMobile(mobile);
+		
+		try {
+			employee.setPhoto(uploadFile(file));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		employeeService.save(employee);
 		return "redirect:/hr/employees";
 	}
@@ -78,29 +126,14 @@ public class EmployeeController {
 		return "redirect:/hr/employees";
 	}
 
-	@PostMapping(value = "/employees/uploadPhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-		File newFile = new File("D:\\SOLUTIONS\\fleetms\\uploads" + file.getOriginalFilename());
-		newFile.createNewFile();
-		FileOutputStream fout = new FileOutputStream(newFile);
-		fout.write(file.getBytes());
-		fout.close();
-		return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
-	}
-
-	@PostMapping("/employees/uploadPhoto2")
-	public String uploadFile2(@RequestParam("file") MultipartFile file, Principal principal)
-			throws IllegalStateException, IOException {
-		String baseDirectory = "D:\\SOLUTIONS\\fleetms\\src\\main\\resources\\static\\img\\photos\\";
-		file.transferTo(new File(baseDirectory + principal.getName() + ".jpg"));
-		return "redirect:/employees";
-	}
-
-	@GetMapping("/employee/profile")
-	public String profile(Model model, Principal principal) {
-		String un = principal.getName();
-		addModelAttributes(model);
-		model.addAttribute("employee", employeeService.findByUsername(un));
-		return "profile";
+	//@PostMapping("/employees/uploadPhoto")
+	public String uploadFile(MultipartFile file) throws IOException {
+	
+		String filename = file.getOriginalFilename();
+		Path path = Paths.get(baseDirectory + filename);
+		Files.createDirectories(path.getParent());
+		Files.write(path, file.getBytes());
+		
+		return filename;
 	}
 }

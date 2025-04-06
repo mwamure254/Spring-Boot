@@ -8,8 +8,7 @@ $('document').ready(function() {
 			$('#txtCityEdit').val(employee.city);
 			$('#ddlNationalityEdit').val(employee.countryid);	
 					
-			var dob = employee.dateOfBirth.substr(0,10);
-			$('#txtDateOfBirthEdit').val(dob);
+			$('#txtDateOfBirthEdit').val(employee.dateOfBirth);
 			$('#txtEmailEdit').val(employee.email);
 			$('#txtFirstnameEdit').val(employee.firstname);
 			$('#txtIdEdit').val(employee.id);
@@ -26,8 +25,7 @@ $('document').ready(function() {
 			$('#ddlMaritalStatusEdit').val(employee.maritalStatus);	
 			$('#ddlEmployeeTypeEdit').val(employee.employeetypeid);	
 						
-			var hireDate = employee.hireDate.substr(0,10);
-			$('#txtHireDateEdit').val(hireDate);
+			$('#txtHireDateEdit').val(employee.hireDate);
 			$('#ddlJobTitleEdit').val(employee.jobtitleid);			
 		});			
 		$('#editModal').modal();		

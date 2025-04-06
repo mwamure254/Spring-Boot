@@ -19,6 +19,7 @@ public class User extends Auditable<String> {
     private String firstname;
     private String lastname;
     private String username;
+    private String email;
     private String password;
 
     @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
@@ -32,6 +33,14 @@ public class User extends Auditable<String> {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getFirstname() {

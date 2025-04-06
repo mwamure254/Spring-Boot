@@ -27,7 +27,7 @@ import com.mfano.mfano.services.VehicleTypeService;
 @Controller
 public class VehicleController {
 
-	private static String baseDirectory = "C:\\Users\\mwamu\\git\\repository\\DakachaPry\\src\\main\\resources\\static\\img\\uploads\\vehicles\\";
+	private static String baseDirectory = "../img/uploads/vehicles/";
 
 	@Autowired
 	private VehicleService vehicleService;
@@ -66,19 +66,28 @@ public class VehicleController {
 
 	// Add Vehicle
 	@PostMapping(value = "vehicles/addNew")
-	public String addNew(Vehicle vehicle) {
+	public String addNew(Vehicle vehicle,  @RequestParam("photo") MultipartFile file) {
+		try {
+			addImage(file);
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		vehicleService.save(vehicle);
 		return "redirect:/vehicles";
 	}
 
 	// Add Vehicle Image
 	@PostMapping(value = "vehicles/addImage")
-	public String addImage(@RequestParam("photo") MultipartFile file, @RequestParam("id") String id)
+	public void addImage(@RequestParam("photo") MultipartFile file)
 			throws IllegalStateException, IOException {
 
-		file.transferTo(new File(baseDirectory + id + ".jpg"));
+		file.transferTo(new File(baseDirectory + file.getOriginalFilename()));
 
-		return "redirect:/vehicles";
+		//return "redirect:/vehicles";
 	}
 
 	@RequestMapping(value = "vehicles/update", method = { RequestMethod.PUT, RequestMethod.GET })

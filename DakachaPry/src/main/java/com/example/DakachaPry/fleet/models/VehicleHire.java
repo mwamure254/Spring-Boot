@@ -30,11 +30,13 @@ public class VehicleHire extends Auditable<String> {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dateOut;
 
+	@DateTimeFormat(pattern = "hh:mm aa")
 	private String timeOut;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dateIn;
 
+	@DateTimeFormat(pattern = "hh:mm aa")
 	private String timeIn;
 
 	@ManyToOne

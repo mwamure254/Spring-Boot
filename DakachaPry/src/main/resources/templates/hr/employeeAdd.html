@@ -18,7 +18,7 @@
             </div>
         </div>
     <div class="container" style="width: 70%">
-        <form class="form-horizontal" th:action="@{/hr/employees}" method="post">
+        <form class="form-horizontal" th:action="@{/hr/employees}" method="post" enctype="multipart/form-data">
             <div class="row justify-content-center white-bg" >
                 <section class="panel">
                     <header class="panel-heading">
@@ -44,7 +44,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="txtSSNEdit" class="col-sm-4 col-form-label">Social Security No.: </label>
+                                <label for="txtSSNEdit" class="col-sm-4 col-form-label">SSN: </label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="txtSSNEdit" name="socialSecurityNumber" placeholder="Social Security Number">
                                 </div>
@@ -90,13 +90,33 @@
                                 </div>
                             </div>
                             <div class="form-group row">
+                                <label for="txtDateOfBirthEdit" class="col-sm-4 col-form-label">DOB:</label>
+                                <div class="col-sm-6">
+                                    <input type="date" class="form-control" id="txtDateOfBirthEdit" name="dateOfBirth" value="yyyy-mm-dd">
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label for="txtAddressEdit" class="col-sm-4 col-form-label">Address</label>
                                 <div class="col-sm-6">
                                     <textarea class="form-control" id="txtAddressEdit" name="address" placeholder="Address" rows="2"></textarea>
                                 </div>
                             </div>
+                        </section>
+                    </div>
+                    <div class="col-lg-6">
+                        <section class="panel">
                             <div class="form-group row">
-                                <label for="ddlEmployeeTypeEdit" class="col-sm-4 col-form-label">Employee Type</label>
+                                <label for="ddlMaritalStatusEdit" class="col-sm-4 col-form-label">MStatus: </label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" id="ddlMaritalStatusEdit" name="maritalStatus">
+                                        <option th:value="${null}">-SELECT-</option>
+                                        <option value="Married">Married</option>
+                                        <option value="Single">Single</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="ddlEmployeeTypeEdit" class="col-sm-4 col-form-label">EType</label>
                                 <div class="col-sm-6">
                                     <select class="form-control" id="ddlEmployeeTypeEdit" name="employeetypeid">
                                         <option th:value="${null}">-SELECT-</option>
@@ -107,20 +127,10 @@
                                     </select>
                                 </div>
                             </div>
-                        </section>
-                    </div>
-                    <div class="col-lg-6">
-                        <section class="panel">
                             <div class="form-group row">
-                                <label for="txtDateOfBirthEdit" class="col-sm-4 col-form-label">Date of Birth:</label>
+                                <label for="txtHireDateEdit" class="col-sm-4 col-form-label" >HDate:</label>
                                 <div class="col-sm-6">
-                                    <input type="date" class="form-control" id="txtDateOfBirthEdit" name="DateOfBirth" placeholder="Date of Birth">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="txtHireDateEdit" class="col-sm-4 col-form-label">Hire Date:</label>
-                                <div class="col-sm-6">
-                                    <input type="date" class="form-control" id="txtHireDateEdit" name="hireDate" placeholder="Hire Date">
+                                    <input type="date" class="form-control" id="txtHireDateEdit" name="hireDate">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -154,23 +164,13 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="ddlMaritalStatusEdit" class="col-sm-4 col-form-label">Marital Status: </label>
-                                <div class="col-sm-6">
-                                    <select class="form-control" id="ddlMaritalStatusEdit" name="maritalStatus">
-                                        <option th:value="${null}">-SELECT-</option>
-                                        <option value="Married">Married</option>
-                                        <option value="Single">Single</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
                                 <label for="txtEmailEdit" class="col-sm-4 col-form-label">Email</label>
                                 <div class="col-sm-6">
                                     <input type="email" class="form-control" id="txtEmailEdit" name="email" placeholder="Email">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="ddlJobTitleEdit" class="col-sm-4 col-form-label">Job Title</label>
+                                <label for="ddlJobTitleEdit" class="col-sm-4 col-form-label">JTitle</label>
                                 <div class="col-sm-6">
                                     <select class="form-control" id="ddlJobTitleEdit" name="jobtitleid">
                                         <option th:value="${null}">-SELECT-</option>
@@ -182,15 +182,10 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="fupImageEdit" class="col-sm-4 col-form-label">Select Image: </label>
+                                <label for="fupImageEdit" class="col-sm-4 col-form-label">Profile: </label>
                                 <div class="col-sm-6">
-                                    <input type="file" class="form-control-file" id="fupImageEdit" name="photo" placeholder="Select File">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Username</label>
-                                <div class="col-sm-6">
-                                    <input class="form-control" name="username" placeholder="Username">
+                                    <input type="file" class="form-control-file" id="fupImageEdit" name="photo" placeholder="Select File" 
+                                    accept="image/*">
                                 </div>
                             </div>
                         </section>

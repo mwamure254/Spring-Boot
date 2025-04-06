@@ -1,15 +1,21 @@
 package com.example.DakachaPry.hr.models;
 
+import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.example.DakachaPry.parameters.models.Country;
 import com.example.DakachaPry.parameters.models.State;
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import jakarta.persistence.*;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -23,10 +29,7 @@ public class Person {
 	private String firstname;
 	private String lastname;
 	private String othername;
-
-	@Formula(value = " concat(firstname, ' ', lastname) ")
-	private String fullName;
-
+	
 	private String title;
 	private String initials;
 	private String socialSecurityNumber;
@@ -44,7 +47,7 @@ public class Person {
 	private Integer stateid;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date dateOfBirth;
+	private LocalDate dateOfBirth;
 
 	private String city;
 	private String address;
@@ -76,12 +79,6 @@ public class Person {
 	}
 	public void setOthername(String othername) {
 		this.othername = othername;
-	}
-	public String getFullName() {
-		return fullName;
-	}
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
 	}
 	public String getTitle() {
 		return title;
@@ -137,10 +134,10 @@ public class Person {
 	public void setStateid(Integer stateid) {
 		this.stateid = stateid;
 	}
-	public Date getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 	public String getCity() {

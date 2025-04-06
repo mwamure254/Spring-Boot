@@ -40,14 +40,14 @@ public class RoleController {
         return "redirect:/security/roles";
     }
 
-    @RequestMapping("/security/role/assign/{userId}/{roleId}")
+    @GetMapping("/security/role/assign/{userId}/{roleId}")
     public String assignRole(@PathVariable Integer userId,
             @PathVariable Integer roleId) {
         roleService.assignUserRole(userId, roleId);
         return "redirect:/security/user/Edit/" + userId;
     }
 
-    @RequestMapping("/security/role/unassign/{userId}/{roleId}")
+    @GetMapping("/security/role/unassign/{userId}/{roleId}")
     public String unassignRole(@PathVariable Integer userId,
             @PathVariable Integer roleId) {
         roleService.unassignUserRole(userId, roleId);

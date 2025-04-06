@@ -10,10 +10,5 @@ public class MeoController {
     public String goHome() {
         return "index";
     }
-
-	@GetMapping("/blank")
-    public String goBlank() {
-        return "security/blank";
-    }
 	
 }

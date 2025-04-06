@@ -27,7 +27,7 @@
                     <br>
                     <div class="col-lg-6">
                         <section class="panel">
-                            <div class="form-group row">
+                            <div class="form-group row" hidden>
                                 <label class="col-sm-4 col-form-label">Id: </label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" th:value="${employee.id}" name="id" readonly placeholder="Id">
@@ -50,7 +50,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Social Security No.: </label>
+                                <label class="col-sm-4 col-form-label">SSN: </label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control"  th:value="${employee.socialSecurityNumber}" name="socialSecurityNumber" placeholder="Social Security Number">
                                 </div>
@@ -71,6 +71,12 @@
                                 <label class="col-sm-4 col-form-label">Othername: </label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" th:value="${employee.othername}" name="othername" placeholder="Othername">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">DOB:</label>
+                                <div class="col-sm-6">
+                                    <input type="date" class="form-control" th:field="${employee.dateOfBirth}" name="dateOfBirth" placeholder="Date of Birth">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -107,13 +113,7 @@
                     <div class="col-lg-6">
                         <section class="panel">
                             <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Date of Birth:</label>
-                                <div class="col-sm-6">
-                                    <input type="date" class="form-control" th:field="${employee.dateOfBirth}" name="dateOfBirth" placeholder="Date of Birth">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Hire Date:</label>
+                                <label class="col-sm-4 col-form-label">HDate:</label>
                                 <div class="col-sm-6">
                                     <input type="date" class="form-control" th:field="${employee.hireDate}" name="hireDate" placeholder="Hire Date">
                                 </div>
@@ -150,7 +150,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="ddlMaritalStatusEdit" class="col-sm-4 col-form-label">Marital Status: </label>
+                                <label for="ddlMaritalStatusEdit" class="col-sm-4 col-form-label">MStatus: </label>
                                 <div class="col-sm-6">
                                     <select class="form-control" id="ddlMaritalStatusEdit" name="maritalStatus">
                                         <option th:value="${null}">-SELECT-</option>
@@ -166,7 +166,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="ddlJobTitleEdit" class="col-sm-4 col-form-label">Job Title</label>
+                                <label for="ddlJobTitleEdit" class="col-sm-4 col-form-label">JTitle</label>
                                 <div class="col-sm-6">
                                     <select class="form-control" id="ddlJobTitleEdit" name="jobtitleid">
                                         <option th:value="${null}">-SELECT-</option>
@@ -179,7 +179,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="ddlEmployeeTypeEdit" class="col-sm-4 col-form-label">Employee Type</label>
+                                <label for="ddlEmployeeTypeEdit" class="col-sm-4 col-form-label">EType</label>
                                 <div class="col-sm-6">
                                     <select class="form-control" id="ddlEmployeeTypeEdit" name="employeetypeid">
                                         <option th:value="${null}">-SELECT-</option>
@@ -192,15 +192,10 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="fupImageEdit" class="col-sm-4 col-form-label">Select Image: </label>
+                                <label for="fupImageEdit" class="col-sm-4 col-form-label">Profile: </label>
                                 <div class="col-sm-6">
-                                    <input type="file" class="form-control-file" id="fupImageEdit" name="photo" placeholder="Select File">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Username</label>
-                                <div class="col-sm-6">
-                                    <input class="form-control" th:value="${employee.username}" name="username" placeholder="Username">
+                                    <input type="file" class="form-control-file" id="fupImageEdit" name="photo" placeholder="Select File"
+                                    accept="image/*">
                                 </div>
                             </div>
                         </section>

@@ -32,6 +32,7 @@ public class ClientController {
 		model.addAttribute("countries", countryService.allCountries());
 		model.addAttribute("states", stateService.findAll());
 		model.addAttribute("clients", clientService.findAll());
+		
 		return "client";
 	}
 

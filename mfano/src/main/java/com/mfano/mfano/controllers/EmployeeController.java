@@ -3,6 +3,8 @@ package com.mfano.mfano.controllers;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +52,21 @@ public class EmployeeController {
 		model.addAttribute("employees", employeeService.findAll());
 		model.addAttribute("jobTitles", jobTitleService.findAll());
 		model.addAttribute("employeeTypes", employeeTypeService.findAll());
+		
+		Employee one = new Employee();
+		
+		// Define two LocalDate objects
+        LocalDate startDate = LocalDate.now(); // May 15, 2020
+        LocalDate endDate = one.getDateOfBirth();   // March 4, 2025
 
+        if(endDate != null) {
+        // Calculate the period (difference) between the two dates
+        Period period = Period.between(startDate, endDate);
+
+        // Output the difference in years, months, and days
+        System.out.print(period.getYears() + " years " + period.getMonths() + " months " + period.getDays() + " days");
+        }
+        
 		return "employee";
 	}
 
@@ -102,7 +118,7 @@ public class EmployeeController {
 		return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
 	}
 
-	@PostMapping("/employees/uploadFile2")
+	@PostMapping(value = "/employees/uploadFile2")
 	public String uploadFile2(@RequestParam("photo") MultipartFile file)
 			throws IllegalStateException, IOException {
 

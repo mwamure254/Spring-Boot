@@ -34,15 +34,14 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Photo</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
                                 </div>
                                 <div class="modal-body">
                                     <img id="employeePhoto" src="" width="100%" height="100%">
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -52,7 +51,6 @@
                     <tbody>
                     <tr>
                         <th></th>
-                        <th><i class="glyphicon-user"></i>Username</th>
                         <th><i class="icon_profile"></i> Full Name</th>
                         <th><i class="icon_calendar"></i>Hire Date</th>
                         <th><i class="icon_mail_alt"></i> Email</th>
@@ -62,11 +60,10 @@
                     </tr>
                     <tr th:each="employee:${employees}">
                         <td>
-                            <a id="photoButton" th:href="@{'/img/photos/' + ${employee.username} +'.jpg'}">
-                                <img th:src="@{'/img/photos/' + ${employee.username} +'.jpg'}" width="40" height="40">
+                            <a id="photoButton" th:href="@{'../img/uploads/employees/' + ${employee.photo}}">
+                                <img th:src="@{'../img/uploads/employees/' + ${employee.photo}}" width="40" height="40">
                             </a>
                         </td>
-                        <td><a th:text="${employee.username} ?: 'Check'" th:href="@{/employees/assignUsername/(id=${employee.id})}"></a></td>
                         <td th:text="${employee.firstname} + ' ' + ${employee.lastname}">Fullname</td>
                         <td th:text="${employee.hireDate}">HireDate</td>
                         <td th:text="${employee.email}">Email</td>
