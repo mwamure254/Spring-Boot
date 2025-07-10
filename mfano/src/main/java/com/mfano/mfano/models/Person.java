@@ -1,8 +1,6 @@
 package com.mfano.mfano.models;
 
 import java.time.LocalDate;
-import java.util.Date;
-
 import org.hibernate.annotations.Formula;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -51,6 +49,7 @@ public class Person {
 	private String mobile;
 	private String email;
 	private String photo;
+	
 	public Integer getId() {
 		return id;
 	}

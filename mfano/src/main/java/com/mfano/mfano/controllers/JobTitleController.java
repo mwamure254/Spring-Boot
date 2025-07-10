@@ -50,4 +50,5 @@ public class JobTitleController {
 		jobTitleService.delete(id);
 		return "redirect:/jobTitles";
 	}
+	
 }

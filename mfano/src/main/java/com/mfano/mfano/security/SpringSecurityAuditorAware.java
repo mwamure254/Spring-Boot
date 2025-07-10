@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
+	@SuppressWarnings("null")
 	@Override
 	public Optional<String> getCurrentAuditor() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

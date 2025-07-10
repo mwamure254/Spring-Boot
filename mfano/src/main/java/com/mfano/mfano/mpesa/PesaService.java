@@ -73,7 +73,7 @@ public class PesaService {
         body.put("PartyA", phoneNumber);
         body.put("PartyB", ConstantS.shortcode);
         body.put("PhoneNumber", phoneNumber);
-        body.put("CallBackURL", "http://localhost:8080/mpesa/callback");
+        body.put("CallBackURL", "http://localhost:2000/mpesa/callback");
         body.put("AccountReference", "test");
         body.put("TransactionDesc", "Payment for testing");
 

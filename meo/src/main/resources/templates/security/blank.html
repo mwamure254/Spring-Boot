@@ -3,12 +3,10 @@
 
 <th:block th:replace="~{partials/_header :: common_header(~{::title/text()},~{::link},~{::meta})}">
 
-
-	<!-- Custom meta data for this template-->
-
+	<!-- Custom meta data for this page-->
 	<title>Meo | Blank</title>
 
-	<!-- Custom styles for this template-->
+	<!-- Custom styles for this page-->
 
 </th:block>
 
@@ -16,11 +14,9 @@
 
 	<!-- ======= Header ======= -->
 	<th:block th:insert="~{partials/_topbar}" />
-	<!-- =====End Header===== -->
 
 	<!-- ======= Sidebar ======= -->
 	<th:block th:insert="~{partials/_sidebar}" />
-	<!-- =====End Sidebar=====-->
 
 	<!-- ======Main===== -->
 	<main id="main" class="main">
@@ -105,7 +101,8 @@
 			</table>
 		</div>
 	</main><!-- End #main -->
-	<h1></h1>
+
+	<!-- =====footer===== -->
 	<th:block th:insert="~{partials/_footer}" />
 
 </body>
