@@ -45,4 +45,25 @@ public class MeoController {
     public String FAQ() {
         return "security/faq";
     }
+
+    @GetMapping("/service-board")
+    public String serviceBoard() {
+        return "security/service-board";
+    }
+
+    @GetMapping("/schools")
+    public String schools() {
+        return "security/schools";
+    }
+
+    @GetMapping("/reports")
+    public String reports() {
+        return "security/reports";
+    }
+
+    @GetMapping("/editables")
+    public String editables() {
+        return "security/editables";
+    }
+
 }

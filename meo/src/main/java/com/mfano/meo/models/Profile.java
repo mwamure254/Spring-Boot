@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,7 +37,7 @@ public class Profile {
 	private String maritalStaus;
 	private String image;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "userid", insertable = false, updatable = false)
     private User user;
     private Integer userid;

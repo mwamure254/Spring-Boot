@@ -25,6 +25,10 @@ public class SecurityConfig {
                 .requestMatchers("/settings", "/resources/**", "/css/**", "/scss/**","/fonts/**", "/img/**", "/js/**", "/vendor/**").permitAll()
                 .requestMatchers("/contact", "/resources/**", "/css/**", "/scss/**", "/fonts/**", "/img/**", "/js/**", "/vendor/**").permitAll()
                 .requestMatchers("/faq", "/resources/**", "/css/**", "/scss/**","/fonts/**", "/img/**", "/js/**", "/vendor/**").permitAll()
+                .requestMatchers("/service-board", "/resources/**", "/css/**", "/scss/**","/fonts/**", "/img/**", "/js/**", "/vendor/**").permitAll()
+                .requestMatchers("/schools", "/resources/**", "/css/**", "/scss/**","/fonts/**", "/img/**", "/js/**", "/vendor/**").permitAll()
+                .requestMatchers("/reports", "/resources/**", "/css/**", "/scss/**","/fonts/**", "/img/**", "/js/**", "/vendor/**").permitAll()
+                .requestMatchers("/editables", "/resources/**", "/css/**", "/scss/**","/fonts/**", "/img/**", "/js/**", "/vendor/**").permitAll()
                 .requestMatchers("/logout").permitAll()
                 .anyRequest().authenticated())
         

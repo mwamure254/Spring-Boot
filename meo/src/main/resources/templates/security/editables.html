@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<th:block th:replace="~{partials/_header :: common_header(~{::title/text()},~{::link},~{::meta})}">
+  <!-- Custom meta data for this template-->
+  <meta name="description" content="meo home page">
+  <meta name="author" content="mfano">
+  <!-- Custom title for this page-->
+  <title>Meo | Editables</title>
+  <!-- Custom styles for this page-->
+</th:block>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <th:block th:insert="~{partials/_topbar}" />
+  <!-- =====End Header===== -->
+
+  <!-- ======= Sidebar ======= -->
+  <th:block th:insert="~{partials/_sidebar}" />
+  <!-- =====End Sidebar=====-->
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>List of Editables</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home"><i class="bi bi-house-door"></i>
+              <span>Home</span></a></li>
+          <li class="breadcrumb-item"><a href="#"><i class="bi bi-people"></i>
+              <span>Users</span></a></li>
+          <li class="breadcrumb-item active"><i class="bi bi-record-fill"></i>Editables</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-6">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Station Status</h5>
+
+              <p>Update the different institution statuses</p>
+              <a href="#" class="btn btn-success">Click <strong>here</strong> to edit</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">User Status</h5>
+
+              <p>Update the different user statuses</p>
+              <a href="#" class="btn btn-success">Click <strong>here</strong> to edit</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">User Role</h5>
+
+              <p>Update the different user capacities</p>
+              <a href="#" class="btn btn-success">Click <strong>here</strong> to edit user roles</a>
+
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Stations</h5>
+
+              <p>Update the different institutions in your Sub County</p>
+              <a href="#" class="btn btn-success">Click <strong>here</strong> to edit Stations</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Users</h5>
+
+              <p>Update the different managers of your institutions</p>
+              <a href="#" class="btn btn-success">Click <strong>here</strong> to edit Users</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Levels</h5>
+
+              <p>Update the different levels enrolled in your institutions</p>
+              <a href="#" class="btn btn-success">Click <strong>here</strong> to edit Users</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  <!-- =====footer===== -->
+  <th:block th:insert="~{partials/_footer}" />
+</body>
+
+</html>

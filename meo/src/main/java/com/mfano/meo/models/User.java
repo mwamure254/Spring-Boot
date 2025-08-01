@@ -43,12 +43,12 @@ public class User implements UserDetails {
     private boolean enabled = false;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", insertable = true, updatable = true)
+    @JoinColumn(name = "roleid", insertable = false, updatable = false)
     private Role role;
     private Integer roleid;
 
     @ManyToOne
-    @JoinColumn(name = "status_id", insertable = true, updatable = true)
+    @JoinColumn(name = "statusid", insertable = false, updatable = false)
     private UserStatus status;
     private Integer statusid;
 
