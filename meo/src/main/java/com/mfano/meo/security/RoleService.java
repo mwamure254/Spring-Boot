@@ -16,12 +16,12 @@ public class RoleService {
 	}
 
 	// Get Role By Id
-	public Optional<Role> findById(Long id) {
+	public Optional<Role> findById(Integer id) {
 		return roleRepository.findById(id);
 	}
 
 	// Delete Role
-	public void delete(Long id) {
+	public void delete(Integer id) {
 		roleRepository.deleteById(id);
 	}
 
