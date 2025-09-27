@@ -12,26 +12,26 @@ import com.mfano.meo.repositories.ServiceStatusRepository;
 @Service
 public class ServiceStatusService {
 	@Autowired
-	private ServiceStatusRepository ServiceStatusRepository;
+	private ServiceStatusRepository serviceStatusRepository;
 
 	// Get All ServiceStatuss
 	public List<ServiceStatus> findAll() {
-		return ServiceStatusRepository.findAll();
+		return serviceStatusRepository.findAll();
 	}
 
 	// Get ServiceStatus By Id
-	public Optional<ServiceStatus> findById(Long id) {
-		return ServiceStatusRepository.findById(id);
+	public Optional<ServiceStatus> findById(int id) {
+		return serviceStatusRepository.findById(id);
 	}
 
 	// Delete ServiceStatus
-	public void delete(Long id) {
-		ServiceStatusRepository.deleteById(id);
+	public void delete(int id) {
+		serviceStatusRepository.deleteById(id);
 	}
 
 	// Update ServiceStatus
-	public void save(ServiceStatus ServiceStatus) {
-		ServiceStatusRepository.save(ServiceStatus);
+	public void save(ServiceStatus serviceStatus) {
+		serviceStatusRepository.save(serviceStatus);
 	}
     
 }

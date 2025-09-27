@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.mfano.meo.models.ServiceBoard;
 import com.mfano.meo.services.ProfileService;
@@ -17,20 +18,21 @@ import com.mfano.meo.services.ServiceStatusService;
 import com.mfano.meo.services.StationService;
 import com.mfano.meo.services.StationStatusService;
 
+@RestController
 public class ServiceBoardController {
     @Autowired
     private ServiceBoardService sbs;
-    @Autowired
+	@Autowired
     private ProfileService profileService;
-    @Autowired
+	@Autowired
     private StationService stationService;
-    @Autowired
+	@Autowired
     private StationStatusService stationStatusService;
-    @Autowired
+	@Autowired
     private ServiceStatusService serviceStatusService;
 
     //Get All sb
-	@GetMapping("/sb")
+	@GetMapping("sb")
 	public String findAll(Model model) {
 		model.addAttribute("sb", sbs.findAll());
 		model.addAttribute("profile", profileService.findAll());

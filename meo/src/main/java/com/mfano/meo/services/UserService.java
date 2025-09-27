@@ -35,8 +35,8 @@ public class UserService {
 	}
 
 	// Update User
-	public void save(User User) {
-		userRepository.save(User);
+	public void save(User user) {
+		userRepository.save(user);
 	}
     
 }

@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Profile {
+public class Profile extends Auditable<String>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -10,7 +10,6 @@ import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
 public class CommonObject {
 
 	@Id

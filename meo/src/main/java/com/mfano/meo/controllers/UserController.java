@@ -9,16 +9,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.mfano.meo.models.User;
 import com.mfano.meo.services.UserService;
 
+@RestController
 public class UserController {
     @Autowired
     private UserService us;
 
     // Get All u
-	@GetMapping("/u")
+	@GetMapping("u")
 	public String findAll(Model model) {
 		model.addAttribute("u", us.findAll());
 		return "u";

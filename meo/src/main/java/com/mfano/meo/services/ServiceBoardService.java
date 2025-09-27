@@ -12,26 +12,26 @@ import com.mfano.meo.repositories.ServiceBoardRepository;
 @Service
 public class ServiceBoardService {
 	@Autowired
-	private ServiceBoardRepository ServiceBoardRepository;
+	private ServiceBoardRepository serviceBoardRepository;
 
 	// Get All ServiceBoards
 	public List<ServiceBoard> findAll() {
-		return ServiceBoardRepository.findAll();
+		return serviceBoardRepository.findAll();
 	}
 
 	// Get ServiceBoard By Id
 	public Optional<ServiceBoard> findById(Long id) {
-		return ServiceBoardRepository.findById(id);
+		return serviceBoardRepository.findById(id);
 	}
 
 	// Delete ServiceBoard
 	public void delete(Long id) {
-		ServiceBoardRepository.deleteById(id);
+		serviceBoardRepository.deleteById(id);
 	}
 
 	// Update ServiceBoard
-	public void save(ServiceBoard ServiceBoard) {
-		ServiceBoardRepository.save(ServiceBoard);
+	public void save(ServiceBoard serviceBoard) {
+		serviceBoardRepository.save(serviceBoard);
 	}
     
 }

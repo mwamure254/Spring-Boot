@@ -12,26 +12,26 @@ import com.mfano.meo.repositories.ProfileRepository;
 @Service
 public class ProfileService {
 	@Autowired
-	private ProfileRepository ProfileRepository;
+	private ProfileRepository profileRepository;
 
 	// Get All Profiles
 	public List<Profile> findAll() {
-		return ProfileRepository.findAll();
+		return profileRepository.findAll();
 	}
 
 	// Get Profile By Id
 	public Optional<Profile> findById(Long id) {
-		return ProfileRepository.findById(id);
+		return profileRepository.findById(id);
 	}
 
 	// Delete Profile
 	public void delete(Long id) {
-		ProfileRepository.deleteById(id);
+		profileRepository.deleteById(id);
 	}
 
 	// Update Profile
-	public void save(Profile Profile) {
-		ProfileRepository.save(Profile);
+	public void save(Profile profile) {
+		profileRepository.save(profile);
 	}
     
 }

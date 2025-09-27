@@ -7,8 +7,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import lombok.AllArgsConstructor;
+
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
 	
 	@Bean
@@ -45,5 +48,5 @@ public class SecurityConfig {
         
         return http.build();
     }
-	
+    
 }

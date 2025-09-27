@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.mfano.meo.models.StationStatus;
 
 @Repository
-public interface StationStatusRepository extends JpaRepository<StationStatus, Long>{
+public interface StationStatusRepository extends JpaRepository<StationStatus, Integer>{
 
 }

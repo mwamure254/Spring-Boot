@@ -9,18 +9,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.mfano.meo.models.Profile;
 import com.mfano.meo.services.ProfileService;
 import com.mfano.meo.services.UserService;
 
+@RestController
 public class ProfileController {
-      @Autowired
-    private ProfileService ps; @Autowired
+    @Autowired
+    private ProfileService ps; 
+	@Autowired
     private UserService us;
 
     // Get All profiles
-	@GetMapping("/p")
+	@GetMapping("p")
 	public String findAll(Model model) {
 		model.addAttribute("p", ps.findAll());
 		model.addAttribute("user", us.findAll());

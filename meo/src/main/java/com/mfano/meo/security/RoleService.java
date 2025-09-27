@@ -9,25 +9,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleService {
 	@Autowired
-	private RoleRepository RoleRepository;
+	private RoleRepository roleRepository;
 	// Get All Roles
 	public List<Role> findAll() {
-		return RoleRepository.findAll();
+		return roleRepository.findAll();
 	}
 
 	// Get Role By Id
 	public Optional<Role> findById(Long id) {
-		return RoleRepository.findById(id);
+		return roleRepository.findById(id);
 	}
 
 	// Delete Role
 	public void delete(Long id) {
-		RoleRepository.deleteById(id);
+		roleRepository.deleteById(id);
 	}
 
 	// Update Role
-	public void save(Role Role) {
-		RoleRepository.save(Role);
+	public void save(Role role) {
+		roleRepository.save(role);
 	}
 
 }

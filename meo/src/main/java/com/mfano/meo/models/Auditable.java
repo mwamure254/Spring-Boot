@@ -18,15 +18,15 @@ import lombok.Data;
 public abstract class Auditable<U> {
 
     @CreatedDate
-    protected LocalDateTime CreatedeAt = LocalDateTime.now();
+    protected LocalDateTime sreatedeAt = LocalDateTime.now();
 
     @CreatedBy
-    protected U CreatedBy;
+    protected U createdBy;
 
     @LastModifiedDate
-    protected LocalDateTime LastUpdatedAt;
+    protected LocalDateTime lastUpdatedAt;
 
     @LastModifiedBy
-    protected U LastModifiedBy;
+    protected U lastModifiedBy;
 
 }

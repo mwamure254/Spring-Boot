@@ -16,13 +16,14 @@ public class MeoController {
     }
 
     @GetMapping("/login")
-    public String login() {
-        return "index";
+    public String login(Model model) {
+        return "security/login";
     }
+
 
     @GetMapping("/logout")
     public String out() {
-        return "index";
+        return "login";
     }
 
     @GetMapping("/error404")

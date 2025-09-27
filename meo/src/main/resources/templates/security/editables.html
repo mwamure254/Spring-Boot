@@ -44,7 +44,8 @@
               <h5 class="card-title">Station Status</h5>
 
               <p>Update the different institution statuses</p>
-              <a href="#" class="btn btn-success">Click <strong>here</strong> to edit</a>
+              <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ss">Click
+                <strong>here</strong> to Add status</a>
             </div>
           </section>
 
@@ -53,16 +54,18 @@
               <h5 class="card-title">User Status</h5>
 
               <p>Update the different user statuses</p>
-              <a href="#" class="btn btn-success">Click <strong>here</strong> to edit</a>
+              <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#us">Click <strong>here</strong> to Add
+                status</a>
             </div>
           </section>
 
           <section class="card">
             <div class="card-body">
-              <h5 class="card-title">User Role</h5>
+              <h5 class="card-title">User Roles</h5>
 
               <p>Update the different user capacities</p>
-              <a href="#" class="btn btn-success">Click <strong>here</strong> to edit user roles</a>
+              <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ur">Click <strong>here</strong> to Add
+                roles</a>
 
             </div>
           </section>
@@ -76,7 +79,8 @@
               <h5 class="card-title">Stations</h5>
 
               <p>Update the different institutions in your Sub County</p>
-              <a href="#" class="btn btn-success">Click <strong>here</strong> to edit Stations</a>
+              <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#s">Click <strong>here</strong> to Add
+                stations</a>
             </div>
           </div>
 
@@ -85,7 +89,8 @@
               <h5 class="card-title">Users</h5>
 
               <p>Update the different managers of your institutions</p>
-              <a href="#" class="btn btn-success">Click <strong>here</strong> to edit Users</a>
+              <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#u">Click <strong>here</strong> to Add
+                users</a>
             </div>
           </div>
 
@@ -94,7 +99,8 @@
               <h5 class="card-title">Levels</h5>
 
               <p>Update the different levels enrolled in your institutions</p>
-              <a href="#" class="btn btn-success">Click <strong>here</strong> to edit Users</a>
+              <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#l">Click <strong>here</strong> to Add
+                levels</a>
             </div>
           </div>
 
@@ -102,7 +108,207 @@
       </div>
     </section>
 
+    <!-- SS Modal-->
+    <div class="modal fade" id="ss" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4>New Status</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form class="py-2 px-4" th:action="@{/ss/newStatus}" method="post">
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">Status Name</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="name" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">Status Description</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="description" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="text-end">
+              <button type="reset" class="btn btn-warning">clear</button>
+              <button type="submit" class="btn btn-primary">save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div><!-- End SS Modal-->
+
+    <!-- US Modal-->
+    <div class="modal fade" id="us" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4>New Status</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form th:action="@{/us/newStatus}" method="post" class="py-2 px-4">
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">Status Name</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="name" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">Status Description</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="description" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="text-end">
+              <button type="reset" class="btn btn-warning">clear</button>
+              <button type="submit" class="btn btn-primary">save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div><!-- End US Modal-->
+
+    <!-- UR Modal-->
+    <div class="modal fade" id="ur" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4>New Role</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form class="py-2 px-4">
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">Role Name</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="name" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">Role Description</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="description" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="text-end">
+              <button type="reset" class="btn btn-warning">clear</button>
+              <button type="submit" class="btn btn-primary">save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div><!-- End UR Modal-->
+
+    <!-- Level Modal-->
+    <div class="modal fade" id="l" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4>New Level</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form class="py-2 px-4">
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">Level Name</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="name" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">Level Description</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="description" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="text-end">
+              <button type="reset" class="btn btn-warning">clear</button>
+              <button type="submit" class="btn btn-primary">save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div><!-- End UR Modal-->
+
+    <!-- User Modal-->
+    <div class="modal fade" id="u" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4>New User</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form class="py-2 px-4">
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">First Name</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="fname" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">Last Name</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="lname" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">Email Address</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="email" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="text-end">
+              <button type="reset" class="btn btn-warning">clear</button>
+              <button type="submit" class="btn btn-primary">save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div><!-- End User Modal-->
+
+    <!-- Station Modal-->
+    <div class="modal fade" id="s" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4>New Station</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form class="py-2 px-4">
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">Name</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="name" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-md-6 col-lg-4 col-form-label">KNEC Code</label>
+              <div class="col-md-6 col-lg-8">
+                <input name="description" type="text" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="text-end">
+              <button type="reset" class="btn btn-warning">clear</button>
+              <button type="submit" class="btn btn-primary">save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div><!-- End UR Modal-->
+
   </main><!-- End #main -->
+
   <!-- =====footer===== -->
   <th:block th:insert="~{partials/_footer}" />
 </body>

@@ -9,16 +9,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.stereotype.Controller;
 
 import com.mfano.meo.models.StationStatus;
 import com.mfano.meo.services.StationStatusService;
-
+@Controller
 public class StationStatusController {
     @Autowired
     private StationStatusService sss;
 
     // Get All ss
-	@GetMapping("/ss")
+	@GetMapping("ss")
 	public String findAll(Model model) {
 		model.addAttribute("ss", sss.findAll());
 		return "ss";
@@ -26,15 +27,15 @@ public class StationStatusController {
 
 	@GetMapping("ss/findById/")
 	@ResponseBody
-	public Optional<StationStatus> findById(Long id) {
+	public Optional<StationStatus> findById(Integer id) {
 		return sss.findById(id);
 	}
 
     // Add ss
-	@PostMapping(value = "ss/add")
+	@PostMapping(value = "/ss/newStatus")
 	public String addNew(StationStatus stationStatus) {
 		sss.save(stationStatus);
-		return "redirect:/ss";
+		return "redirect:/editables";
 	}
 
 	//Update ss
@@ -46,7 +47,7 @@ public class StationStatusController {
 
 	//Delete ss
 	@RequestMapping(value = "ss/delete/", method = { RequestMethod.DELETE, RequestMethod.GET })
-	public String delete(Long id) {
+	public String delete(Integer id) {
 		sss.delete(id);
 		return "redirect:/ss";
 	}
