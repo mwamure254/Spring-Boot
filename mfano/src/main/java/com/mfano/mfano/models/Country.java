@@ -16,7 +16,6 @@ import lombok.Data;
 @Entity
 @Data
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
 public class Country {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -19,13 +19,13 @@ public class StationStatusController {
     private StationStatusService sss;
 
     // Get All ss
-	@GetMapping("ss")
+	@GetMapping("/ss")
 	public String findAll(Model model) {
 		model.addAttribute("ss", sss.findAll());
 		return "ss";
 	}
 
-	@GetMapping("ss/findById/")
+	@GetMapping("/ss/findById/")
 	@ResponseBody
 	public Optional<StationStatus> findById(Integer id) {
 		return sss.findById(id);
@@ -39,14 +39,14 @@ public class StationStatusController {
 	}
 
 	//Update ss
-	@RequestMapping(value = "ss/update", method = { RequestMethod.PUT, RequestMethod.GET })
+	@RequestMapping(value = "/ss/update", method = { RequestMethod.PUT, RequestMethod.GET })
 	public String update(StationStatus stationStatus) {
 		sss.save(stationStatus);
 		return "redirect:/ss";
 	}
 
 	//Delete ss
-	@RequestMapping(value = "ss/delete/", method = { RequestMethod.DELETE, RequestMethod.GET })
+	@RequestMapping(value = "/ss/delete/", method = { RequestMethod.DELETE, RequestMethod.GET })
 	public String delete(Integer id) {
 		sss.delete(id);
 		return "redirect:/ss";

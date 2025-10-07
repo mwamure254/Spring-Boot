@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .requestMatchers("/logout").permitAll()
                 .anyRequest().authenticated())
         
-                .formLogin(login -> login.loginPage("/login").permitAll().defaultSuccessUrl("/home"))
+                .formLogin(login -> login.loginPage("/home").permitAll().defaultSuccessUrl("/home"))
                 .exceptionHandling(handling -> handling.accessDeniedPage("/error404"))
                 
                 .logout(logout -> logout.invalidateHttpSession(true).clearAuthentication(true)
