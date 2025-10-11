@@ -8,6 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.mfano.moe.security.models.User;
+
 public class UserPrincipal implements UserDetails {
 	@Autowired
 	private User user;

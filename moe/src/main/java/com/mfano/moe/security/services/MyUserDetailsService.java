@@ -1,10 +1,14 @@
-package com.mfano.moe.security;
+package com.mfano.moe.security.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.mfano.moe.security.UserPrincipal;
+import com.mfano.moe.security.models.User;
+import com.mfano.moe.security.repositories.UserRepository;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {

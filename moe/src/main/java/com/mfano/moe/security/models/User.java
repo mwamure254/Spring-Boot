@@ -1,4 +1,4 @@
-package com.mfano.moe.security;
+package com.mfano.moe.security.models;
 
 import java.util.HashSet;
 import java.util.Set;

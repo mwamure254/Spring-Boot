@@ -1,4 +1,4 @@
-package com.mfano.moe.security;
+package com.mfano.moe.security.controllers;
 
 import java.util.Optional;
 
@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.mfano.moe.security.models.User;
+import com.mfano.moe.security.services.UserService;
 
 @Controller
 public class UserController {
@@ -30,7 +33,7 @@ public class UserController {
 	}
 
 	// Add User
-	@PostMapping(value = "users/addNew")
+	@PostMapping(value = "users/create")
 	public String addNew(User user) {
 		userService.save(user);
 		return "redirect:/users";

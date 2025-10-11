@@ -1,16 +1,17 @@
-package com.mfano.moe.security;
+package com.mfano.moe.security.services;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import lombok.AllArgsConstructor;
+import com.mfano.moe.security.models.User;
+import com.mfano.moe.security.repositories.UserRepository;
 
 @Service
-@AllArgsConstructor
 public class UserService {
 	@Autowired
 	private UserRepository userRepository;
@@ -31,11 +32,10 @@ public class UserService {
 	}
 
 	// Update User
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
+	private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	public void save(User user) {
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userRepository.save(user);
 	}
 }

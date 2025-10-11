@@ -1,4 +1,4 @@
-package com.mfano.moe.security;
+package com.mfano.moe.security.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -10,12 +10,14 @@ import lombok.Data;
 @Data
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Role {
+
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	private Integer id;
 
 	private String description;
 	private String details;
+
 	public Integer getId() {
 		return id;
 	}
