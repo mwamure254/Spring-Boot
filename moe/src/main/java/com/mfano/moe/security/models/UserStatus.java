@@ -2,13 +2,13 @@ package com.mfano.moe.security.models;
 
 import com.mfano.moe.security.CommonObject;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Role extends CommonObject{
+public class UserStatus extends CommonObject {
 
 }

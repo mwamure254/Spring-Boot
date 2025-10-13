@@ -11,19 +11,24 @@ public class SecurityController {
         return "security/login";
     }
 
-    @GetMapping("/register")
+	@GetMapping("/logout")
+	public String logout() {
+		return "login";
+	}
+
+    @GetMapping("security/register")
     public String register() {
         return "security/register";
     }
 
     @GetMapping("/error")
     public String blank() {
-        return "error";
+        return "security/error";
     }
     
-    @GetMapping("/forgotPassword")
+    @GetMapping("security/reset")
     public String forgotPassword(){
-       return "security/forgotPassword";
+       return "security/reset";
     }
 
 }
