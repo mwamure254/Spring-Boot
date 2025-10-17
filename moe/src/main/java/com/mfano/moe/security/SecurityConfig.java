@@ -26,7 +26,7 @@ public class SecurityConfig{
                 .requestMatchers("/logout", "/resources/**", "/css/**", "/scss/**", "/vendor/**").permitAll()
                 .requestMatchers("/error", "/resources/**", "/css/**", "/scss/**", "/vendor/**").permitAll()
                 .anyRequest().authenticated())
-                .formLogin(login -> login.loginPage("/index").permitAll().defaultSuccessUrl("/index"))
+                .formLogin(login -> login.loginPage("/login").permitAll().defaultSuccessUrl("/index"))
                 .exceptionHandling(handling -> handling.accessDeniedPage("/error"))
                 .logout(logout -> logout.invalidateHttpSession(true).clearAuthentication(true)
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
