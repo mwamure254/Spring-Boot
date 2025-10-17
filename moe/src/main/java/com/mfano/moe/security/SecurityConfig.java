@@ -25,6 +25,7 @@ public class SecurityConfig{
                 .requestMatchers("/login", "/resources/**", "/css/**", "/scss/**", "/vendor/**").permitAll()
                 .requestMatchers("/logout", "/resources/**", "/css/**", "/scss/**", "/vendor/**").permitAll()
                 .requestMatchers("/error", "/resources/**", "/css/**", "/scss/**", "/vendor/**").permitAll()
+                .requestMatchers("/security/reset", "/resources/**", "/css/**", "/scss/**", "/vendor/**").permitAll()
                 .anyRequest().authenticated())
                 .formLogin(login -> login.loginPage("/login").permitAll().defaultSuccessUrl("/index"))
                 .exceptionHandling(handling -> handling.accessDeniedPage("/error"))
