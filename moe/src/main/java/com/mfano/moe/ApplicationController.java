@@ -1,8 +1,5 @@
 package com.mfano.moe;
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -10,13 +7,48 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ApplicationController {
 
     @GetMapping("/index")
-    public String home() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-			return "redirect:/login";
-		}
-        
+    public String goHome(){
         return "index";
     }
-    
+
+    @GetMapping("/hr")
+    public String hr(){
+        return "/hr/index";
+    }
+
+    @GetMapping("/fleet")
+    public String fleet(){
+        return "/fleet/index";
+    }
+
+    @GetMapping("/accounts")
+    public String accounts(){
+        return "/accounts/index";
+    }
+
+    @GetMapping("/payroll")
+    public String payroll(){
+        return "/payroll/index";
+    }
+
+    @GetMapping("/helpdesk")
+    public String helpdesk(){
+        return "/helpdesk/index";
+    }
+
+    @GetMapping("/parameters")
+    public String parameters(){
+        return "/parameters/index";
+    }
+
+    @GetMapping("/reports")
+    public String reports(){
+        return "/reports/index";
+    }
+
+    @GetMapping("/security")
+    public String security(){
+        return "/security/index";
+    }
+
 }

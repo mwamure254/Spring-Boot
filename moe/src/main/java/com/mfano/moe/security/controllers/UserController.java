@@ -1,53 +1,53 @@
 package com.mfano.moe.security.controllers;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mfano.moe.security.models.User;
+import com.mfano.moe.security.services.RoleService;
 import com.mfano.moe.security.services.UserService;
 
 @Controller
 public class UserController {
-	@Autowired
-	private UserService userService;
 
-	// Get All Users
-	@GetMapping("users")
-	public String findAll(Model model) {
-		model.addAttribute("users", userService.findAll());
-		return "user";
-	}
+    @Autowired
+    private UserService userService;
 
-	@GetMapping("users/findById/")
-	@ResponseBody
-	public Optional<User> findById(Integer id) {
-		return userService.findById(id);
-	}
+    @Autowired
+    private RoleService roleService;
 
-	// Add User
-	@PostMapping(value = "users/create")
-	public String addNew(User user) {
-		userService.save(user);
-		return "redirect:/users";
-	}
+    @Autowired
+    private MessageSource messageSource;
 
-	@RequestMapping(value = "users/update", method = { RequestMethod.PUT, RequestMethod.GET })
-	public String update(User user) {
-		userService.save(user);
-		return "redirect:/users";
-	}
+    @GetMapping("/security/users")
+    public String getAll(Model model) {
+        model.addAttribute("users", userService.findAll());
+        return "/security/users";
+    }
 
-	@RequestMapping(value = "users/delete/", method = { RequestMethod.DELETE, RequestMethod.GET })
-	public String delete(Integer id) {
-		userService.delete(id);
-		return "redirect:/users";
-	}
+    @GetMapping("/security/user/{op}/{id}")
+    public String editUser(@PathVariable Integer id, @PathVariable String op, Model model) {
+        User user = userService.findById(id);
+        model.addAttribute("user", user);
+        model.addAttribute("userRoles", roleService.getUserRoles(user));
+        model.addAttribute("userNotRoles", roleService.getUserNotRoles(user));
+        return "/security/user" + op; //returns employeeEdit or employeeDetails
+    }
+
+    @PostMapping("/usersAddNew")
+    public String addNew(User user, Model model, RedirectAttributes redir) {
+        userService.register(user);
+
+        model.addAttribute("registrationSuccess",
+                messageSource.getMessage("user.registration.verification.email.msg", null, LocaleContextHolder.getLocale()));
+        return "security/registrationSucessful";
+    }
+
 }

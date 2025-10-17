@@ -1,8 +1,5 @@
 package com.mfano.moe.security.services;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,35 +7,44 @@ import org.springframework.stereotype.Service;
 import com.mfano.moe.security.models.User;
 import com.mfano.moe.security.repositories.UserRepository;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class UserService {
-	@Autowired
-	private UserRepository userRepository;
 
-	// Get All Users
-	public List<User> findAll() {
-		return userRepository.findAll();
-	}
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
-	// Get User By Id
-	public Optional<User> findById(int id) {
-		return userRepository.findById(id);
-	}
+    @Autowired
+    private UserRepository userRepository;
 
-	// Delete User
-	public void delete(int id) {
-		userRepository.deleteById(id);
-	}
+    public boolean checkIfUserExist(String email) {
 
-	// Update User
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+        return userRepository.findByEmail(email) != null;
+    }
 
+    //Get All Users
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
 
-	public void save(User user) {
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		userRepository.save(user);
-	}
+    //Get User By Id
+    public User findById(int id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    //Delete User
+    public void delete(int id) {
+        userRepository.deleteById(id);
+    }
+
+    //Update User
+    public void register(User user) {
+        if (checkIfUserExist(user.getEmail())) {
+           
+        }
+        user.setPassword(encoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
 }

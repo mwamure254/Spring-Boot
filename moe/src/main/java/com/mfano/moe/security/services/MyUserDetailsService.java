@@ -6,23 +6,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.mfano.moe.security.UserPrincipal;
 import com.mfano.moe.security.models.User;
+import com.mfano.moe.security.models.UserPrincipal;
 import com.mfano.moe.security.repositories.UserRepository;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {
-	@Autowired
-	private UserRepository userRepository;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    @Autowired
+    private UserRepository userRepository;
 
-		User user = userRepository.findByUsername(username);
-		if (user == null) {
-			throw new UsernameNotFoundException("user not found!");
-		}
-
-		return new UserPrincipal(user);
-	}
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found!");
+        }
+        return new UserPrincipal(user);
+    }
 }

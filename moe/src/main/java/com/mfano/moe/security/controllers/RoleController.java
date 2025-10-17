@@ -29,28 +29,28 @@ public class RoleController {
         return roleService.findById(id);
     }
 
-    @PostMapping("/security/roles/create")
+    @PostMapping("/security/roles")
     public String save(Role role) {
         roleService.save(role);
         return "redirect:/security/roles";
     }
 
-    @RequestMapping(value = "/security/role/delete/{id}", method = { RequestMethod.DELETE, RequestMethod.GET })
+    @RequestMapping(value = "/security/role/delete/{id}", method = {RequestMethod.DELETE, RequestMethod.GET})
     public String delete(@PathVariable Integer id) {
         roleService.delete(id);
         return "redirect:/security/roles";
     }
 
-    @GetMapping("/security/role/assign/{userId}/{roleId}")
+    @RequestMapping("/security/role/assign/{userId}/{roleId}")
     public String assignRole(@PathVariable Integer userId,
-            @PathVariable Integer roleId) {
+                             @PathVariable Integer roleId) {
         roleService.assignUserRole(userId, roleId);
         return "redirect:/security/user/Edit/" + userId;
     }
 
-    @GetMapping("/security/role/unassign/{userId}/{roleId}")
+    @RequestMapping("/security/role/unassign/{userId}/{roleId}")
     public String unassignRole(@PathVariable Integer userId,
-            @PathVariable Integer roleId) {
+                               @PathVariable Integer roleId) {
         roleService.unassignUserRole(userId, roleId);
         return "redirect:/security/user/Edit/" + userId;
     }
