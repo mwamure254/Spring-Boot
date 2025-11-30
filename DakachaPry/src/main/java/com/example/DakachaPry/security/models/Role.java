@@ -1,16 +1,12 @@
 package com.example.DakachaPry.security.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.EqualsAndHashCode;
 import jakarta.persistence.*;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-
+@EqualsAndHashCode(callSuper = false)
 public class Role extends Auditable<String> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

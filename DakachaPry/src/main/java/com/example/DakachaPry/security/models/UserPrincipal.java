@@ -57,4 +57,19 @@ public class UserPrincipal implements UserDetails {
 		return true;
 	}
 
+	//other methods
+    public String getEmail() {
+        return user.getEmail();
+    }
+	public String getFirstname() {
+		return user.getFirstname();
+	}
+	public String getLastname() {
+		return user.getLastname();
+	}
+
+	public User getUser() {
+		return user;
+	}
+
 }

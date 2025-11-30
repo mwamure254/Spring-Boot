@@ -19,13 +19,13 @@ public abstract class Auditable<U> {
     protected U createdBy;
 
     @CreatedDate
-    protected LocalDateTime createdDate;
+    protected LocalDateTime createdDate = LocalDateTime.now();
 
     @LastModifiedBy
     protected U lastModifiedBy;
 
     @LastModifiedDate
-    protected LocalDateTime lastModifiedDate;
+    protected LocalDateTime lastModifiedDate = LocalDateTime.now();
 
     public U getCreatedBy() {
         return createdBy;

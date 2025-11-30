@@ -26,8 +26,6 @@ public class User extends Auditable<String> {
     private String username;
     private String password;
     private String email;
-    private boolean accountVerified;
-    private boolean loginDisabled;
 
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(
@@ -36,9 +34,5 @@ public class User extends Auditable<String> {
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     Set<Role> roles = new HashSet<>();
-
-    public boolean isLoginDisabled() {
-        return loginDisabled;
-    }
 
 }

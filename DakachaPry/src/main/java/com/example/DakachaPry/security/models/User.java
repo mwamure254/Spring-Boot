@@ -1,17 +1,15 @@
 package com.example.DakachaPry.security.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class User extends Auditable<String> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

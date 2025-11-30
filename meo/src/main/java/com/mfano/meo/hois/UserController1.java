@@ -3,7 +3,6 @@ package com.mfano.meo.hois;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +40,10 @@ public class UserController1 {
 
 	@PostMapping("/users/add")
 	public String addUser(
-			@RequestParam("name") String name,
+			@RequestParam String name,
 			@RequestParam("description") String desc, 
-			@RequestParam("price") double price,
-			@RequestParam("image") MultipartFile image) {
+			@RequestParam double price,
+			@RequestParam MultipartFile image) {
 		
 		final User1 client = new User1();
 		client.setDescription(desc);
@@ -76,7 +75,7 @@ public class UserController1 {
 
 	private String saveImage(MultipartFile image) throws IOException {
 		String filename = image.getOriginalFilename();
-		Path path = Paths.get(UPLOAD_DIR + filename);
+		Path path = Path.of(UPLOAD_DIR + filename);
 		Files.createDirectories(path.getParent());
 		Files.write(path, image.getBytes());
 		

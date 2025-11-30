@@ -42,7 +42,7 @@ public class LocationController {
 	}
 
 	@GetMapping("locations/findByDescriptionContaining/{description}")
-	public List<Location> findByDescriptionContaining(@PathVariable("description") String description) {
+	public List<Location> findByDescriptionContaining(@PathVariable String description) {
 		return locationService.findByDescriptionContaining(description);
 	}
 

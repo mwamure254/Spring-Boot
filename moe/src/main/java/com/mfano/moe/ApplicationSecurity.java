@@ -23,8 +23,10 @@ public class ApplicationSecurity {
         // Customize your security configuration
     	http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests(requests -> requests
-                .requestMatchers("/login", "/resources/**", "/css/**", "/fonts/**", "/img/**").permitAll()
-                .requestMatchers("/register", "/resources/**", "/css/**", "/fonts/**", "/img/**", "/js/**").permitAll()
+                .requestMatchers("/login", "/resources/**", "/css/**", "/js/**", "/scss/**", "/vendor/**", "/img/**").permitAll()
+                .requestMatchers("/register", "/resources/**", "/css/**",  "/js/**", "/scss/**", "/vendor/**", "/img/**").permitAll()
+                .requestMatchers("/index", "/resources/**", "/css/**",  "/js/**", "/scss/**", "/vendor/**", "/img/**").permitAll()
+                .requestMatchers("/error", "/resources/**", "/css/**",  "/js/**", "/scss/**", "/vendor/**", "/img/**").permitAll()
                 .requestMatchers("/security/user/Edit/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated())
                 .formLogin(login -> login.loginPage("/login").permitAll().defaultSuccessUrl("/index"))
@@ -34,7 +36,7 @@ public class ApplicationSecurity {
                         .permitAll())
                 .sessionManagement(management -> management
                         .maximumSessions(1)
-                        .expiredUrl("/login?expired=true"));;
+                        .expiredUrl("/login?expired=true"));
         return http.build();
     }
     

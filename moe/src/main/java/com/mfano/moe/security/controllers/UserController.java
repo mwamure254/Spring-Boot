@@ -1,14 +1,11 @@
 package com.mfano.moe.security.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mfano.moe.security.models.User;
 import com.mfano.moe.security.services.RoleService;
@@ -22,9 +19,6 @@ public class UserController {
 
     @Autowired
     private RoleService roleService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @GetMapping("/security/users")
     public String getAll(Model model) {
@@ -41,13 +35,12 @@ public class UserController {
         return "/security/user" + op; //returns employeeEdit or employeeDetails
     }
 
-    @PostMapping("/usersAddNew")
-    public String addNew(User user, Model model, RedirectAttributes redir) {
+    @PostMapping("/createUser")
+    public String addNew(User user, Model model) {
         userService.register(user);
 
-        model.addAttribute("registrationSuccess",
-                messageSource.getMessage("user.registration.verification.email.msg", null, LocaleContextHolder.getLocale()));
-        return "security/registrationSucessful";
+        model.addAttribute("message","registration successful");
+        return "redirect:/login";
     }
 
 }

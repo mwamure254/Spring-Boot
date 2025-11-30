@@ -28,7 +28,7 @@ public class PesaService {
     }
 
     public static String getStkPushPassword(String shortCode, String passKey, String timestamp) {
-        String concatenatedString = String.format("%s%s%s", shortCode, passKey, timestamp);
+        String concatenatedString = "%s%s%s".formatted(shortCode, passKey, timestamp);
         return toBase64String(concatenatedString);
     }
 

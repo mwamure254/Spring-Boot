@@ -16,7 +16,7 @@ public class PesaController {
 	private PesaService mpesa;
 
 	@PostMapping("/mPush")
-	public void mPush(@RequestParam("phone") String phone, @RequestParam("amount") String amount) {
+	public void mPush(@RequestParam String phone, @RequestParam String amount) {
 		try {
 			mpesa.initiateSTKPush(phone, amount);
 		} catch (Exception e) {

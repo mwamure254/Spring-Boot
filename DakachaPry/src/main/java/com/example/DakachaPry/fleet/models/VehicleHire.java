@@ -4,16 +4,12 @@ import com.example.DakachaPry.parameters.models.Client;
 import com.example.DakachaPry.parameters.models.Location;
 import com.example.DakachaPry.security.models.Auditable;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class VehicleHire extends Auditable<String> {
 

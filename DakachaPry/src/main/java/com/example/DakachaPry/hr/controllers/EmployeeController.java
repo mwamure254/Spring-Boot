@@ -3,7 +3,6 @@ package com.example.DakachaPry.hr.controllers;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,15 +73,15 @@ public class EmployeeController {
 	// Add Employee (value="yyyy-mm-dd")
 	@PostMapping("/hr/employees")
 	public String addNew(
-			@RequestParam("title") String title, @RequestParam("initials") String initials
-			, @RequestParam("socialSecurityNumber") String ssn, @RequestParam("firstname") String firstname
-			, @RequestParam("lastname") String lastname, @RequestParam("othername") String othername
-			, @RequestParam("gender") String gender, @RequestParam("countryid") int countryid
-			, @RequestParam("address") String address, @RequestParam("employeetypeid") int employeetypeid
+			@RequestParam String title, @RequestParam String initials
+			, @RequestParam("socialSecurityNumber") String ssn, @RequestParam String firstname
+			, @RequestParam String lastname, @RequestParam String othername
+			, @RequestParam String gender, @RequestParam int countryid
+			, @RequestParam String address, @RequestParam int employeetypeid
 			, @RequestParam("dateOfBirth") String dob, @RequestParam("hireDate") String hd
-			, @RequestParam("stateid") int si, @RequestParam("city") String city
-			, @RequestParam("phone") String phone, @RequestParam("mobile") String mobile
-			, @RequestParam("maritalStatus") String ms, @RequestParam("email") String email
+			, @RequestParam("stateid") int si, @RequestParam String city
+			, @RequestParam String phone, @RequestParam String mobile
+			, @RequestParam("maritalStatus") String ms, @RequestParam String email
 			, @RequestParam("jobtitleid") int jti, @RequestParam("photo") MultipartFile file) {
 		
 		Employee employee=new Employee();
@@ -130,7 +129,7 @@ public class EmployeeController {
 	public String uploadFile(MultipartFile file) throws IOException {
 	
 		String filename = file.getOriginalFilename();
-		Path path = Paths.get(baseDirectory + filename);
+		Path path = Path.of(baseDirectory + filename);
 		Files.createDirectories(path.getParent());
 		Files.write(path, file.getBytes());
 		

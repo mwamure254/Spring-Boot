@@ -17,15 +17,14 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 //import com.example.DakachaPry.services.MyUserDetailsService;
 
-
 @Configuration
 @EnableWebSecurity
-public class ApplicationSecurityConfig {
+public class ApplicationSecurity {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // Customize your security configuration
-    	http.csrf(csrf -> csrf.disable());
+        http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers("/login", "/resources/**", "/css/**", "/fonts/**", "/img/**").permitAll()
                 .requestMatchers("/register", "/resources/**", "/css/**", "/fonts/**", "/img/**", "/js/**")
@@ -42,14 +41,15 @@ public class ApplicationSecurityConfig {
                         .permitAll())
                 .sessionManagement(management -> management
                         .maximumSessions(1)
-                        .expiredUrl("/login?expired=true"));;
+                        .expiredUrl("/login?expired=true"));
+        ;
         return http.build();
     }
-    
+
     @Bean
-	HttpSessionEventPublisher httpSessionEventPublisher() {
-	return new HttpSessionEventPublisher();
-	}
+    HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
 
     @Bean
     PasswordEncoder passwordEncoder() {
