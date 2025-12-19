@@ -1,20 +1,13 @@
 package com.example.DakachaPry;
-
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import com.example.DakachaPry.security.models.UserPrincipal;
 
 @Controller
 public class ApplicationController {
 
     @GetMapping("/index")
-    public String goHome(Model model, UserPrincipal user) {
-        user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public String goHome() {
 
-        model.addAttribute("signed", user);
         return "index";
     }
 
