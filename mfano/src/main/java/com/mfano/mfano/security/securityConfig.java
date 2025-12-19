@@ -19,6 +19,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class securityConfig{
 
+    @SuppressWarnings("removal")
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // Customize your security configuration
@@ -42,6 +43,7 @@ public class securityConfig{
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @SuppressWarnings("deprecation")
     @Bean
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
