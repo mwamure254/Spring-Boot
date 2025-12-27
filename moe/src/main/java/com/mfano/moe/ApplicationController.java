@@ -1,54 +1,57 @@
 package com.mfano.moe;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class ApplicationController {
 
-    @GetMapping("/index")
-    public String goHome(){
-        return "index";
-    }
+  @GetMapping("/")
+  public String home() {
+    return "redirect:/dashboard";
+  }
 
-    @GetMapping("/hr")
-    public String hr(){
-        return "/hr/index";
-    }
+  // Error
+  @GetMapping("/error-page")
+  public String errorPage() {
+    return "security/error";
+  }
 
-    @GetMapping("/fleet")
-    public String fleet(){
-        return "/fleet/index";
-    }
+  @GetMapping("/director/dashboard")
+  public String directorDashboard() {
+    return "director/dashboard";
+  }
 
-    @GetMapping("/accounts")
-    public String accounts(){
-        return "/accounts/index";
-    }
+  @GetMapping("/hoi/dashboard")
+  public String hoiDashboard() {
+    return "hoi/dashboard";
+  }
 
-    @GetMapping("/payroll")
-    public String payroll(){
-        return "/payroll/index";
-    }
+  @GetMapping("/user/dashboard")
+  public String userDashboard() {
+    return "user/dashboard";
+  }
 
-    @GetMapping("/helpdesk")
-    public String helpdesk(){
-        return "/helpdesk/index";
-    }
+  @GetMapping("/settings")
+  public String settings(HttpServletRequest request, Model model) {
+    model.addAttribute("requestURI", request.getRequestURI());
+    return "security/settings";
+  }
 
-    @GetMapping("/parameters")
-    public String parameters(){
-        return "/parameters/index";
-    }
+  @GetMapping("/contact")
+  public String contact(HttpServletRequest request, Model model) {
+    model.addAttribute("requestURI", request.getRequestURI());
+    return "security/contact";
+  }
 
-    @GetMapping("/reports")
-    public String reports(){
-        return "/reports/index";
-    }
-
-    @GetMapping("/security")
-    public String security(){
-        return "/security/index";
-    }
-
+  @GetMapping("/faq")
+  public String FAQ(HttpServletRequest request, Model model) {
+    model.addAttribute("requestURI", request.getRequestURI());
+    return "security/faq";
+  }
 }

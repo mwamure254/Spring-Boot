@@ -12,7 +12,7 @@
 	<artifactId>moe</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>moe</name>
-	<description>Demo project for Spring Boot</description>
+	<description>MoE project seeks to bridge communication gap between the ministry and school heads</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -33,10 +33,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session-jdbc</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
