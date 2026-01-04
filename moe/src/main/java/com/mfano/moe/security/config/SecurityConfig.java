@@ -29,7 +29,7 @@ public class SecurityConfig {
         .requestMatchers("/hoi/**").hasRole("HOI")
         .requestMatchers("/user/**").hasRole("USER")
         .requestMatchers("/", "/register", "/login", "/verify", "/forgot", "/reset-password", "/resend",
-            "/error", "/profile", "/resources/**", "/css/**", "/js/**", "/vendor/**", "/img/**")
+            "/error", "/profile", "/css/**", "/js/**", "/vendor/**", "/img/**")
         .permitAll()
         .anyRequest().authenticated())
 

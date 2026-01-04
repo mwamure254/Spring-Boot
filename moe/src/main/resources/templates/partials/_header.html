@@ -9,25 +9,23 @@
 	<meta content="" name="keywords">
 	<th:block th:replace="${metas} ?: ~{}" />
 
-
 	<!-- Favicons -->
-	<link href="../img/favicon.png" rel="icon">
-	<link href="../img/apple-touch-icon.png" rel="apple-touch-icon">
+	<link th:href="@{/img/favicon.png}" rel="icon">
+	<link th:href="@{/img/apple-touch-icon.png}" rel="apple-touch-icon">
 
 	<!-- Vendor CSS Files -->
-	<link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link href="../vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-	<link href="../vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-	<link href="../vendor/quill/quill.snow.css" rel="stylesheet">
-	<link href="../vendor/quill/quill.bubble.css" rel="stylesheet">
-	<link href="../vendor/remixicon/remixicon.css" rel="stylesheet">
-	<link href="../vendor/simple-datatables/style.css" rel="stylesheet">
-	<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-
+	<link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+	<link th:href="@{/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
+	<link th:href="@{/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet">
+	<link th:href="@{/vendor/quill/quill.snow.css}" rel="stylesheet">
+	<link th:href="@{/vendor/quill/quill.bubble.css}" rel="stylesheet">
+	<link th:href="@{/vendor/remixicon/remixicon.css}" rel="stylesheet">
+	<link th:href="@{/vendor/simple-datatables/style.css}" rel="stylesheet">
+	<link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
 
 	<!-- Template Main CSS File -->
-	<link href="../css/style.css" rel="stylesheet">
-	<link href="../css/custom.css" rel="stylesheet">
+	<link th:href="@{/css/style.css}" rel="stylesheet">
+	<link th:href="@{/css/custom.css}" rel="stylesheet">
 	<th:block th:replace="${links} ?: ~{}" />
 
 </head><!-- End Head -->

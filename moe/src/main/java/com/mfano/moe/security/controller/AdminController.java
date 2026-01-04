@@ -10,6 +10,9 @@ import com.mfano.moe.security.service.AuditService;
 import com.mfano.moe.security.service.RoleService;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +23,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class AdminController {
 
     private final UserRepository userRepository;
@@ -59,6 +63,7 @@ public class AdminController {
     }
 
     // Enable/Disable user
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/toggle/{id}")
     public String toggleUser(@PathVariable Long id) {
         User user = userRepository.findById(id).orElse(null);
@@ -72,6 +77,7 @@ public class AdminController {
     }
 
     // Delete user
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id, Model model) {
         try {
@@ -86,6 +92,7 @@ public class AdminController {
     }
 
     // Change role
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/update-role/{id}")
     public String updateRole(@PathVariable Long id, @RequestParam String role) {
         User user = userRepository.findById(id).orElse(null);
@@ -118,6 +125,7 @@ public class AdminController {
         return redirect;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/manage-roles/{id}")
     public String manageRoles(@PathVariable Long id, Model model) {
         User user = userService.findById(id);
@@ -129,6 +137,7 @@ public class AdminController {
         return "admin/manage-roles";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/assign-role/{userId}/{roleId}")
     public String assignRole(@PathVariable Long userId, @PathVariable Long roleId) {
         adminService.assignRoleToUser(userId, roleId);
@@ -136,6 +145,7 @@ public class AdminController {
         return "redirect:/admin/manage-roles/{userId}";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/remove-role/{userId}/{roleId}")
     public String removeRole(@PathVariable Long userId, @PathVariable Long roleId) {
         adminService.removeRoleFromUser(userId, roleId);
