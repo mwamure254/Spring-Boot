@@ -54,4 +54,5 @@ public class ApplicationController {
     model.addAttribute("requestURI", request.getRequestURI());
     return "security/faq";
   }
+  
 }
