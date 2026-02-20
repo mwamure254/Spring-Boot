@@ -17,7 +17,7 @@ public class ApplicationController {
   }
 
   // Error
-  @GetMapping("/error-page")
+  @GetMapping("/error")
   public String errorPage() {
     return "security/error";
   }
@@ -50,9 +50,15 @@ public class ApplicationController {
   }
 
   @GetMapping("/faq")
-  public String FAQ(HttpServletRequest request, Model model) {
+  public String faq(HttpServletRequest request, Model model) {
     model.addAttribute("requestURI", request.getRequestURI());
     return "security/faq";
+  }
+
+  @GetMapping("/help")
+  public String help(HttpServletRequest request, Model model) {
+    model.addAttribute("requestURI", request.getRequestURI());
+    return "security/help";
   }
   
 }

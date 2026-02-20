@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{partials/_header :: common_header(~{::title/text()},~{::link},~{::meta})}">
+  <!-- Custom meta data for this template-->
+  <meta name="description" content="meo home page">
+  <meta name="author" content="mfano">
+  <!-- Custom title for this page-->
+  <title>MoE | Error</title>
+  <!-- Custom styles for this page-->
+</th:block>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <th:block th:insert="~{partials/_topbar}" />
+  <!-- =====End Header===== -->
+
+  <main>
+    <div class="container">
+
+      <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+        <h1>404!</h1>
+        <h2>An error occured. Try again later.</h2>
+        <a class="btn" href="/home">Back to Home Page</a>
+      </section>
+
+    </div>
+ 
+  </main><!-- End #main -->
+  <!-- =====footer===== -->
+  <th:block th:insert="~{partials/_footer}" />
+
+</body>
+
+</html>
