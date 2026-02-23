@@ -140,6 +140,16 @@ public class AdminController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/profile/{id}")
+    public String getProfile(@PathVariable Long id, Model model) {
+        User user = userService.findById(id);
+
+        model.addAttribute("user", user);
+
+        return "security/profile";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/assign-role/{userId}/{roleId}")
     public String assignRole(@PathVariable Long userId, @PathVariable Long roleId) {
         adminService.assignRoleToUser(userId, roleId);

@@ -38,28 +38,28 @@
 				<form class="user" th:action="@{/users/addNew}" method="post">
 					<div class="form-group row">
 						<div class="col-sm-6 mb-3 mb-sm-0">
-							<input type="text" class="form-control" id="exampleFirstName" placeholder="First Name" required>
+							<input type="text" class="form-control" id="exampleFirstName" placeholder="First Name" name="firstname" required>
 						</div>
 						<div class="col-sm-6">
-							<input type="text" class="form-control" id="exampleLastName" placeholder="Last Name" required>
+							<input type="text" class="form-control" id="exampleLastName" placeholder="Last Name" name="lastname" required>
 						</div>
 					</div>
 					<div class="form-group row">
 						<div class="col-sm-6 mb-3 mb-sm-0">
-							<input type="email" class="form-control" id="exampleInputEmail" placeholder="Email Address" required>
+							<input type="email" class="form-control" id="exampleInputEmail" placeholder="Email Address" name="username" required>
 						</div>
 						<div class="col-sm-6">
-							<input type="text" class="form-control" id="exampleAddress" placeholder="Address" required>
+							<input type="text" class="form-control" id="exampleAddress" placeholder="Address" name="address" required>
 						</div>
 					</div>
 					<div class="form-group row">
 						<div class="col-sm-6 mb-3 mb-sm-0">
 							<input type="password" class="form-control" id="exampleInputPassword"
-								placeholder="Password" required>
+								placeholder="Password" name="password" required>
 						</div>
 						<div class="col-sm-6">
 							<input type="password" class="form-control" id="exampleRepeatPassword"
-								placeholder="Repeat Password" required>
+								placeholder="Repeat Password" name="confirm" required>
 						</div>
 					</div>
 					<button class="btn btn-primary btn-block" type="submit">
