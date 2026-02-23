@@ -27,10 +27,6 @@ public class User {
 
   private boolean enabled = false;
 
-  private String username;
-  private String fin;
-  private String lan;
-
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
@@ -50,24 +46,12 @@ public class User {
     return email;
   }
 
+  public String getUsername() {
+    return email;
+  }
+
   public void setEmail(String email) {
     this.email = email.toLowerCase();
-  }
-
-  public String getFin(String fin) {
-    return fin;
-  }
-
-  public void setFin(String fin) {
-    this.fin = fin.toUpperCase();
-  }
-
-  public String getLan(String lan) {
-    return lan;
-  }
-
-  public void setLan(String lan) {
-    this.lan = lan.toUpperCase();
   }
 
   public String getPassword() {
@@ -92,14 +76,6 @@ public class User {
 
   public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username.toLowerCase();
   }
 
   public Set<Role> getRoles() {

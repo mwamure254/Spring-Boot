@@ -28,7 +28,8 @@ public class UserService {
     @Transactional
     public User registerUser(String email, String rawPassword, Set<Role> role) {
         if (userRepository.findByEmail(email) != null) {
-            throw new RuntimeException("Email already in use");
+            throw new RuntimeException("Email is already registered");
+            
         }
 
         User user = new User();
@@ -55,7 +56,7 @@ public class UserService {
         tokenRepository.save(vt);
         String link = appBaseUrl + "/verify?token=" + token;
         String subject = "Please verify your email";
-        String body = "Hi " + (user.getUsername() == null ? "" : user.getUsername()) + "\n\n"
+        String body = "Hi " + (user.getEmail() == null ? "" : user.getEmail()) + "\n\n"
                 + "Please click the link to verify your email:\n" + link + "\n\n"
                 + "This link will expire in 24 hours.\n\nThanks!";
         emailService.sendSimpleMessage(user.getEmail(), subject, body);
@@ -83,9 +84,6 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
 
     // Password reset flow
     public void createPasswordResetToken(String email) {
@@ -101,7 +99,7 @@ public class UserService {
         passwordResetTokenRepository.save(prt);
         String link = appBaseUrl + "/reset-password?token=" + token;
         String subject = "Password reset request";
-        String body = "Hi " + (user.getUsername() == null ? "" : user.getUsername()) + "\n\n"
+        String body = "Hi " + (user.getEmail() == null ? "" : user.getEmail()) + "\n\n"
                 + "Click the link to reset your password: \n" + link + "\n\n"
                 + "This link expires in 2 hours.\n\nIf you did not request this, ignore this email.";
         emailService.sendSimpleMessage(user.getEmail(), subject, body);

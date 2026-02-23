@@ -42,13 +42,13 @@
           <h5>Create New User</h5>
           <form th:action="@{/admin/create}" method="post" class="row g-2 d-flex">
             <div class="col-md-3">
-              <input type="text" class="form-control" name="username" placeholder="Username" required>
-            </div>
-            <div class="col-md-3">
               <input type="email" class="form-control" name="email" placeholder="Email" required>
             </div>
             <div class="col-md-2">
               <input type="password" class="form-control" name="password" placeholder="Password" required>
+            </div>
+            <div class="col-md-3">
+              <input type="password" class="form-control" name="confirm" placeholder="confirm password" required>
             </div>
             <div class="col-md-2">
               <select class="form-select" name="role" required>
@@ -67,8 +67,7 @@
         <thead class="table-dark">
           <tr>
             <th>#</th>
-            <th>Name</th>
-            <th>Email</th>
+            <th>User</th>
             <th>Role</th>
             <th>Enabled</th>
             <th>Actions</th>
@@ -77,10 +76,9 @@
         <tbody>
           <tr th:each="u : ${users}">
             <td th:text="${u.id}"></td>
-            <td th:text="${u.username}"></td>
             <td th:text="${u.email}"></td>
             <td>
-              <a class="btn btn-success" th:href="@{'/admin/manage-roles/' + ${u.id}}">manage</a>
+              <a class="btn btn-sm btn-success" th:href="@{'/admin/manage-roles/' + ${u.id}}">manage</a>
             </td>
             <td>
               <span th:text="${u.enabled} ? 'Yes' : 'No'"></span>
@@ -93,7 +91,7 @@
                 <a th:href="@{'/admin/resend/' + ${u.id}}" class="btn btn-sm btn-info">Resend</a>
 
                 <form th:action="@{'/admin/reset-password/' + ${u.id}}" method="post" class="d-inline-flex">
-                  <input type="password" name="newPassword" placeholder="New Pass"
+                  <input type="password" name="newPassword" placeholder="New Password"
                     class="form-control form-control-sm d-inline w-auto" required>
                   <button class="btn btn-sm btn-secondary" type="submit">Reset</button>
                 </form>

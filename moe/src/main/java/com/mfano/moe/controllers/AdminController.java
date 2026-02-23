@@ -1,11 +1,11 @@
-package com.mfano.moe.security.controller;
+package com.mfano.moe.controllers;
 
 import com.mfano.moe.security.config.UserDto;
 import com.mfano.moe.security.model.User;
 import com.mfano.moe.security.repository.RoleRepository;
 import com.mfano.moe.security.repository.UserRepository;
 import com.mfano.moe.security.service.UserService;
-import com.mfano.moe.security.service.AdminService;
+import com.mfano.moe.services.AdminService;
 import com.mfano.moe.security.service.AuditService;
 import com.mfano.moe.security.service.RoleService;
 
@@ -43,6 +43,8 @@ public class AdminController {
         model.addAttribute("users", users);
         model.addAttribute("roles", roles.findAll());
         model.addAttribute("auditEntries", auditService.findAll());
+
+        model.addAttribute("message", "login successsful");
         return "admin/dashboard";
     }
 
@@ -152,5 +154,5 @@ public class AdminController {
             auditService.record("UPDATE_ROLE", "admin", "Revoked role id=" + roleId + " from user id=" + userId);
         return "redirect:/admin/manage-roles/{userId}";
     }
-
+    
 }

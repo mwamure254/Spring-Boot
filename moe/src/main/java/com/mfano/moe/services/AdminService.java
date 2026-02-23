@@ -1,4 +1,4 @@
-package com.mfano.moe.security.service;
+package com.mfano.moe.services;
 
 import com.mfano.moe.security.model.Role;
 import com.mfano.moe.security.model.User;

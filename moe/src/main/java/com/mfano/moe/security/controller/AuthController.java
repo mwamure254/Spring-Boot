@@ -134,9 +134,6 @@ public class AuthController {
         // Add user info to model (for Thymeleaf dashboard pages)
         model.addAttribute("id", u.getId());
         model.addAttribute("username", u.getUsername());
-        model.addAttribute("email", u.getEmail());
-        model.addAttribute("firstname", u.getFin());
-        model.addAttribute("lastname", u.getLan());
         model.addAttribute("roles", u.getRoles());
 
         model.addAttribute("requestURI", request.getRequestURI());

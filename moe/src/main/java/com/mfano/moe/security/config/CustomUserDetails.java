@@ -58,18 +58,6 @@ public class CustomUserDetails implements UserDetails {
         return user.isEnabled();
     }
 
-    public String getEmail() {
-        return user.getEmail();
-    }
-
-    public String getFin() {
-        return user.getFin();
-    }
-
-    public String getLan() {
-        return user.getLan();
-    }
-
     public Long getId() { return user.getId(); }
     public Set<String> getRoles() { return user.getRoles().stream().map(r->r.getName()).collect(Collectors.toSet()); }
     
