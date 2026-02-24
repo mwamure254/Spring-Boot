@@ -1,6 +1,7 @@
 package com.mfano.moe.security.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,9 @@ public class RoleService {
 
     public Set<Role> getUserRoles(User user) {
         return user.getRoles();
+    }
+
+    public Optional<Role> findByName(String name) {
+        return roleRepository.findByName(name);
     }
 }

@@ -35,27 +35,27 @@ public class AdminInializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        List<String> defaultRoles = List.of("ADMIN","DIRECTOR","HOI","USER");
-        
+        List<String> defaultRoles = List.of("ADMIN", "DIRECTOR", "HOI", "USER");
+
         for (String r : defaultRoles) {
             if (roleRepo.findByName(r).isEmpty()) {
                 Role role = new Role();
                 role.setName(r);
                 roleRepo.save(role);
-                
+
             }
         }
 
         if (userRepository.findByEmail(adminEmail) == null) {
             User admin = new User();
-            
+
             admin.setEmail(adminEmail);
             admin.setPassword(passwordEncoder.encode(adminPassword));
             admin.setEnabled(true);
             admin.setRoles(Set.of(roleRepo.findByName("ADMIN").get()));
-            
+
             userRepository.save(admin);
-        } 
+        }
     }
 
 }

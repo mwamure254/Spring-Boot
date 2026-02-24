@@ -1,23 +1,8 @@
 package com.mfano.moe.security.config;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import com.mfano.moe.security.model.Role;
-
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-
 public class UserDto {
   private String email;
   private String password;
-  private String fullName;
-  
-  @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private Set<Role> roles = new HashSet<>();
+  private String role;
 
   // getters and setters
   public String getEmail() {
@@ -36,19 +21,11 @@ public class UserDto {
     this.password = password;
   }
 
-  public String getFullName() {
-    return fullName;
+  public String getRole() {
+    return role;
   }
 
-  public void setFullName(String fullName) {
-    this.fullName = fullName;
-  }
-
-  public Set<Role> getRoles() {
-    return roles;
-  }
-
-  public void setRoles(Set<Role> roles) {
-    this.roles = roles;
+  public void setRole(String role) {
+    this.role = role;
   }
 }

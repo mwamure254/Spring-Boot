@@ -1,12 +1,14 @@
 package com.mfano.moe.controllers;
 
 import com.mfano.moe.security.config.UserDto;
+import com.mfano.moe.security.model.Profile;
 import com.mfano.moe.security.model.User;
 import com.mfano.moe.security.repository.RoleRepository;
 import com.mfano.moe.security.repository.UserRepository;
 import com.mfano.moe.security.service.UserService;
 import com.mfano.moe.services.AdminService;
 import com.mfano.moe.security.service.AuditService;
+import com.mfano.moe.security.service.ProfileService;
 import com.mfano.moe.security.service.RoleService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,8 @@ import java.util.List;
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 @EnableMethodSecurity
+
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
     private final UserRepository userRepository;
@@ -33,7 +37,7 @@ public class AdminController {
     private final PasswordEncoder passwordEncoder;
     private final AuditService auditService;
     private final AdminService adminService;
-    
+    private final ProfileService profileService;
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
@@ -55,7 +59,7 @@ public class AdminController {
     public String createUser(@ModelAttribute UserDto userDto,
             Model model) {
         try {
-            userService.registerUser(userDto.getEmail(), userDto.getPassword(), userDto.getRoles());
+            userService.registerUser(userDto.getEmail(), userDto.getPassword(), userDto.getRole());
             model.addAttribute("message", "User created and verification email sent.");
             auditService.record("CREATE_USER", "admin", "Created user: " + userDto.getEmail());
         } catch (Exception e) {
@@ -65,7 +69,6 @@ public class AdminController {
     }
 
     // Enable/Disable user
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/toggle/{id}")
     public String toggleUser(@PathVariable Long id) {
         User user = userRepository.findById(id).orElse(null);
@@ -79,7 +82,6 @@ public class AdminController {
     }
 
     // Delete user
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id, Model model) {
         try {
@@ -94,7 +96,6 @@ public class AdminController {
     }
 
     // Change role
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/update-role/{id}")
     public String updateRole(@PathVariable Long id, @RequestParam String role) {
         User user = userRepository.findById(id).orElse(null);
@@ -127,7 +128,6 @@ public class AdminController {
         return redirect;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/manage-roles/{id}")
     public String manageRoles(@PathVariable Long id, Model model) {
         User user = userService.findById(id);
@@ -139,30 +139,30 @@ public class AdminController {
         return "admin/manage-roles";
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/profile/{id}")
-    public String getProfile(@PathVariable Long id, Model model) {
-        User user = userService.findById(id);
-
-        model.addAttribute("user", user);
-
-        return "security/profile";
+    @GetMapping("/profile/{userid}")
+    public String getProfile(@PathVariable Long userid, Model model) {
+        Profile profile = profileService.findByUserId(userid);
+        if (profile == null) {
+            model.addAttribute("error", "Profile not set for user");
+            return "/";
+        } else {
+            model.addAttribute("profile", profile);
+            return "security/profile";
+        }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/assign-role/{userId}/{roleId}")
     public String assignRole(@PathVariable Long userId, @PathVariable Long roleId) {
         adminService.assignRoleToUser(userId, roleId);
-            auditService.record("UPDATE_ROLE", "admin", "Assigned user id=" + userId + " role id=" + roleId);
+        auditService.record("UPDATE_ROLE", "admin", "Assigned user id=" + userId + " role id=" + roleId);
         return "redirect:/admin/manage-roles/{userId}";
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/remove-role/{userId}/{roleId}")
     public String removeRole(@PathVariable Long userId, @PathVariable Long roleId) {
         adminService.removeRoleFromUser(userId, roleId);
-            auditService.record("UPDATE_ROLE", "admin", "Revoked role id=" + roleId + " from user id=" + userId);
+        auditService.record("UPDATE_ROLE", "admin", "Revoked role id=" + roleId + " from user id=" + userId);
         return "redirect:/admin/manage-roles/{userId}";
     }
-    
+
 }

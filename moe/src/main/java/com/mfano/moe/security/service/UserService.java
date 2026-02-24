@@ -16,6 +16,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
+    private final RoleService roleService;
     private final UserRepository userRepository;
     private final VerificationTokenRepository tokenRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
@@ -26,10 +28,10 @@ public class UserService {
     private String appBaseUrl;
 
     @Transactional
-    public User registerUser(String email, String rawPassword, Set<Role> role) {
+    public User registerUser(String email, String rawPassword, String role) {
         if (userRepository.findByEmail(email) != null) {
             throw new RuntimeException("Email is already registered");
-            
+
         }
 
         User user = new User();
@@ -42,7 +44,8 @@ public class UserService {
 
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setRoles(role);
+        user.setRoles(Set.of(roleService.findByName(role).get()));
+        user.setEnabled(true);
 
         userRepository.save(user);
         createAndSendToken(user);
@@ -76,13 +79,24 @@ public class UserService {
         tokenRepository.delete(vt);
         return "valid";
     }
+
     // Get User By Id
-	public User findById(Long id) {
-		return userRepository.findById(id).orElse(null);
-	}
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    // Update User
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
+    // Delete User
+    public void delete(Long id) {
+        userRepository.deleteById(id);
     }
 
     // Password reset flow

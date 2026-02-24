@@ -52,7 +52,7 @@
             </div>
             <div class="col-md-2">
               <select class="form-select" name="role" required>
-                <option th:each="r : ${roles}" th:text="${r.name}" th:value="${r}">USER</option>
+                <option th:each="r : ${roles}" th:text="${r.name}" th:value="${r.name}">USER</option>
               </select>
             </div>
             <div class="col-md-2">

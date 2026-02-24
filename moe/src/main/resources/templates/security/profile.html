@@ -43,13 +43,17 @@
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
               <img th:src="@{/img/profile-img.jpg}" alt="Profile" class="rounded-circle">
-              <h2>Kevin Anderson</h2>
-              <h3>Web Designer</h3>
+              <h2 th:text="${profile.fin + ' ' + profile.lan}">First Last</h2>
+              <h3 th:text="${profile.designation}">Web Designer</h3>
               <div class="social-links mt-2">
-                <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-                <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                <a th:href="${#strings.isEmpty(profile.twitter)} ? '#' : ${profile.twitter}" class="twitter"><i
+                    class="bi bi-twitter"></i></a>
+                <a th:href="${#strings.isEmpty(profile.facebook)} ? '#' : ${profile.facebook}" class="facebook"><i
+                    class="bi bi-facebook"></i></a>
+                <a th:href="${#strings.isEmpty(profile.instagram)} ? '#' : ${profile.instagram}" class="instagram"><i
+                    class="bi bi-instagram"></i></a>
+                <a th:href="${#strings.isEmpty(profile.linkedin)} ? '#' : ${profile.linkedin}" class="linkedin"><i
+                    class="bi bi-linkedin"></i></a>
               </div>
             </div>
           </div>
@@ -82,7 +86,8 @@
 
                 <div class="tab-pane fade show active profile-overview" id="profile-overview">
                   <h5 class="card-title">About</h5>
-                  <p class="small fst-italic">Sunt est soluta temporibus accusantium neque nam maiores cumque
+                  <p class="small fst-italic" th:text="${profile.about}">Sunt est soluta temporibus accusantium neque
+                    nam maiores cumque
                     temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem
                     eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</p>
 
@@ -90,18 +95,28 @@
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">First Name</div>
-                    <div class="col-lg-9 col-md-8">Kevin</div>
+                    <div class="col-lg-9 col-md-8" th:text="${profile.fin}">Kevin</div>
                   </div>
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Other Name</div>
-                    <div class="col-lg-9 col-md-8">Anderson</div>
+                    <div class="col-lg-9 col-md-8" th:text="${profile.other}">Anderson</div>
                   </div>
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Last Name</div>
-                    <div class="col-lg-9 col-md-8">Harry</div>
+                    <div class="col-lg-9 col-md-8" th:text="${profile.lan}">Harry</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">IDN</div>
+                    <div class="col-lg-9 col-md-8" th:text="${profile.IDN}">3*****5</div>
                   </div>
 
                   <hr class="fas fa-divide">
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Service Number</div>
+                    <div class="col-lg-9 col-md-8" th:text="${profile.SN}">23**12</div>
+                  </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Institution</div>
@@ -110,29 +125,30 @@
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Designation</div>
-                    <div class="col-lg-9 col-md-8">Web Designer</div>
+                    <div class="col-lg-9 col-md-8" th:text="${profile.designation}">Web Designer</div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">County</div>
-                    <div class="col-lg-9 col-md-8">Kilifi</div>
+                    <div class="col-lg-9 col-md-8" th:text="${profile.county}">Kilifi</div>
                   </div>
 
                   <hr class="fas fa-divide">
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Address</div>
-                    <div class="col-lg-9 col-md-8">A108 Adam Street, New York, NY 535022</div>
+                    <div class="col-lg-9 col-md-8" th:text="${profile.address}">A108 Adam Street, New York, NY 535022
+                    </div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Phone</div>
-                    <div class="col-lg-9 col-md-8">(+254) 712 *** 130</div>
+                    <div class="col-lg-9 col-md-8" th:text="${profile.phone}">(+254) 712 *** 130</div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Email</div>
-                    <div class="col-lg-9 col-md-8">name@example.com</div>
+                    <div class="col-lg-9 col-md-8" th:text="${username}">name@example.com</div>
                   </div>
 
                 </div>
@@ -140,9 +156,9 @@
                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
                   <!-- Profile Edit Form -->
-                  <form>
+                  <form th:action="@{/profile/update}" method="post" th:object="${profile}">
                     <div class="row mb-3">
-                      <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Image</label>
+                      <label for="Image" class="col-md-4 col-lg-3 col-form-label">Image</label>
                       <div class="col-md-8 col-lg-9">
                         <!--<img src="../img/profile-img.jpg" alt="Profile">-->
                         <div class="pt-2">
@@ -157,77 +173,91 @@
                     <div class="row mb-3">
                       <label for="about" class="col-md-4 col-lg-3 col-form-label">About</label>
                       <div class="col-md-8 col-lg-9">
-                        <textarea name="about" class="form-control" id="about"
+                        <textarea th:field="*{about}" class="form-control" id="about"
                           style="height: 100px">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</textarea>
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">First Name</label>
+                      <label for="fin" class="col-md-4 col-lg-3 col-form-label">First Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName" value="Kevin">
+                        <input th:field="*{fin}" type="text" class="form-control" id="fin">
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Other Name</label>
+                      <label for="lan" class="col-md-4 col-lg-3 col-form-label">Other Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName" value="Anderson">
+                        <input th:field="*{other}" type="text" class="form-control" id="lan">
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
+                      <label for="other" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName" value="Harry">
+                        <input th:field="*{lan}" type="text" class="form-control" id="other">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="IDN" class="col-md-4 col-lg-3 col-form-label">IDN</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input th:field="*{IDN}" type="text" class="form-control" id="IDN">
                       </div>
                     </div>
 
                     <hr class="fas fa-divide">
 
                     <div class="row mb-3">
-                      <label for="company" class="col-md-4 col-lg-3 col-form-label">Institution</label>
+                      <label for="serviceNumber" class="col-md-4 col-lg-3 col-form-label">Service Number</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="company" type="text" class="form-control" id="company"
+                        <input th:field="*{SN}" type="text" class="form-control" id="serviceNumber">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="institutionid" class="col-md-4 col-lg-3 col-form-label">Institution</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="institutionid" type="text" class="form-control" id="institutionid"
                           value="Lueilwitz, Wisoky and Leuschke">
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="Job" class="col-md-4 col-lg-3 col-form-label">Designation</label>
+                      <label for="designation" class="col-md-4 col-lg-3 col-form-label">Designation</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="job" type="text" class="form-control" id="Job" value="Web Designer">
+                        <input th:field="*{designation}" type="text" class="form-control" id="designation">
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="Country" class="col-md-4 col-lg-3 col-form-label">County</label>
+                      <label for="country" class="col-md-4 col-lg-3 col-form-label">County</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="country" type="text" class="form-control" id="Country" value="Kilifi">
+                        <input th:field="*{county}" type="text" class="form-control" id="country">
                       </div>
                     </div>
 
                     <hr class="fas fa-divide">
 
                     <div class="row mb-3">
-                      <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
+                      <label for="address" class="col-md-4 col-lg-3 col-form-label">Address</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="address" type="text" class="form-control" id="Address"
-                          value="A108 Adam Street, New York, NY 535022">
+                        <input th:field="*{address}" type="text" class="form-control" id="address">
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="phone" type="text" class="form-control" id="Phone" value="(+254) 712 ** 130">
+                        <input th:field="*{phone}" type="text" class="form-control" id="Phone">
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="email" type="email" class="form-control" id="Email" value="k.anderson@example.com">
+                        <input name="email" type="email" class="form-control" id="Email" th:value="${username}"
+                          readonly>
                       </div>
                     </div>
 
@@ -236,32 +266,28 @@
                     <div class="row mb-3">
                       <label for="Twitter" class="col-md-4 col-lg-3 col-form-label">Twitter</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="twitter" type="text" class="form-control" id="Twitter"
-                          value="https://twitter.com/#">
+                        <input th:field="*{twitter}" type="text" class="form-control" id="Twitter">
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Facebook" class="col-md-4 col-lg-3 col-form-label">Facebook</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="facebook" type="text" class="form-control" id="Facebook"
-                          value="https://facebook.com/#">
+                        <input th:field="*{facebook}" type="text" class="form-control" id="Facebook">
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Instagram" class="col-md-4 col-lg-3 col-form-label">Instagram</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="instagram" type="text" class="form-control" id="Instagram"
-                          value="https://instagram.com/#">
+                        <input th:field="*{instagram}" type="text" class="form-control" id="Instagram">
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Linkedin" class="col-md-4 col-lg-3 col-form-label">Linkedin</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="linkedin" type="text" class="form-control" id="Linkedin"
-                          value="https://linkedin.com/#">
+                        <input th:field="*{linkedin}" type="text" class="form-control" id="Linkedin">
                       </div>
                     </div>
 
@@ -275,26 +301,37 @@
 
                 <div class="tab-pane fade pt-3" id="profile-change-password">
                   <!-- Change Password Form -->
-                  <form>
+                  <form th:action="@{/reset}" method="post">
 
                     <div class="row mb-3">
-                      <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="password" type="password" class="form-control" id="currentPassword">
+                      <div class="col-md-8 col-lg-9 input-group">
+                        <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
+                        <input th:value="${password}" type="password" class="form-control" id="currentPassword"
+                          readonly>
+                        <button class="input-group-text btn btn-outline-secondary" type="button"
+                          onclick="togglePassword('currentPassword', this)">
+                          <i class="bi bi-eye"></i>
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New Password</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="newpassword" type="password" class="form-control" id="newPassword">
+                      <div class="col-md-8 col-lg-9 input-group">
+                        <label for="Np" class="col-md-4 col-lg-3 col-form-label">New Password</label>
+                        <input name="NP" type="password" class="form-control" id="Np" required>
+                        <button class="input-group-text btn btn-outline-secondary" type="button"
+                          onclick="togglePassword('Np', this)">
+                          <i class="bi bi-eye"></i>
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Confirm New Password</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="renewpassword" type="password" class="form-control" id="renewPassword">
+                      <div class="col-md-8 col-lg-9 input-group">
+                        <label for="Password" class="col-md-4 col-lg-3 col-form-label">Confirm Password</label>
+                        <input name="password" type="password" class="form-control" id="Password" required>
+                        <button class="input-group-text btn btn-outline-secondary" type="button"
+                          onclick="togglePassword('Password', this)">
+                          <i class="bi bi-eye"></i>
+                        </button>
                       </div>
                     </div>
 

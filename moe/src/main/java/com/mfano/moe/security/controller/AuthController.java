@@ -2,11 +2,13 @@ package com.mfano.moe.security.controller;
 
 import com.mfano.moe.security.config.CustomUserDetails;
 import com.mfano.moe.security.config.UserDto;
+import com.mfano.moe.security.model.Profile;
 import com.mfano.moe.security.model.User;
-import com.mfano.moe.security.repository.RoleRepository;
+import com.mfano.moe.security.service.AuditService;
+import com.mfano.moe.security.service.ProfileService;
+import com.mfano.moe.security.service.RoleService;
 import com.mfano.moe.security.service.UserService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Set;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +29,14 @@ public class AuthController {
     @Autowired
     private final UserService userService;
     @Autowired
-    private final RoleRepository roleRepo;
+    private final ProfileService profileService;
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private final RoleService roleService;
+    @Autowired
+    private final AuditService auditService;
+
     private String msg = "security/message";
     private final String login = "redirect:/login?error";
 
@@ -39,11 +49,12 @@ public class AuthController {
         }
 
         Object principal = auth.getPrincipal();
-        if (!(principal instanceof CustomUserDetails u)) {
+        if (!(principal instanceof CustomUserDetails)) {
             model.addAttribute("error", "invalid user");
             return login;
         }
 
+        CustomUserDetails u = (CustomUserDetails) principal;
         // Check if user is enabled
         if (!u.isEnabled()) {
             model.addAttribute("error", "user not verified");
@@ -80,8 +91,7 @@ public class AuthController {
 
     @GetMapping("/register")
     public String registerForm(Model model) {
-
-        model.addAttribute("roles", roleRepo.findAll());
+        model.addAttribute("roles", roleService.findAll());
         model.addAttribute("userDto", new UserDto());
         return "security/register";
     }
@@ -89,7 +99,7 @@ public class AuthController {
     @PostMapping("/register")
     public String registerSubmit(@ModelAttribute UserDto userDto, Model model) {
         try {
-            userService.registerUser(userDto.getEmail(), userDto.getPassword(), userDto.getRoles());
+            userService.registerUser(userDto.getEmail(), userDto.getPassword(), userDto.getRole());
             model.addAttribute("message", "Registration successful. Check your email for verification link.");
             return msg;
         } catch (Exception e) {
@@ -107,7 +117,7 @@ public class AuthController {
 
         // If user is already logged in → redirect to dashboard
         if (authentication != null && authentication.isAuthenticated()
-                && authentication instanceof CustomUserDetails) {
+                && authentication.getPrincipal() instanceof CustomUserDetails) {
             return "redirect:/dashboard";
         }
 
@@ -126,21 +136,61 @@ public class AuthController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
-    public String userProfile(Authentication auth, HttpServletRequest request, Model model) {
-        if (!(auth.getPrincipal() instanceof CustomUserDetails u)) {
+    public String userProfile(Authentication auth, Model model) {
+        if (!(auth.getPrincipal() instanceof CustomUserDetails)) {
             model.addAttribute("error", "user not authenticated");
             return "redirect:/login";
+        } else {
+            CustomUserDetails u = (CustomUserDetails) auth.getPrincipal();
+            Profile profile = profileService.findByUserId(u.getId());
+
+            if (profile == null) {
+                profile = new Profile();
+                profile.setUserid(u.getId());
+                profileService.save(profile);
+            }
+            // Add user info to model (for Thymeleaf dashboard pages)
+            model.addAttribute("id", u.getId());
+            model.addAttribute("username", u.getUsername());
+            model.addAttribute("password", u.getPassword());
+            model.addAttribute("roles", u.getRoles());
+
+            model.addAttribute("message", "Welcome to your profile");
+            model.addAttribute("profile", profileService.findByUserId(u.getId()));
+
+            return "security/profile";
         }
-        // Add user info to model (for Thymeleaf dashboard pages)
-        model.addAttribute("id", u.getId());
-        model.addAttribute("username", u.getUsername());
-        model.addAttribute("roles", u.getRoles());
-
-        model.addAttribute("requestURI", request.getRequestURI());
-
-        return "security/profile";
     }
 
+    // profile/update @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/profile/update")
+    public String userProfileUpdate(Authentication auth, @ModelAttribute("profile") Profile profile) {
+
+        CustomUserDetails u = (CustomUserDetails) auth.getPrincipal();
+        Profile existing = profileService.findByUserId(u.getId());
+
+        // update only editable fields
+        existing.setFin(profile.getFin());
+        existing.setLan(profile.getLan());
+        existing.setOther(profile.getOther());
+        existing.setAbout(profile.getAbout());
+        existing.setIDN(profile.getIDN());
+        existing.setSN(profile.getSN());
+        existing.setDesignation(profile.getDesignation());
+        existing.setCounty(profile.getCounty());
+        existing.setAddress(profile.getAddress());
+        existing.setPhone(profile.getPhone());
+        existing.setTwitter(profile.getTwitter());
+        existing.setFacebook(profile.getFacebook());
+        existing.setInstagram(profile.getInstagram());
+        existing.setLinkedin(profile.getLinkedin());
+
+        profileService.save(existing);
+        return "redirect:/profile";
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/logout")
     public String logout(Model model) {
         model.addAttribute("message", "You have been logged out successfully");
@@ -226,5 +276,29 @@ public class AuthController {
         userService.changePassword(optUser.get(), password);
         model.addAttribute("message", "Password changed. You can now login.");
         return msg;
+    }
+
+    // Reset user password
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/reset")
+    public String resetPassword(Authentication auth, @RequestParam String password, @RequestParam String NP,
+            Model model) {
+        CustomUserDetails u = (CustomUserDetails) auth.getPrincipal();
+        User user = userService.findById(u.getId());
+        if (!NP.equals(password) || NP.isEmpty() || password.isEmpty()) {
+            model.addAttribute("error", "Passwords do not match");
+            return "redirect:/profile";
+        }
+
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode(password));
+            userService.save(user);
+            auditService.record("RESET_PASSWORD", "user id=" + user.getId(), "Reset password");
+            model.addAttribute("message", "Password reset successful");
+            return "redirect:/profile";
+        } else {
+            model.addAttribute("error", "Failed to reset password");
+            return "redirect:/profile";
+        }
     }
 }
