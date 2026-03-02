@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{partials/_header :: common_header(~{::title/text()},~{::link},~{::meta})}">
+  <!-- Custom meta data for this template-->
+  <meta name="description" content="meo home page">
+  <meta name="author" content="mfano">
+  <!-- Custom title for this page-->
+  <title>MoE | Director</title>
+  <!-- Custom styles for this page-->
+</th:block>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <th:block th:insert="~{partials/_topbar}" />
+  <!-- =====End Header===== -->
+
+  <!-- ======= Sidebar ======= -->
+  <th:block th:insert="~{partials/_sidebar}" />
+  <!-- =====End Sidebar=====-->
+
+  <!-- ======Main===== -->
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home"><i class="bi bi-house-door"></i>
+              <span>Home</span></a></li>
+          <li class="breadcrumb-item active"><i class="bi bi-record-fill"></i>Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+          <div class="row">
+
+            <!-- Schools Card -->
+            <div class="col-xxl-4 col-md-6" id="Schools">
+              <div class="card info-card sales-card">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li th:each="lev : ${levels}"><a class="dropdown-item" href="#Schools" th:text="${lev.name}"></a>
+                    </li>
+
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Schools <span>| ECDE</span> </h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-bricks"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>145</h6>
+                      <span class="text-success small pt-1 fw-bold">ecde</span> <span
+                        class="text-muted small pt-2 ps-1">schools</span>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Schools Card -->
+
+            <!-- Projects Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card revenue-card">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Term</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Projects <span>| This Month</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-stack"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>500</h6>
+                      <span class="text-success small pt-1 fw-bold">projects</span> <span
+                        class="text-muted small pt-2 ps-1">done</span>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Projects Card -->
+
+            <!-- Learners Card -->
+            <div class="col-xxl-4 col-xl-12" id="Learners">
+
+              <div class="card info-card customers-card">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li th:each="lev : ${levels}"><a class="dropdown-item" href="#Learners" th:text="${lev.name}"></a>
+                    </li>
+
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Learners <span>| ECDE</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>1200</h6>
+                      <span class="text-danger small pt-1 fw-bold">learners</span> <span
+                        class="text-muted small pt-2 ps-1">enrolled</span>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div><!-- End Customers Card -->
+
+            <!-- Intitutions Section -->
+            <div class="col-12" id="Institutions">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="filter">
+                  <a href="#"><i class="bi bi-file-arrow-down"></i></a>
+                  <span>|<a data-bs-toggle="modal" data-bs-target="#school"> Add School</a>|</span>
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li th:each="lev : ${levels}"><a class="dropdown-item" href="#Schools" th:text="${lev.name}"></a>
+                    </li>
+
+                  </ul>
+                </div>
+
+                <div class="card-body" th:if="${institutions != null}">
+                  <h5 class="card-title">Institutions <span>| ECDE</span></h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Level</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:each="ins, con : ${institutions}">
+                        <th scope="row" th:text="${con.count}"><a href="#"></a></th>
+                        <td><a href="#" class="text-primary" th:text="${ins.name}"></a></td>
+                        <td th:text="${ins.ilevelid}"></td>
+                        <td th:text="${ins.icategoryid}"></td>
+                        <td th:text="${ins.istatusid}"><span class="badge bg-success">Active</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Intitutions Selection -->
+
+            <!-- Top Selling -->
+            <div class="col-12">
+              <div class="card top-selling overflow-auto">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body pb-0">
+                  <h5 class="card-title">Top Selling <span>| Today</span></h5>
+
+                  <table class="table table-borderless">
+                    <thead>
+                      <tr>
+                        <th scope="col">Preview</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Sold</th>
+                        <th scope="col">Revenue</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><a href="#"><img src="../img/product-1.jpg" alt=""></a></th>
+                        <td><a href="#" class="text-primary fw-bold">Ut inventore ipsa voluptas nulla</a></td>
+                        <td>$64</td>
+                        <td class="fw-bold">124</td>
+                        <td>$5,828</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><a href="#"><img src="../img/product-2.jpg" alt=""></a></th>
+                        <td><a href="#" class="text-primary fw-bold">Exercitationem similique doloremque</a></td>
+                        <td>$46</td>
+                        <td class="fw-bold">98</td>
+                        <td>$4,508</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><a href="#"><img src="../img/product-3.jpg" alt=""></a></th>
+                        <td><a href="#" class="text-primary fw-bold">Doloribus nisi exercitationem</a></td>
+                        <td>$59</td>
+                        <td class="fw-bold">74</td>
+                        <td>$4,366</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><a href="#"><img src="../img/product-4.jpg" alt=""></a></th>
+                        <td><a href="#" class="text-primary fw-bold">Officiis quaerat sint rerum error</a></td>
+                        <td>$32</td>
+                        <td class="fw-bold">63</td>
+                        <td>$2,016</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><a href="#"><img src="../img/product-5.jpg" alt=""></a></th>
+                        <td><a href="#" class="text-primary fw-bold">Sit unde debitis delectus repellendus</a></td>
+                        <td>$79</td>
+                        <td class="fw-bold">41</td>
+                        <td>$3,239</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Top Selling -->
+
+          </div>
+        </div><!-- End Left side columns -->
+
+        <!-- Right side columns -->
+        <div class="col-lg-4">
+
+          <!-- Schools Card -->
+          <div class="card info-card revenue-card" id="Activities">
+
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#Activities">Today</a></li>
+                <li><a class="dropdown-item" href="#Activities">This Month</a></li>
+                <li><a class="dropdown-item" href="#Activities">This Year</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <h5 class="card-title">Activities <span>| Today</span> </h5>
+
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-arrow-repeat"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>145</h6>
+                  <span class="text-success small pt-1 fw-bold">activities</span> <span
+                    class="text-muted small pt-2 ps-1">happened</span>
+
+                </div>
+              </div>
+            </div>
+          </div><!-- End Activities Card -->
+
+          <!-- Recent Activity -->
+          <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <h5 class="card-title">Recent Activity <span>| Today</span></h5>
+
+              <div class="activity">
+
+                <div class="activity-item d-flex">
+                  <div class="activite-label">32 min</div>
+                  <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
+                  <div class="activity-content">
+                    Quia quae rerum <a href="#" class="fw-bold text-dark">explicabo officiis</a> beatae
+                  </div>
+                </div><!-- End activity item-->
+
+                <div class="activity-item d-flex">
+                  <div class="activite-label">56 min</div>
+                  <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
+                  <div class="activity-content">
+                    Voluptatem blanditiis blanditiis eveniet
+                  </div>
+                </div><!-- End activity item-->
+
+                <div class="activity-item d-flex">
+                  <div class="activite-label">2 hrs</div>
+                  <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
+                  <div class="activity-content">
+                    Voluptates corrupti molestias voluptatem
+                  </div>
+                </div><!-- End activity item-->
+
+                <div class="activity-item d-flex">
+                  <div class="activite-label">1 day</div>
+                  <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
+                  <div class="activity-content">
+                    Tempore autem saepe <a href="#" class="fw-bold text-dark">occaecati voluptatem</a> tempore
+                  </div>
+                </div><!-- End activity item-->
+
+                <div class="activity-item d-flex">
+                  <div class="activite-label">2 days</div>
+                  <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
+                  <div class="activity-content">
+                    Est sit eum reiciendis exercitationem
+                  </div>
+                </div><!-- End activity item-->
+
+                <div class="activity-item d-flex">
+                  <div class="activite-label">4 weeks</div>
+                  <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
+                  <div class="activity-content">
+                    Dicta dolorem harum nulla eius. Ut quidem quidem sit quas
+                  </div>
+                </div><!-- End activity item-->
+
+              </div>
+
+            </div>
+          </div><!-- End Recent Activity -->
+
+          <!-- Institution Graph -->
+          <div class="card">
+
+            <div class="card-body pb-0">
+              <h5 class="card-title">Institution Graph
+
+                <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+
+                <script>
+                  document.addEventListener("DOMContentLoaded", () => {
+                    echarts.init(document.querySelector("#trafficChart")).setOption({
+                      tooltip: {
+                        trigger: 'item'
+                      },
+                      legend: {
+                        top: '0%',
+                        left: 'center'
+                      },
+                      series: [{
+                        name: 'School Level',
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                          show: false,
+                          position: 'center'
+                        },
+                        emphasis: {
+                          label: {
+                            show: true,
+                            fontSize: '18',
+                            fontWeight: 'bold'
+                          }
+                        },
+                        labelLine: {
+                          show: false
+                        },
+                        data: [{
+                          value: 1048,
+                          name: 'Primary'
+                        },
+                        {
+                          value: 735,
+                          name: 'Junior'
+                        },
+                        {
+                          value: 580,
+                          name: 'ECDE'
+                        },
+                        {
+                          value: 484,
+                          name: 'Senior'
+                        },
+                        {
+                          value: 4,
+                          name: 'Special'
+                        },
+                        {
+                          value: 300,
+                          name: 'TVET'
+                        }
+                        ]
+                      }]
+                    });
+                  });
+                </script>
+
+            </div>
+          </div><!-- End Institution Graph -->
+
+          <!-- News & Updates Traffic -->
+          <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body pb-0">
+              <h5 class="card-title">News &amp; Updates <span>| Today</span></h5>
+
+              <div class="news">
+                <div class="post-item clearfix">
+                  <img src="../img/news-1.jpg" alt="">
+                  <h4><a href="#">Nihil blanditiis at in nihil autem</a></h4>
+                  <p>Sit recusandae non aspernatur laboriosam. Quia enim eligendi sed ut harum...</p>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="../img/news-2.jpg" alt="">
+                  <h4><a href="#">Quidem autem et impedit</a></h4>
+                  <p>Illo nemo neque maiores vitae officiis cum eum turos elan dries werona nande...</p>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="../img/news-3.jpg" alt="">
+                  <h4><a href="#">Id quia et et ut maxime similique occaecati ut</a></h4>
+                  <p>Fugiat voluptas vero eaque accusantium eos. Consequuntur sed ipsam et totam...</p>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="../img/news-4.jpg" alt="">
+                  <h4><a href="#">Laborum corporis quo dara net para</a></h4>
+                  <p>Qui enim quia optio. Eligendi aut asperiores enim repellendusvel rerum cuder...</p>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="../img/news-5.jpg" alt="">
+                  <h4><a href="#">Et dolores corrupti quae illo quod dolor</a></h4>
+                  <p>Odit ut eveniet modi reiciendis. Atque cupiditate libero beatae dignissimos eius...</p>
+                </div>
+
+              </div><!-- End sidebar recent posts-->
+
+            </div>
+          </div><!-- End News & Updates -->
+
+        </div><!-- End Right side columns -->
+
+      </div>
+    </section>
+
+    <!-- School Modal-->
+    <div class="modal fade" id="school" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document" style="width:70%">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Register new school</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form th:action="@{/director/create/school}" method="post">
+              <table width="100%">
+                <tr>
+                  <td width="50%">
+                    <div class="form-group row">
+                      <label for="Name" class="col-sm-4 col-form-label">Name: </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Name" name="name" placeholder="School name">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Knec" class="col-sm-4 col-form-label">KNEC: </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Knec" name="knec" placeholder="KNEC code">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Ippd" class="col-sm-4 col-form-label">IPPD: </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Ippd" name="email" placeholder="IPPD code">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Registration" class="col-sm-4 col-form-label">Registration: </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Registration" name="registration"
+                          placeholder="Certificate number">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Ems" class="col-sm-4 col-form-label">EMS: </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Ems" name="ems" placeholder="Nemis / Kemis">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Category" class="col-sm-4 col-form-label">Category:
+                      </label>
+                      <div class="col-sm-6">
+                        <select class="form-control" id="Category" name="icategoryid">
+                          <option>-Select-</option>
+                          <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}">
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Level" class="col-sm-4 col-form-label">Level:
+                      </label>
+                      <div class="col-sm-6">
+                        <select class="form-control" id="Level" name="ilevelid">
+                          <option>-Select-</option>
+                          <option th:each="lev : ${levels}" th:value="${lev.id}" th:text="${lev.name}">
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Status" class="col-sm-4 col-form-label">Status:
+                      </label>
+                      <div class="col-sm-6">
+                        <select class="form-control" id="Status" name="istatusid">
+                          <option>-Select-</option>
+                          <option th:each="stat : ${ss}" th:value="${stat.id}" th:text="${stat.name}">
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </td>
+                  <td width="50%" style="padding-left:10px" class="pull-right">
+                    <div class="form-group row">
+                      <label for="Phone" class="col-sm-4 col-form-label">Phone: </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Phone" name="phone" placeholder="Phone number">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Email" class="col-sm-4 col-form-label">Email: </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Email" name="email" placeholder="School email">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="County" class="col-sm-4 col-form-label">County:
+                      </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="County" name="county" placeholder="County">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Subcounty" class="col-sm-4 col-form-label">Sub County:
+                      </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Subcounty" name="subcounty"
+                          placeholder="Sub County">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Constituency" class="col-sm-4 col-form-label">Constituency:
+                      </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Constituency" name="constituency"
+                          placeholder="Constituency">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Ward" class="col-sm-4 col-form-label">Ward:
+                      </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Ward" name="ward" placeholder="Area ward">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Location" class="col-sm-4 col-form-label">Location:
+                      </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Location" name="location"
+                          placeholder="Area location">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Sublocation" class="col-sm-4 col-form-label">Sub location:
+                      </label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Sublocation" name="sublocation"
+                          placeholder="Sub location">
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <div class="modal-footer">
+                <button type="reset" class="btn btn-warning">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div><!-- End School Modal-->
+
+  </main><!-- =====End #main===== -->
+
+  <!-- =====footer===== -->
+  <th:block th:insert="~{partials/_footer}" />
+</body>
+
+</html>

@@ -1,14 +1,20 @@
 package com.mfano.moe.security.service;
 
+import com.mfano.moe.security.config.CustomUserDetails;
 import com.mfano.moe.security.model.*;
 import com.mfano.moe.security.repository.*;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -23,6 +29,8 @@ public class UserService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    @Autowired
+    private final ProfileService profileService;
 
     @Value("${app.base-url}")
     private String appBaseUrl;
@@ -78,6 +86,10 @@ public class UserService {
         userRepository.save(user);
         tokenRepository.delete(vt);
         return "valid";
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     // Get User By Id
@@ -140,4 +152,23 @@ public class UserService {
         passwordResetTokenRepository.deleteByUserId(user.getId());
     }
 
+    // check logged user
+    public void redirectUser(Authentication auth, Model model) {
+
+        if (auth == null || !auth.isAuthenticated()) {
+            model.addAttribute("error", "user not authenticated");
+        } else {
+            CustomUserDetails u = (CustomUserDetails) auth.getPrincipal();
+
+            // Add user info to model (for Thymeleaf dashboard pages)
+            model.addAttribute("id", u.getId());
+            model.addAttribute("username", u.getUsername());
+            model.addAttribute("password", u.getPassword());
+            model.addAttribute("roles", u.getRoles());
+
+            Profile profile = profileService.findByUserId(u.getId());
+            profileService.checkProfile(u.getId(), model);
+            model.addAttribute("logged", profile);
+        }
+    }
 }

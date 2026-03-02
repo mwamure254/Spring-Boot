@@ -6,7 +6,7 @@
   <meta name="description" content="meo home page">
   <meta name="author" content="mfano">
   <!-- Custom title for this page-->
-  <title>MoE | Profile</title>
+  <title>MoE | User Profile</title>
   <!-- Custom styles for this page-->
 </th:block>
 
@@ -53,7 +53,7 @@
               </div>
 
               <h2 th:text="${profile.fin + ' ' + profile.lan}">First Last</h2>
-              <h3 th:text="${profile.designation}">Your Designation</h3>
+              <h3 th:text="${profile.designation}">Web Designer</h3>
               <div class="social-links mt-2">
                 <a th:href="${#strings.isEmpty(profile.twitter)} ? '#' : ${profile.twitter}" class="twitter"><i
                     class="bi bi-twitter"></i></a>
@@ -114,10 +114,9 @@
                     <div class="col-lg-3 col-md-4 label ">Last Name</div>
                     <div class="col-lg-9 col-md-8" th:text="${profile.lan}">Harry</div>
                   </div>
-
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Gender</div>
-                    <div class="col-lg-9 col-md-8" th:text="${profile.gender}">Male</div>
+                    <div class="col-lg-9 col-md-8" th:text="${profile.gender}">3*****5</div>
                   </div>
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">IDN</div>
@@ -161,7 +160,7 @@
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Email</div>
-                    <div class="col-lg-9 col-md-8" th:text="${username}">name@example.com</div>
+                    <div class="col-lg-9 col-md-8" th:text="${username1}">name@example.com</div>
                   </div>
 
                 </div>
@@ -169,7 +168,8 @@
                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
                   <!-- Profile Edit Form -->
-                  <form th:action="@{/profile/update}" method="post" th:object="${profile}">
+                  <form th:action="@{'/admin/profile/update/' + ${id1}}" method="post" th:object="${profile}">
+
                     <div class="row mb-3">
                       <label for="about" class="col-md-4 col-lg-3 col-form-label">About</label>
                       <div class="col-md-8 col-lg-9">
@@ -209,7 +209,6 @@
                         </select>
                       </div>
                     </div>
-
                     <div class="row mb-3">
                       <label for="IDN" class="col-md-4 col-lg-3 col-form-label">IDN</label>
                       <div class="col-md-8 col-lg-9">
@@ -267,7 +266,7 @@
                     <div class="row mb-3">
                       <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="email" type="email" class="form-control" id="Email" th:value="${username}"
+                        <input name="email" type="email" class="form-control" id="Email" th:value="${username1}"
                           readonly>
                       </div>
                     </div>
@@ -312,12 +311,12 @@
 
                 <div class="tab-pane fade pt-3" id="profile-change-password">
                   <!-- Change Password Form -->
-                  <form th:action="@{/reset}" method="post">
+                  <form th:action="@{'/admin/reset/' + ${id1}}" method="post">
 
                     <div class="row mb-3">
                       <div class="col-md-8 col-lg-9 input-group">
                         <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
-                        <input th:value="${password}" type="password" class="form-control" id="currentPassword"
+                        <input th:value="${password1}" type="password" class="form-control" id="currentPassword"
                           readonly>
                         <button class="input-group-text btn btn-outline-secondary" type="button"
                           onclick="togglePassword('currentPassword', this)">
@@ -375,7 +374,7 @@
             <p>Update profile image</p>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <form class="py-2 px-4" th:action="@{'/image/update/' + ${profile.userid}}" method="post"
+          <form class="py-2 px-4" th:action="@{'/admin/image/update/' + ${profile.userid}}" method="post"
             enctype="multipart/form-data" accept="image">
             <div class="row mb-3">
               <label class="col-md-6 col-lg-4 col-form-label">Select image</label>
@@ -402,14 +401,15 @@
           </div>
           <div class="modal-body text-center">
             Confirm to delete image
-            <form class="py-2 px-4" th:action="@{'/image/delete/' + ${profile.userid}}" method="post">
+            <form class="py-2 px-4" th:action="@{'/admin/image/delete/' + ${profile.userid}}" method="post">
               <div class="text-center">
-                <button class="btn btn-success" type="submit">Proceed</button>
+                <button type="submit" class="btn btn-success">Proceed</button>
               </div>
             </form>
           </div>
         </div>
       </div><!-- End Delete Modal-->
+
   </main><!-- End #main -->
   <!-- =====footer===== -->
   <th:block th:insert="~{partials/_footer}" />

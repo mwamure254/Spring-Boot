@@ -41,27 +41,21 @@
 				<div class="col-lg-5">
 					<div class="panel bordered-primary">
 						<div class="panel-body">
-							<div class="form-group">
-								<label class="control-label col-sm-4">Id</label>
-								<div class="col-sm-6">
-									<input name="id" th:value="${user.id}" disabled type="text" size="16"
-										class="form-control">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="control-label col-sm-4"> Email</label>
-								<div class="col-sm-6">
-									<input name="email" th:value="${user.email}" type="text" class=" form-control"
-										disabled />
-								</div>
+
+							<div class="row">
+								<div class="col-lg-3 col-md-4 label">ID</div>
+								<div class="col-lg-9 col-md-8" th:text="${user.id}">id</div>
 							</div>
 
-							<div class="form-group py-4">
-								<form th:action="@{'/admin/profile/'+${user.id}}" method="get">
-									<button type="submit" class="btn btn-sm btn-success col-sm-6">
-										PROFILE</button>
-								</form>
+							<div class="row">
+								<div class="col-lg-3 col-md-4 label">Email</div>
+								<div class="col-lg-9 col-md-8" th:text="${user.email}">name@example.com</div>
 							</div>
+
+							<form class="py-4" th:action="@{'/admin/profile/'+${user.id}}" method="get">
+								<button type="submit" class="btn btn-sm btn-success">
+									PROFILE</button>
+							</form>
 						</div>
 					</div>
 				</div>

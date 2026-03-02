@@ -11,6 +11,7 @@ import com.mfano.moe.security.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,19 +40,13 @@ public class AuthController {
     private final AuditService auditService;
 
     private String msg = "security/message";
-    private final String login = "redirect:/login?error";
+    private final String login = "redirect:/login";
 
     @GetMapping("/dashboard")
     public String redirectAfterLogin(Authentication auth, Model model) {
-
-        if (auth == null || !auth.isAuthenticated()) {
-            model.addAttribute("error", "user not authenticated");
-            return login;
-        }
-
         Object principal = auth.getPrincipal();
         if (!(principal instanceof CustomUserDetails)) {
-            model.addAttribute("error", "invalid user");
+            model.addAttribute("error", "Invalid Username or Password.");
             return login;
         }
 
@@ -119,11 +115,11 @@ public class AuthController {
         if (authentication != null && authentication.isAuthenticated()
                 && authentication.getPrincipal() instanceof CustomUserDetails) {
             return "redirect:/dashboard";
-        }
+        } 
 
         // Error from Spring Security (bad credentials or disabled)
         if (error != null) {
-            model.addAttribute("error", "Invalid Username or Password.");
+            model.addAttribute("error", "Check your credentials and try again.");
         }
 
         // Logout confirmation
@@ -135,28 +131,39 @@ public class AuthController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @PostMapping("/image/update/{userid}")
+    public String imageUpdate(@PathVariable Long userid, @RequestParam("image") MultipartFile file, Model model) {
+        try {
+            profileService.updateProfileImage(userid, file, model);
+        } catch (IOException e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        auditService.record("update_image", "user id=" + userid, "Updated their profile image");
+        return "redirect:/profile";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/image/delete/{userid}")
+    public String imageDelete(@PathVariable Long userid, Model model) {
+        try {
+            profileService.deleteProfileImage(userid, model);
+        } catch (IOException e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        auditService.record("delete_image", "user id=" + userid, "Deleted their profile image");
+        return "redirect:/profile";
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public String userProfile(Authentication auth, Model model) {
+        userService.redirectUser(auth, model);
         if (!(auth.getPrincipal() instanceof CustomUserDetails)) {
             model.addAttribute("error", "user not authenticated");
             return "redirect:/login";
         } else {
-            CustomUserDetails u = (CustomUserDetails) auth.getPrincipal();
-            Profile profile = profileService.findByUserId(u.getId());
-
-            if (profile == null) {
-                profile = new Profile();
-                profile.setUserid(u.getId());
-                profileService.save(profile);
-            }
-            // Add user info to model (for Thymeleaf dashboard pages)
-            model.addAttribute("id", u.getId());
-            model.addAttribute("username", u.getUsername());
-            model.addAttribute("password", u.getPassword());
-            model.addAttribute("roles", u.getRoles());
-
+            userService.redirectUser(auth, model);
             model.addAttribute("message", "Welcome to your profile");
-            model.addAttribute("profile", profileService.findByUserId(u.getId()));
 
             return "security/profile";
         }
@@ -168,25 +175,9 @@ public class AuthController {
     public String userProfileUpdate(Authentication auth, @ModelAttribute("profile") Profile profile) {
 
         CustomUserDetails u = (CustomUserDetails) auth.getPrincipal();
-        Profile existing = profileService.findByUserId(u.getId());
 
-        // update only editable fields
-        existing.setFin(profile.getFin());
-        existing.setLan(profile.getLan());
-        existing.setOther(profile.getOther());
-        existing.setAbout(profile.getAbout());
-        existing.setIDN(profile.getIDN());
-        existing.setSN(profile.getSN());
-        existing.setDesignation(profile.getDesignation());
-        existing.setCounty(profile.getCounty());
-        existing.setAddress(profile.getAddress());
-        existing.setPhone(profile.getPhone());
-        existing.setTwitter(profile.getTwitter());
-        existing.setFacebook(profile.getFacebook());
-        existing.setInstagram(profile.getInstagram());
-        existing.setLinkedin(profile.getLinkedin());
-
-        profileService.save(existing);
+        profileService.update(u.getId(), profile);
+        auditService.record("update_profile", "user id=" + u.getId(), "Updated their profile");
         return "redirect:/profile";
     }
 
@@ -293,7 +284,7 @@ public class AuthController {
         if (user != null) {
             user.setPassword(passwordEncoder.encode(password));
             userService.save(user);
-            auditService.record("RESET_PASSWORD", "user id=" + user.getId(), "Reset password");
+            auditService.record("reset_password", "user id=" + user.getId(), "Reset password");
             model.addAttribute("message", "Password reset successful");
             return "redirect:/profile";
         } else {
@@ -301,4 +292,5 @@ public class AuthController {
             return "redirect:/profile";
         }
     }
+
 }

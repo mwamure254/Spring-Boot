@@ -2,7 +2,7 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-      <li class="nav-item" th:classappend="${requestURI == '/home'} ? ' astive'">
+      <li class="nav-item" th:classappend="${requestURI == '/home'} ? ' active'">
         <a class="nav-link collapsed" href="/">
           <i class="bi bi-house-door"></i>
           <span>Home</span>
@@ -11,49 +11,42 @@
 
       <hr>
 
-      <li class="nav-item" th:classappend="${requestURI == '/service-board'} ? ' astive'">
+      <li class="nav-item" th:classappend="${requestURI == '/service-board'} ? ' active'">
         <a class="nav-link collapsed" href="/service-board">
           <i class="bi bi-list-task"></i>
           <span>Service Board</span>
         </a>
       </li><!-- End Service Board -->
 
-      <li class="nav-item" th:classappend="${requestURI == '/schools'} ? ' astive'">
-        <a class="nav-link collapsed" href="/schools">
+      <li class="nav-item" th:classappend="${requestURI == '/schools'} ? ' active'">
+        <a class="nav-link collapsed" href="/director/schools">
           <i class="bi bi-stack"></i><span>Schools</span>
         </a>
       </li><!-- End Schools -->
 
-      <li class="nav-item" th:classappend="${requestURI == '/editables'} ? ' astive'">
-        <a class="nav-link collapsed" href="/editables">
+      <li class="nav-item" th:classappend="${requestURI == '/admin/editables'} ? ' active'">
+        <a class="nav-link collapsed" href="/admin/editables">
           <i class="bi bi-pen"></i>
           <span>Editables</span>
         </a>
       </li><!-- End Updatables -->
 
-      <li class="nav-item" th:classappend="${requestURI == '/reports'} ? ' astive'">
+      <li class="nav-item" th:classappend="${requestURI == '/reports'} ? ' active'">
         <a class="nav-link collapsed" href="/reports">
           <i class="bi bi-folder"></i><span>Records</span>
         </a>
       </li><!-- End Records -->
 
       <hr>
-      
-      <li class="nav-item" th:classappend="${requestURI == '/profile'} ? ' astive'">
-        <a class="nav-link collapsed" href="/profile">
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
 
-      <li class="nav-item" th:classappend="${requestURI == '/contact'} ? ' astive'">
+      <li class="nav-item" th:classappend="${requestURI == '/contact'} ? ' active'">
         <a class="nav-link collapsed" href="/contact">
           <i class="bi bi-envelope"></i>
           <span>Contact</span>
         </a>
       </li><!-- End Contact Page Nav -->
 
-      <li class="nav-item" th:classappend="${requestURI == '/faq'} ? ' astive'">
+      <li class="nav-item" th:classappend="${requestURI == '/faq'} ? ' active'">
         <a class="nav-link collapsed" href="/faq">
           <i class="bi bi-question-circle"></i>
           <span>F.A.Q</span>
@@ -61,13 +54,6 @@
       </li><!-- End F.A.Q Page Nav -->
 
       <hr>
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="/settings">
-          <i class="bi bi-gear"></i>
-          <span>Settings</span>
-        </a>
-      </li><!-- End Settings Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-bs-toggle="modal"
