@@ -1,6 +1,7 @@
 package com.mfano.moe.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,20 +36,18 @@ public class Institution {
     private String sublocation;
     private String ward;
     private String constituency;
-    // relationships
-    @ManyToOne
-	@JoinColumn(name = "icategoryid", insertable = false, updatable = false)
-	private ICategory iCategory;
-	private Integer icategoryid;
+   
+    // ── Relationships (only keep the object reference) ────
+    @ManyToOne(fetch = FetchType.LAZY)   // ← usually good choice
+    @JoinColumn(name = "icategoryid")
+    private ICategory iCategory;
 
-    @ManyToOne
-	@JoinColumn(name = "ilevelid", insertable = false, updatable = false)
-	private ILevel iLevel;
-	private Integer ilevelid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ilevelid")
+    private ILevel iLevel;
 
-    @ManyToOne
-	@JoinColumn(name = "istatusid", insertable = false, updatable = false)
-	private IStatus iStatus;
-	private Integer istatusid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "istatusid")
+    private IStatus iStatus;
 
 }

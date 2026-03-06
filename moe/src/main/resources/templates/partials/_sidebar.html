@@ -2,7 +2,7 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-      <li class="nav-item" th:classappend="${requestURI == '/home'} ? ' active'">
+      <li class="nav-item" sec:authorize="isAuthenticated">
         <a class="nav-link collapsed" href="/">
           <i class="bi bi-house-door"></i>
           <span>Home</span>
@@ -11,27 +11,27 @@
 
       <hr>
 
-      <li class="nav-item" th:classappend="${requestURI == '/service-board'} ? ' active'">
-        <a class="nav-link collapsed" href="/service-board">
+      <li class="nav-item" sec:authorize="hasRole('HOI')">
+        <a class="nav-link collapsed" th:href="@{/service-board}">
           <i class="bi bi-list-task"></i>
           <span>Service Board</span>
         </a>
       </li><!-- End Service Board -->
 
-      <li class="nav-item" th:classappend="${requestURI == '/schools'} ? ' active'">
-        <a class="nav-link collapsed" href="/director/schools">
+      <li class="nav-item" sec:authorize="hasRole('DIRECTOR')">
+        <a class="nav-link collapsed" th:href="@{/director/schools}">
           <i class="bi bi-stack"></i><span>Schools</span>
         </a>
       </li><!-- End Schools -->
 
-      <li class="nav-item" th:classappend="${requestURI == '/admin/editables'} ? ' active'">
-        <a class="nav-link collapsed" href="/admin/editables">
+      <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+        <a class="nav-link collapsed" th:href="@{/admin/editables}">
           <i class="bi bi-pen"></i>
           <span>Editables</span>
         </a>
       </li><!-- End Updatables -->
 
-      <li class="nav-item" th:classappend="${requestURI == '/reports'} ? ' active'">
+      <li class="nav-item" sec:authorize="isAuthenticated">
         <a class="nav-link collapsed" href="/reports">
           <i class="bi bi-folder"></i><span>Records</span>
         </a>
@@ -39,14 +39,14 @@
 
       <hr>
 
-      <li class="nav-item" th:classappend="${requestURI == '/contact'} ? ' active'">
+      <li class="nav-item" sec:authorize="isAuthenticated">
         <a class="nav-link collapsed" href="/contact">
           <i class="bi bi-envelope"></i>
           <span>Contact</span>
         </a>
       </li><!-- End Contact Page Nav -->
 
-      <li class="nav-item" th:classappend="${requestURI == '/faq'} ? ' active'">
+      <li class="nav-item" sec:authorize="isAuthenticated">
         <a class="nav-link collapsed" href="/faq">
           <i class="bi bi-question-circle"></i>
           <span>F.A.Q</span>

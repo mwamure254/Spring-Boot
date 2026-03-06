@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{partials/_header :: common_header(~{::title/text()},~{::link},~{::meta})}">
+  <!-- Custom meta data for this template-->
+  <meta name="description" content="meo home page">
+  <meta name="author" content="mfano">
+  <!-- Custom title for this page-->
+  <title>MoE | Schools</title>
+  <!-- Custom styles for this page-->
+</th:block>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <th:block th:insert="~{partials/_topbar}" />
+  <!-- =====End Header===== -->
+
+  <!-- ======= Sidebar ======= -->
+  <th:block th:insert="~{partials/_sidebar}" />
+  <!-- =====End Sidebar=====-->
+
+  <!-- ======Main===== -->
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Schools</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home"><i class="bi bi-house-door"></i>
+              <span>Home</span></a></li>
+          <li class="breadcrumb-item active"><i class="bi bi-record-fill"></i>Leadership</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="card">
+        <div class="filter">
+          <a class="btn btn-sm btn-dark" href="#" data-bs-toggle="dropdown" title="export"><i class="bi bi-folder"></i></a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li><a class="dropdown-item" href="#"><i class="bi bi-file-excel-fill"></i>EXCEL</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-file-word-fill"></i>WORD</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-pdf-fill"></i>PDF</a></li>
+          </ul>
+
+          <a class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#assign" title="assign"><i
+              class="bi bi-plus"></i></a>
+          <a class="icon" href="#" data-bs-toggle="dropdown" title="filter"><i class="bi bi-three-dots"></i></a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li th:each="lev : ${levels}"><a class="dropdown-item" href="#" th:text="${lev.name}"></a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-body">
+          <h5 class="card-title">Institutions and their Leadership | <span>ECDE</span></h5>
+          <!-- Default Accordion -->
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item" th:each="ins, con : ${institutions}">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                  aria-expanded="true" aria-controls="collapseOne"
+                  th:text="${con.count + '  ' + ins.name + '  ' + ins.iLevel?.name}">
+                  Accordion Item #1
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <strong>This is the first item's accordion body.</strong> It is hidden by default, until the
+                  collapse plugin adds the appropriate classes that we use to style each element. These classes
+                  control the overall appearance, as well as the showing and hiding via CSS transitions. You can
+                  modify any of this with custom CSS or overriding our default variables. It's also worth noting
+                  that just about any HTML can go within the <code>.accordion-body</code>, though the transition
+                  does limit overflow.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Accordion Item #2
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <strong>This is the second item's accordion body.</strong> It is hidden by default, until the
+                  collapse plugin adds the appropriate classes that we use to style each element. These classes
+                  control the overall appearance, as well as the showing and hiding via CSS transitions. You can
+                  modify any of this with custom CSS or overriding our default variables. It's also worth noting
+                  that just about any HTML can go within the <code>.accordion-body</code>, though the transition
+                  does limit overflow.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  Accordion Item #3
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <strong>This is the third item's accordion body.</strong> It is hidden by default, until the
+                  collapse plugin adds the appropriate classes that we use to style each element. These classes
+                  control the overall appearance, as well as the showing and hiding via CSS transitions. You can
+                  modify any of this with custom CSS or overriding our default variables. It's also worth noting
+                  that just about any HTML can go within the <code>.accordion-body</code>, though the transition
+                  does limit overflow.
+                </div>
+              </div>
+            </div>
+          </div><!-- End Default Accordion Example -->
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Assign Modal-->
+    <div class="modal fade" id="assign" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document" style="width:70%">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Assign HOI a School</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form th:action="@{/director/assign/school}" method="post">
+
+              <div class="row mb-3">
+                <label class="col-md-6 col-lg-4 col-form-label">School</label>
+                <div class="col-md-6 col-lg-8">
+                  <select class="form-select" name="institutionid" required>
+                    <option>-Select School-</option>
+                    <option th:each="s : ${institutions}" th:text="${s.name}" th:value="${s.id}">School</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-6 col-lg-4 col-form-label">HOI</label>
+                <div class="col-md-6 col-lg-8">
+                  <select class="form-select" name="profileid" required>
+                    <option>-Select HOI-</option>
+                    <option th:each="p : ${profiles}" th:text="${p.fin + ' ' + p.other + ' ' + p.lan}" th:value="${p.id}">HOI</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-6 col-lg-4 col-form-label">Status</label>
+                <div class="col-md-6 col-lg-8">
+                  <select class="form-select" name="sstatusid" required>
+                    <option>-Select Status-</option>
+                    <option th:each="t : ${ss}" th:text="${t.name}" th:value="${t.id}">USER</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-6 col-lg-4 col-form-label">Remarks</label>
+                <div class="col-md-6 col-lg-8">
+                  <input type="text" class="form-control" name="remarks" placeholder="comment on assignment" required>
+                </div>
+              </div>
+
+              <div class="text-end">
+                <button type="reset" class="btn btn-warning">clear</button>
+                <button type="submit" class="btn btn-primary">save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div><!-- End Assign Modal-->
+
+  </main><!-- End #main -->
+
+  <!-- =====footer===== -->
+  <th:block th:insert="~{partials/_footer}" />
+</body>
+
+</html>

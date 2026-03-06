@@ -154,15 +154,23 @@
             <!-- Intitutions Section -->
             <div class="col-12" id="Institutions">
               <div class="card recent-sales overflow-auto">
-
+                
                 <div class="filter">
-                  <a href="#"><i class="bi bi-file-arrow-down"></i></a>
-                  <span>|<a data-bs-toggle="modal" data-bs-target="#school"> Add School</a>|</span>
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <a class="btn btn-sm btn-dark" href="#" data-bs-toggle="dropdown" title="export"><i
+                      class="bi bi-folder"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
+                    <li><a class="dropdown-item" href="#"><i
+                          class="bi bi-file-excel-fill"></i>EXCEL</a></li>
+                    <li><a class="dropdown-item" href="#"><i
+                          class="bi bi-file-word-fill"></i>WORD</a></li>
+                    <li><a class="dropdown-item" href="#"><i
+                          class="bi bi-file-earmark-pdf-fill"></i>PDF</a></li>
+                  </ul>
+
+                  <a class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#school" title="add school"><i
+                      class="bi bi-plus"></i></a>
+                  <a class="icon" data-bs-toggle="dropdown" title="filter"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
 
                     <li th:each="lev : ${levels}"><a class="dropdown-item" href="#Schools" th:text="${lev.name}"></a>
                     </li>
@@ -185,11 +193,21 @@
                     </thead>
                     <tbody>
                       <tr th:each="ins, con : ${institutions}">
-                        <th scope="row" th:text="${con.count}"><a href="#"></a></th>
-                        <td><a href="#" class="text-primary" th:text="${ins.name}"></a></td>
-                        <td th:text="${ins.ilevelid}"></td>
-                        <td th:text="${ins.icategoryid}"></td>
-                        <td th:text="${ins.istatusid}"><span class="badge bg-success">Active</span></td>
+                        <th scope="row" th:text="${con.count}"></th>
+                        <td>
+                          <a data-bs-toggle="dropdown" class="text-primary" th:text="${ins.name}" title="show more"></a>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#school"><i
+                                  class="bi bi-clipboard"></i>View</a></li>
+                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#school"><i
+                                  class="bi bi-pen"></i>Edit</a></li>
+                          </ul>
+                        </td>
+                        <td th:text="${ins.iLevel?.name}"></td>
+                        <td th:text="${ins.iCategory?.name}"></td>
+                        <td>
+                          <span class="badge bg-success" th:text="${ins.iStatus?.name}"></span>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -312,6 +330,76 @@
             </div>
           </div><!-- End Activities Card -->
 
+          <!-- Institution Graph -->
+          <div class="card">
+
+            <div class="card-body pb-0">
+              <h5 class="card-title">Institution Graph
+
+                <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+
+                <script>
+                  document.addEventListener("DOMContentLoaded", () => {
+                    echarts.init(document.querySelector("#trafficChart")).setOption({
+                      tooltip: {
+                        trigger: 'item'
+                      },
+                      legend: {
+                        top: '0%',
+                        left: 'center'
+                      },
+                      series: [{
+                        name: 'School Level',
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                          show: false,
+                          position: 'center'
+                        },
+                        emphasis: {
+                          label: {
+                            show: true,
+                            fontSize: '18',
+                            fontWeight: 'bold'
+                          }
+                        },
+                        labelLine: {
+                          show: false
+                        },
+                        data: [{
+                          value: 1048,
+                          name: 'Primary'
+                        },
+                        {
+                          value: 735,
+                          name: 'Junior'
+                        },
+                        {
+                          value: 580,
+                          name: 'ECDE'
+                        },
+                        {
+                          value: 484,
+                          name: 'Senior'
+                        },
+                        {
+                          value: 4,
+                          name: 'Special'
+                        },
+                        {
+                          value: 300,
+                          name: 'TVET'
+                        }
+                        ]
+                      }]
+                    });
+                  });
+                </script>
+
+            </div>
+          </div><!-- End Institution Graph -->
+
           <!-- Recent Activity -->
           <div class="card">
             <div class="filter">
@@ -385,76 +473,6 @@
             </div>
           </div><!-- End Recent Activity -->
 
-          <!-- Institution Graph -->
-          <div class="card">
-
-            <div class="card-body pb-0">
-              <h5 class="card-title">Institution Graph
-
-                <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
-
-                <script>
-                  document.addEventListener("DOMContentLoaded", () => {
-                    echarts.init(document.querySelector("#trafficChart")).setOption({
-                      tooltip: {
-                        trigger: 'item'
-                      },
-                      legend: {
-                        top: '0%',
-                        left: 'center'
-                      },
-                      series: [{
-                        name: 'School Level',
-                        type: 'pie',
-                        radius: ['40%', '70%'],
-                        avoidLabelOverlap: false,
-                        label: {
-                          show: false,
-                          position: 'center'
-                        },
-                        emphasis: {
-                          label: {
-                            show: true,
-                            fontSize: '18',
-                            fontWeight: 'bold'
-                          }
-                        },
-                        labelLine: {
-                          show: false
-                        },
-                        data: [{
-                          value: 1048,
-                          name: 'Primary'
-                        },
-                        {
-                          value: 735,
-                          name: 'Junior'
-                        },
-                        {
-                          value: 580,
-                          name: 'ECDE'
-                        },
-                        {
-                          value: 484,
-                          name: 'Senior'
-                        },
-                        {
-                          value: 4,
-                          name: 'Special'
-                        },
-                        {
-                          value: 300,
-                          name: 'TVET'
-                        }
-                        ]
-                      }]
-                    });
-                  });
-                </script>
-
-            </div>
-          </div><!-- End Institution Graph -->
-
           <!-- News & Updates Traffic -->
           <div class="card">
             <div class="filter">
@@ -520,7 +538,7 @@
       <div class="modal-dialog modal-lg" role="document" style="width:70%">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Register new school</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Register New School</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </button>
           </div>
@@ -544,7 +562,7 @@
                     <div class="form-group row">
                       <label for="Ippd" class="col-sm-4 col-form-label">IPPD: </label>
                       <div class="col-sm-6">
-                        <input type="text" class="form-control" id="Ippd" name="email" placeholder="IPPD code">
+                        <input type="text" class="form-control" id="Ippd" name="ippd" placeholder="IPPD code">
                       </div>
                     </div>
                     <div class="form-group row">

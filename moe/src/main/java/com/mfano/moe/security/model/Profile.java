@@ -4,6 +4,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -42,8 +43,8 @@ public class Profile {
     private String linkedin;
     private String instagram;
 
-    @OneToOne
-    @JoinColumn(name = "userid", nullable = false, insertable = false, updatable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userid", nullable = false, insertable=false, updatable=false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
     private Long userid;

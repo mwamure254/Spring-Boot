@@ -4,9 +4,10 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.mfano.moe.security.model.User;
+import com.mfano.moe.security.model.Profile;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServiceBoard {
+public class SBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,23 +32,20 @@ public class ServiceBoard {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate upTo;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "profileid", insertable = false, updatable = false)
+	private Profile profile;
+	private Long profileid;
 
-    @ManyToOne
-	@JoinColumn(name = "userid", insertable = false, updatable = false)
-	private User user;
-	private Integer userid;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sstatusid", insertable = false, updatable = false)
 	private SStatus sStatus;
-	private Integer sstatusid;
+	private Long sstatusid;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "institutionid", insertable = false, updatable = false)
 	private Institution institution;
-	private Integer institutionid;
+	private Long institutionid;
 
-    //TODO Length of stay Formula
-
-    //Individual Port Folio
 }

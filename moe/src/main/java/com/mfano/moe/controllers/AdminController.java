@@ -11,11 +11,10 @@ import com.mfano.moe.security.model.Profile;
 import com.mfano.moe.security.model.Role;
 import com.mfano.moe.security.model.User;
 import com.mfano.moe.security.service.UserService;
-import com.mfano.moe.services.AdminService;
 import com.mfano.moe.security.service.AuditService;
 import com.mfano.moe.security.service.ProfileService;
 import com.mfano.moe.security.service.RoleService;
-
+import com.mfano.moe.services.AdminService;
 import com.mfano.moe.services.ICategoryService;
 import com.mfano.moe.services.IStatusService;
 import com.mfano.moe.services.SStatusService;
@@ -309,7 +308,7 @@ public class AdminController {
         userService.redirectUser(auth, model);
         adminService.assignRoleToUser(userId, roleId);
         auditService.record("update_role", "admin", "Assigned user id=" + userId + " role id=" + roleId);
-        return "redirect:/admin/manage-role/{userId}";
+        return "redirect:/admin/manage-user/{userId}";
     }
 
     @PostMapping("/remove-role/{userId}/{roleId}")
@@ -317,7 +316,7 @@ public class AdminController {
         userService.redirectUser(auth, model);
         adminService.removeRoleFromUser(userId, roleId);
         auditService.record("update_role", "admin", "Revoked role id=" + roleId + " from user id=" + userId);
-        return "redirect:/admin/manage-role/{userId}";
+        return "redirect:/admin/manage-user/{userId}";
     }
 
 }
