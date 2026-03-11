@@ -10,7 +10,7 @@
   <!-- Custom styles for this page-->
 </th:block>
 
-<body>
+<body style="background-image: url('/img/mfano-bg.png'); background-size:100% 100%; height:100%;">
 
   <!-- ======= Header ======= -->
   <th:block th:insert="~{partials/_topbar}" />
@@ -24,7 +24,7 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Dashboard</h1>
+      <h2>Dashboard</h2>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/home"><i class="bi bi-house-door"></i>
@@ -51,7 +51,6 @@
                     <li class="dropdown-header text-start">
                       <h6>Filter</h6>
                     </li>
-
                     <li th:each="lev : ${levels}"><a class="dropdown-item" href="#Schools" th:text="${lev.name}"></a>
                     </li>
 
@@ -120,11 +119,10 @@
 
                 <div class="filter">
                   <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                  <ul class="dropdown-menu ">
                     <li class="dropdown-header text-start">
                       <h6>Filter</h6>
                     </li>
-
                     <li th:each="lev : ${levels}"><a class="dropdown-item" href="#Learners" th:text="${lev.name}"></a>
                     </li>
 
@@ -154,24 +152,28 @@
             <!-- Intitutions Section -->
             <div class="col-12" id="Institutions">
               <div class="card recent-sales overflow-auto">
-                
+
                 <div class="filter">
                   <a class="btn btn-sm btn-dark" href="#" data-bs-toggle="dropdown" title="export"><i
                       class="bi bi-folder"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li><a class="dropdown-item" href="#"><i
-                          class="bi bi-file-excel-fill"></i>EXCEL</a></li>
-                    <li><a class="dropdown-item" href="#"><i
-                          class="bi bi-file-word-fill"></i>WORD</a></li>
-                    <li><a class="dropdown-item" href="#"><i
-                          class="bi bi-file-earmark-pdf-fill"></i>PDF</a></li>
+                    <li class="dropdown-header text-start">
+                      <h6>Export</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-file-excel-fill"></i>EXCEL</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-file-word-fill"></i>WORD</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-pdf-fill"></i>PDF</a></li>
                   </ul>
 
-                  <a class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#school" title="add school"><i
-                      class="bi bi-plus"></i></a>
+                  <a class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#school"
+                    title="add school"><i class="bi bi-plus"></i></a>
                   <a class="icon" data-bs-toggle="dropdown" title="filter"><i class="bi bi-three-dots"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
 
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
                     <li th:each="lev : ${levels}"><a class="dropdown-item" href="#Schools" th:text="${lev.name}"></a>
                     </li>
 

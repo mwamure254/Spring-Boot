@@ -9,17 +9,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import com.mfano.moe.models.Institution;
-import com.mfano.moe.models.SBoard;
+import com.mfano.moe.models.Board;
 import com.mfano.moe.security.service.AuditService;
 import com.mfano.moe.security.service.ProfileService;
 import com.mfano.moe.security.service.RoleService;
 import com.mfano.moe.security.service.UserService;
 import com.mfano.moe.services.InstitutionService;
+import com.mfano.moe.services.BoardService;
 import com.mfano.moe.services.ICategoryService;
 import com.mfano.moe.services.ILevelService;
 import com.mfano.moe.services.IStatusService;
 import com.mfano.moe.services.SStatusService;
-import com.mfano.moe.services.SBoardService;
 import com.mfano.moe.services.UStatusService;
 
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +35,10 @@ public class DirectorController {
 
     private final RoleService roleService;
     private final InstitutionService institutionService;
-    private final SBoardService serviceBoardService;
     private final AuditService auditService;
     private final ProfileService profileService;
     private final UserService userService;
+    private final BoardService boardService;
 
     // statuses
     private final ICategoryService iCategoryService;
@@ -83,9 +83,9 @@ public class DirectorController {
 
     // Create a new school
     @PostMapping("/assign/school")
-    public String assignSchool(SBoard board, Model model) {
+    public String assignSchool(Board board, Model model) {
         try {
-            serviceBoardService.save(board);
+            boardService.save(board);
             model.addAttribute("message", "service created successfully");
             auditService.record("create_service", "scde", "Created service id= " + board.getId());
         } catch (Exception e) {
