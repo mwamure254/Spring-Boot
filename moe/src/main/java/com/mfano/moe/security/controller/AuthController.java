@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,15 +27,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
-    @Autowired
     private final UserService userService;
-    @Autowired
     private final ProfileService profileService;
-    @Autowired
     private final PasswordEncoder passwordEncoder;
-    @Autowired
     private final RoleService roleService;
-    @Autowired
     private final AuditService auditService;
 
     private String msg = "security/message";
@@ -235,11 +229,11 @@ public class AuthController {
     public String forgotSubmit(@RequestParam String email, Model model) {
         try {
             userService.createPasswordResetToken(email);
-            model.addAttribute("message", "If an account exists, a reset link was sent.");
+            model.addAttribute("message", "A reset link was sent to " + email + ".");
         } catch (Exception e) {
-            model.addAttribute("message", "If an account exists, a reset link was sent.");
+            model.addAttribute("error", "Email does not match any existing account.");
         }
-        return msg;
+        return "security/login";
     }
 
     @GetMapping("/password-reset")

@@ -31,11 +31,9 @@
             <div class="card mb-3">
 
               <div class="card-body">
-
-
                 <div th:if="${error}" class="alert alert-danger py-2" th:text="${error}"></div>
                 <div th:if="${message}" class="alert alert-success py-2" th:text="${message}"></div>
-
+                
                 <form class="row g-3 py-2 needs-validation" th:action="@{/login}" method="post" novalidate>
 
                   <div class="col-12">
@@ -72,7 +70,7 @@
                     <button class="btn btn-primary w-100" type="submit">Login</button>
                   </div>
 
-                  <a th:href="@{/security/forgot}">Forgot Password?</a>
+                  <a th:href="@{/forgot}">Forgot Password?</a>
                 </form>
 
               </div>
@@ -102,6 +100,34 @@
       }
     }
   </script>
+
+  <script th:if="${message != null or error != null}">
+    const myModal = new bootstrap.Modal(document.getElementById('messageModal'));
+    myModal.show();
+  </script>
+
+  <script>
+    setTimeout(() => {
+      let alert = document.querySelector('.alert');
+      if (alert) {
+        let bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+      }
+    }, 3000);
+  </script>
+
+  <!-- Message Modal-->
+  <div class="modal fade" id="messageModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body my-2">
+
+          <div th:if="${error}" class="alert alert-danger py-2" th:text="${error}"></div>
+          <div th:if="${message}" class="alert alert-success py-2" th:text="${message}"></div>
+
+        </div>
+      </div>
+    </div><!-- End Message Modal-->
 
 </body>
 

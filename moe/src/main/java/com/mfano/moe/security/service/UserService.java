@@ -5,7 +5,6 @@ import com.mfano.moe.security.model.*;
 import com.mfano.moe.security.repository.*;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +28,6 @@ public class UserService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-    @Autowired
     private final ProfileService profileService;
 
     @Value("${app.base-url}")

@@ -7,13 +7,11 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ICategoryService {
-    @Autowired
     private final ICategoryRepository iCategoryRepository;
 
     // Get All ICategorys

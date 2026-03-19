@@ -2,7 +2,6 @@ package com.mfano.moe.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mfano.moe.models.Institution;
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class InstitutionService {
-    @Autowired
     private final InstitutionRepository institutionRepository;
 
     // Get All ILevels

@@ -171,7 +171,7 @@
 
         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
           <img th:src="${#strings.isEmpty(logged.image)} ? @{/img/profile-img.jpg} : '/img/profile/' + ${logged.image}"
-            alt="MY" class="rounded-circle">
+            alt="MY" class="rounded-circle" height="38" width="38">
         </a><!-- End Profile Iamge Icon -->
 
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">

@@ -44,7 +44,7 @@
 
               <img
                 th:src="${#strings.isEmpty(profile.image)} ? @{/img/profile-img.jpg} : '/img/profile/' + ${profile.image}"
-                alt="Profile" class="rounded-circle">
+                alt="Profile" class="rounded-circle" height="120" width="120">
               <div class="pt-2">
                 <a data-bs-toggle="modal" data-bs-target="#image" class="btn btn-primary btn-sm"
                   title="Upload new profile image"><i class="bi bi-upload"></i></a>
