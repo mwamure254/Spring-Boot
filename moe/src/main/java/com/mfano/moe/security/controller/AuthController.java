@@ -18,11 +18,13 @@ import java.util.stream.Collectors;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -226,14 +228,14 @@ public class AuthController {
     }
 
     @PostMapping("/forgot")
-    public String forgotSubmit(@RequestParam String email, Model model) {
+    public String forgotSubmit(@RequestParam String email, RedirectAttributes model) {
         try {
             userService.createPasswordResetToken(email);
-            model.addAttribute("message", "A reset link was sent to " + email + ".");
-        } catch (Exception e) {
-            model.addAttribute("error", "Email does not match any existing account.");
+            model.addFlashAttribute("message", "A reset link was sent to " + email + ".");
+        } catch (UsernameNotFoundException e) {
+            model.addFlashAttribute("error", e.getMessage());
         }
-        return "security/login";
+        return login;
     }
 
     @GetMapping("/password-reset")

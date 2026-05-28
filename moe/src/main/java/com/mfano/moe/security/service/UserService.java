@@ -123,10 +123,10 @@ public class UserService {
         passwordResetTokenRepository.save(prt);
         String link = appBaseUrl + "/reset-password?token=" + token;
         String subject = "Password reset request";
-        String body = "Hi " + (user.getEmail() == null ? "" : user.getEmail()) + "\n\n"
+        String body = "Hi " + (user.getEmail() == null ? "" : email) + "\n\n"
                 + "Click the link to reset your password: \n" + link + "\n\n"
                 + "This link expires in 2 hours.\n\nIf you did not request this, ignore this email.";
-        emailService.sendSimpleMessage(user.getEmail(), subject, body);
+        emailService.sendSimpleMessage(email, subject, body);
     }
 
     public String validatePasswordResetToken(String token) {

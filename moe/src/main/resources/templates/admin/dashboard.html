@@ -69,10 +69,10 @@
 
           <div class="card-body">
             <h5 class="card-title">Registered Users</h5>
-            <table class="table datatable table-striped table-hover col-sm-12">
-              <thead class="table-dark">
+            <table class="table datatable table-striped table-hover table-sm">
+              <thead>
                 <tr>
-                  <th>#</th>
+                  <th>S/N</th>
                   <th>User</th>
                   <th>Roles</th>
                   <th>Status</th>
@@ -88,20 +88,26 @@
                         class="bi bi-pen"></i></a>
                   </td>
                   <td th:switch="${u.enabled} ? 'Yes': 'No'">
-                    <span th:case="'Yes'" class="btn btn-sm btn-success">Active</span>
-                    <span th:case="'No'" class="btn btn-sm btn-primary">Disabled</span>
+                    <span th:case="'Yes'" class="badge bg-success">Active</span>
+                    <span th:case="'No'" class="badge bg-primary">Disabled</span>
                   </td>
                   <td>
                     <div class="d-flex flex-wrap gap-1">
                       <a th:href="@{'/admin/toggle/' + ${u.id}}" class="btn btn-sm btn-warning">Toggle</a>
                       <a th:href="@{'/admin/delete/' + ${u.id}}" class="btn btn-sm btn-danger"
-                        onclick="return confirm('Delete this user?')">Delete</a>
+                        onclick="return confirm('Delete this user?')">
+                        <i class=" ri-delete-bin-line"></i></a>
                       <a th:href="@{'/admin/resend/' + ${u.id}}" class="btn btn-sm btn-info">Resend</a>
 
                       <form th:action="@{'/admin/reset-password/' + ${u.id}}" method="post" class="d-inline-flex">
-                        <input type="password" name="newPassword" placeholder="New Password"
-                          class="form-control form-control-sm d-inline w-auto" required>
-                        <button class="btn btn-sm btn-secondary" type="submit">Reset</button>
+                        <div class="input-group">
+                          <input type="password" name="newPassword" id="Password" placeholder="New Password">
+                          <button class="input-group-text btn btn-outline-secondary" type="button"
+                            onclick="togglePassword('Password', this)">
+                            <i class="bi bi-eye"></i>
+                            <button class="input-group-text btn btn-sm btn-secondary" type="submit">Reset</button>
+                          </button>
+                        </div>
                       </form>
                     </div>
                   </td>
@@ -146,10 +152,10 @@
 
           <div class="card-body">
             <h5 class="card-title">Audit log (latest) <span>| Today</span></h5>
-            <table class="table datatable table-sm">
+            <table class="table datatable table-striped table-sm">
               <thead>
                 <tr>
-                  <th>#</th>
+                  <th>S/N</th>
                   <th>Action</th>
                   <th>By</th>
                   <th>Details</th>
