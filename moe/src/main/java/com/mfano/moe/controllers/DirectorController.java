@@ -23,6 +23,8 @@ import com.mfano.moe.services.SStatusService;
 import com.mfano.moe.services.UStatusService;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -48,7 +50,7 @@ public class DirectorController {
     private final ILevelService iLevelService;
 
     @GetMapping("/dashboard")
-    public String dashboard(Authentication auth, Model model) {
+    public String dashboard(Authentication auth, Model model, RedirectAttributes red) {
 
         userService.redirectUser(auth, model);
         List<Institution> schools = institutionService.findAll();
@@ -64,45 +66,46 @@ public class DirectorController {
         model.addAttribute("categories", iCategoryService.findAll());
         model.addAttribute("logs", auditService.findAll());
 
-        model.addAttribute("message", "login successsful");
+        red.addFlashAttribute("message", "Login successsful.");
         return "scde/dashboard";
     }
 
     // Create a new school
     @PostMapping("/create/school")
-    public String creatSchool(Institution ins, Model model) {
+    public String creatSchool(Institution ins, RedirectAttributes red) {
         try {
             institutionService.save(ins);
-            model.addAttribute("message", "School created successfully");
+            red.addFlashAttribute("message", "School created successfully");
             auditService.record("create_school", "scde", "Created school id= " + ins.getId());
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+            red.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/director/dashboard";
     }
 
     // Create a new school
     @PostMapping("/assign/school")
-    public String assignSchool(Board board, Model model) {
+    public String assignSchool(Board board, RedirectAttributes red) {
         try {
             boardService.save(board);
-            model.addAttribute("message", "service created successfully");
+            red.addFlashAttribute("message", "service created successfully");
             auditService.record("create_service", "scde", "Created service id= " + board.getId());
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+            red.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/director/schools";
     }
 
     // Update school
     @PostMapping("/update/school/{id}")
-    public String updateSchool(@ModelAttribute("institution") Institution ins, @PathVariable Long id, Model model) {
+    public String updateSchool(@ModelAttribute("institution") Institution ins,
+     @PathVariable Long id, RedirectAttributes red) {
         try {
             institutionService.save(ins);
-            model.addAttribute("message", "School updated successfully");
+            red.addFlashAttribute("message", "School updated successfully");
             auditService.record("update_school", "scde", "Updated school id= " + ins.getId());
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+            red.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/director/dashboard";
     }

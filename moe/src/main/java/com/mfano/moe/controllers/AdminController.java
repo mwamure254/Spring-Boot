@@ -31,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
@@ -58,7 +59,7 @@ public class AdminController {
     private final ILevelService iLevelService;
 
     @GetMapping("/dashboard")
-    public String dashboard(Authentication auth, Model model) {
+    public String dashboard(Authentication auth, Model model, RedirectAttributes red) {
 
         userService.redirectUser(auth, model);
         List<User> users = userService.findAll();
@@ -68,7 +69,7 @@ public class AdminController {
         model.addAttribute("roles", roleService.findAll());
         model.addAttribute("auditEntries", auditService.findAll());
 
-        model.addAttribute("message", "login successsful");
+        red.addFlashAttribute("message", "Login successsful.");
         return "admin/dashboard";
     }
 
@@ -78,13 +79,13 @@ public class AdminController {
     // Create a new user
     @PostMapping("/create")
     public String createUser(@ModelAttribute UserDto userDto,
-            Model model) {
+            RedirectAttributes red) {
         try {
             userService.registerUser(userDto.getEmail(), userDto.getPassword(), userDto.getRole());
-            model.addAttribute("message", "User created and verification email sent.");
+            red.addFlashAttribute("message", "User created and verification email sent.");
             auditService.record("create_user", "admin", "Created user: " + userDto.getEmail());
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+            red.addFlashAttribute("error", e.getMessage());
         }
         return redirect;
     }
@@ -98,47 +99,47 @@ public class AdminController {
     }
 
     @PostMapping("/status/{option}")
-    public String createStatus(@PathVariable String option, Model model, Role role, ILevel level,
+    public String createStatus(@PathVariable String option, RedirectAttributes red, Role role, ILevel level,
             UStatus user, SStatus board, IStatus institute, ICategory category) {
         switch (option) {
             // Create a new role
             case "role":
                 roleService.save(role);
-                model.addAttribute("message", "Role added successfully");
+                red.addFlashAttribute("message", "Role added successfully");
                 break;
 
             // Create a new level
             case "level":
                 iLevelService.save(level);
-                model.addAttribute("message", "Level added successfully");
+                red.addFlashAttribute("message", "Level added successfully");
                 break;
 
             // Create a new status
             case "user":
                 uStatusService.save(user);
-                model.addAttribute("message", "Status added successfully");
+                red.addFlashAttribute("message", "Status added successfully");
                 break;
 
             // Create a new service status
             case "service":
                 sStatusService.save(board);
-                model.addAttribute("message", "Status added successfully");
+                red.addFlashAttribute("message", "Status added successfully");
                 break;
 
             // Create a new station status
             case "institution":
                 iStatusService.save(institute);
-                model.addAttribute("message", "Status added successfully");
+                red.addFlashAttribute("message", "Status added successfully");
                 break;
 
             // Create a new category
             case "category":
                 iCategoryService.save(category);
-                model.addAttribute("message", "Category added successfully");
+                red.addFlashAttribute("message", "Category added successfully");
                 break;
 
             default:
-                model.addAttribute("error", "An error occured, please try again later.");
+                red.addFlashAttribute("error", "An error occured, please try again later.");
                 break;
         }
 
@@ -147,13 +148,14 @@ public class AdminController {
 
     // Reset user password
     @PostMapping("/reset-password/{id}")
-    public String resetPassword(@PathVariable Long id, @RequestParam String newPassword, Model model) {
+    public String resetPassword(@PathVariable Long id, @RequestParam String newPassword,
+         RedirectAttributes red) {
         User user = userService.findById(id);
         if (user != null) {
             user.setPassword(passwordEncoder.encode(newPassword));
             userService.save(user);
             auditService.record("reset_password", "admin", "Reset password for user id=" + id);
-            model.addAttribute("message", "Passwords reset successfully");
+            red.addFlashAttribute("message", "Passwords reset successfully");
         }
         return redirect;
     }
@@ -163,20 +165,20 @@ public class AdminController {
     @PostMapping("/reset/{userid}")
     public String resetPassword(Authentication auth, @PathVariable Long userid, @RequestParam String password,
             @RequestParam String NP,
-            Model model) {
-        userService.redirectUser(auth, model);
+            RedirectAttributes red) {
+        userService.redirectUser(auth, red);
         User user = userService.findById(userid);
         if (!NP.equals(password) || NP.isEmpty() || password.isEmpty()) {
-            model.addAttribute("error", "Passwords do not match");
+            red.addFlashAttribute("error", "Passwords do not match");
         }
 
         if (user != null) {
             user.setPassword(passwordEncoder.encode(password));
             userService.save(user);
             auditService.record("reset_password", "Admin", "Reset password for user id=" + user.getId());
-            model.addAttribute("message", "Password reset successful");
+            red.addFlashAttribute("message", "Password reset successful");
         } else {
-            model.addAttribute("error", "Failed to reset password");
+            red.addFlashAttribute("error", "Failed to reset password");
         }
 
         return "redirect:/admin/profile/{userid}";
@@ -184,7 +186,8 @@ public class AdminController {
 
     // manage user roles
     @GetMapping("/{option}/{id}")
-    public String manageRoles(Authentication auth, @PathVariable String option, @PathVariable Long id, Model model) {
+    public String manageRoles(Authentication auth, @PathVariable String option, @PathVariable Long id, 
+        Model model, RedirectAttributes red) {
         userService.redirectUser(auth, model);
         User user = userService.findById(id);
         model.addAttribute("user", user);
@@ -213,7 +216,7 @@ public class AdminController {
                 if (user != null && !user.isEnabled()) {
                     userService.createAndSendToken(user);
                     auditService.record("RESEND_VERIFICATION", "admin", "Resent token to user id=" + id);
-                    model.addAttribute("message", "Link resent to user");
+                    red.addFlashAttribute("message", "Link resent to user");
                 }
                 break;
 
@@ -222,9 +225,9 @@ public class AdminController {
                 try {
                     userService.delete(id);
                     auditService.record("delete_user", "admin", "Deleted user id=" + id);
-                    model.addAttribute("message", "user successfully deleted");
+                    red.addFlashAttribute("message", "user successfully deleted");
                 } catch (Exception e) {
-                    model.addAttribute("error", "Sorry! Failed to delete user");
+                    red.addFlashAttribute("error", "Sorry! Failed to delete user");
                 }
                 break;
 
@@ -235,7 +238,7 @@ public class AdminController {
                     userService.save(user);
                     auditService.record("toggle_user", "admin",
                             "Toggled user: " + user.getEmail() + " to enabled=" + user.isEnabled());
-                    model.addAttribute("message", "Toggled user successfully");
+                    red.addFlashAttribute("message", "Toggled user successfully");
                 }
                 break;
 
@@ -248,12 +251,12 @@ public class AdminController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/profile/update/{userid}")
     public String userProfileUpdate(Authentication auth, @PathVariable Long userid,
-            @ModelAttribute("profile") Profile profile, Model model) {
+            @ModelAttribute("profile") Profile profile, RedirectAttributes red) {
 
-        userService.redirectUser(auth, model);
+        userService.redirectUser(auth, red);
         profileService.update(userid, profile);
         auditService.record("update_profile", "admin", "Updated the profile of user id=" + userid);
-        model.addAttribute("message", "Profile updated successfully");
+        red.addFlashAttribute("message", "Profile updated successfully");
         return "redirect:/admin/profile/{userid}";
     }
 
@@ -261,14 +264,14 @@ public class AdminController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/image/update/{userid}")
     public String imageUpdate(Authentication auth, @PathVariable Long userid,
-            @RequestParam("image") MultipartFile file, Model model) {
-        userService.redirectUser(auth, model);
+            @RequestParam("image") MultipartFile file, RedirectAttributes red) {
+        userService.redirectUser(auth, red);
         try {
-            profileService.updateProfileImage(userid, file, model);
+            profileService.updateProfileImage(userid, file, red);
             auditService.record("update_image", "admin", "Updated the profile image  of user id=" + userid);
-            model.addAttribute("message", "Image updated successfully");
+            red.addFlashAttribute("message", "Image updated successfully");
         } catch (IOException e) {
-            model.addAttribute("error", e.getMessage());
+            red.addFlashAttribute("error", e.getMessage());
         }
 
         return "redirect:/admin/profile/{userid}";
@@ -277,15 +280,15 @@ public class AdminController {
     // Delete profile image
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/image/delete/{userid}")
-    public String imageDelete(Authentication auth, @PathVariable Long userid, Model model) {
-        userService.redirectUser(auth, model);
+    public String imageDelete(Authentication auth, @PathVariable Long userid, RedirectAttributes red) {
+        userService.redirectUser(auth, red);
 
         try {
-            profileService.deleteProfileImage(userid, model);
+            profileService.deleteProfileImage(userid, red);
             auditService.record("delete_image", "admin", "Deleted the profile image of user id=" + userid);
-            model.addAttribute("message", "Image deleted successfully");
+            red.addFlashAttribute("message", "Image deleted successfully");
         } catch (IOException e) {
-            model.addAttribute("error", e.getMessage());
+            red.addFlashAttribute("error", e.getMessage());
         }
 
         return "redirect:/admin/profile/{userid}";
@@ -294,24 +297,24 @@ public class AdminController {
     // Assign Remove roles
     @PostMapping("/{option}/{userId}/{roleId}")
     public String userRole(Authentication auth, @PathVariable Long userId, @PathVariable String option,
-            @PathVariable Long roleId, Model model) {
+            @PathVariable Long roleId, RedirectAttributes red) {
 
-        userService.redirectUser(auth, model);
+        userService.redirectUser(auth, red);
         switch (option) {
             case "assign-role":
                 adminService.assignRoleToUser(userId, roleId);
                 auditService.record("update_role", "admin", "Assigned user id=" + userId + " role id=" + roleId);
-                model.addAttribute("message", "Action successful");
+                red.addFlashAttribute("message", "Action successful");
                 break;
 
             case "remove-role":
                 adminService.removeRoleFromUser(userId, roleId);
                 auditService.record("update_role", "admin", "Revoked role id=" + roleId + " from user id=" + userId);
-                model.addAttribute("message", "Action successful");
+                red.addFlashAttribute("message", "Action successful");
                 break;
 
             default:
-                model.addAttribute("error", "Action failed");
+                red.addFlashAttribute("error", "Action failed");
                 break;
         }
 

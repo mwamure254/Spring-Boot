@@ -5,18 +5,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mfano.moe.security.model.Profile;
 import com.mfano.moe.security.repository.ProfileRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ProfileService {
-    @Autowired
-    private ProfileRepository profileRepository;
+    private final ProfileRepository profileRepository;
     private final String baseDirectory = "src/main/resources/static/img/profile/";
 
     // Get All Profiles
@@ -45,7 +47,7 @@ public class ProfileService {
     }
 
     // Update Profile Image
-    public void updateProfileImage(Long userid, MultipartFile file, Model model) throws IOException {
+    public void updateProfileImage(Long userid, MultipartFile file, RedirectAttributes red) throws IOException {
         Profile existing = findByUserId(userid);
         try {
             Path path = Path.of(baseDirectory + file.getOriginalFilename());
@@ -55,15 +57,15 @@ public class ProfileService {
             String img = file.getOriginalFilename();
             existing.setImage(img);
             save(existing);
-            model.addAttribute("message", "Profile image updated successsfully");
+            red.addFlashAttribute("message", "Profile image updated successsfully");
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+            red.addFlashAttribute("error", e.getMessage());
         }
 
     }
 
     // Update Profile Image
-    public void deleteProfileImage(Long userid, Model model) throws IOException {
+    public void deleteProfileImage(Long userid, RedirectAttributes red) throws IOException {
         Profile existing = findByUserId(userid);
         try {
             String image = existing.getImage();
@@ -72,9 +74,9 @@ public class ProfileService {
 
             existing.setImage(null);
             save(existing);
-            model.addAttribute("message", "Profile image deleted successfully");
+            red.addFlashAttribute("message", "Profile image deleted successfully");
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+            red.addFlashAttribute("error", e.getMessage());
         }
 
     }

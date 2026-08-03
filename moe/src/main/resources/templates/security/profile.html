@@ -10,7 +10,7 @@
   <!-- Custom styles for this page-->
 </th:block>
 
-<body style="background-image: url('/img/mfano-bg.png'); background-size:100% 100%; height:100%;">
+<body class="profile-page">
 
   <!-- ======= Header ======= -->
   <th:block th:insert="~{partials/_topbar}" />
@@ -22,14 +22,12 @@
 
   <main id="main" class="main">
 
-    <div class="pagetitle">
+    <div class="pagetitle my-4">
       <h3>Profile</h3>
-      <nav>
+      <nav class="bg-dark">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/"><i class="bi bi-house-door"></i>
               <span>Home</span></a></li>
-          <li class="breadcrumb-item"><a href="#"><i class="bi bi-people"></i>
-              <span>Users</span></a></li>
           <li class="breadcrumb-item active"><i class="bi bi-record-fill"></i>Profile</li>
         </ol>
       </nav>
@@ -264,8 +262,8 @@
                     <div class="row mb-3">
                       <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="email" type="email" class="form-control" id="Email" th:value="${profile.user?.email}"
-                          readonly>
+                        <input name="email" type="email" class="form-control" id="Email"
+                          th:value="${profile.user?.email}" readonly>
                       </div>
                     </div>
 
@@ -325,7 +323,8 @@
                     <div class="row mb-3">
                       <div class="col-md-8 col-lg-9 input-group">
                         <label for="Np" class="col-md-4 col-lg-3 col-form-label">New Password</label>
-                        <input name="NP" type="password" class="form-control" id="Np" required>
+                        <input name="NP" type="password" class="form-control" id="Np" placeholder="new password"
+                          required>
                         <button class="input-group-text btn btn-outline-secondary" type="button"
                           onclick="togglePassword('Np', this)">
                           <i class="bi bi-eye"></i>
@@ -335,7 +334,8 @@
                     <div class="row mb-3">
                       <div class="col-md-8 col-lg-9 input-group">
                         <label for="Password" class="col-md-4 col-lg-3 col-form-label">Confirm Password</label>
-                        <input name="password" type="password" class="form-control" id="Password" required>
+                        <input name="password" type="password" class="form-control" id="Password"
+                          placeholder="confirm password" required>
                         <button class="input-group-text btn btn-outline-secondary" type="button"
                           onclick="togglePassword('Password', this)">
                           <i class="bi bi-eye"></i>
@@ -360,9 +360,6 @@
         </div>
       </div>
     </section>
-
-
-
 
     <!-- Upload Modal-->
     <div class="modal fade" id="image" tabindex="-1">
@@ -395,11 +392,12 @@
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
           <div class="modal-body text-center">
+            <h1><a href="#"><i class="bi bi-info-circle text-danger"></i></a></h1>
             Confirm to Remove image
             <form class="py-2 px-4" th:action="@{'/image/delete/' + ${profile.userid}}" method="post">
               <div class="text-center">
-                <button class="btn btn-success" type="submit">remove</button>
-                <a class="btn btn-warning" data-bs-dismiss="modal">cancel</a>
+                <button class="btn btn-success" type="submit">Remove</button>
+                <a class="btn btn-warning" data-bs-dismiss="modal">Cancel</a>
               </div>
             </form>
           </div>

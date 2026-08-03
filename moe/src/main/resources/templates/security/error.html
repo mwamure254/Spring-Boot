@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <th:block th:replace="~{partials/_header :: common_header(~{::title/text()},~{::link},~{::meta})}">
   <!-- Custom meta data for this template-->
-  <meta name="description" content="meo home page">
+  <meta name="description" content="meo error page">
   <meta name="author" content="mfano">
   <!-- Custom title for this page-->
   <title>MoE | Error</title>
@@ -12,17 +12,13 @@
 
 <body>
 
-  <!-- ======= Header ======= -->
-  <th:block th:insert="~{partials/_topbar}" />
-  <!-- =====End Header===== -->
-
   <main>
     <div class="container">
 
       <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
         <h1>404!</h1>
         <h2>An error occured. Try again later.</h2>
-        <a class="btn" href="/home">Back to Home Page</a>
+        <a class="btn" href="/home">Back to Main Page</a>
       </section>
 
     </div>

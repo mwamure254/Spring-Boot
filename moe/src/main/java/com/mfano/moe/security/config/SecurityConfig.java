@@ -21,7 +21,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public class SecurityConfig {
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http, LogHandler logoutHandler) throws Exception {
     http.csrf(csrf -> csrf.disable());
     http.authorizeHttpRequests(auth -> auth
         .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -29,22 +29,31 @@ public class SecurityConfig {
         .requestMatchers("/hoi/**").hasRole("HOI")
         .requestMatchers("/user/**").hasRole("USER")
         .requestMatchers("/", "/register", "/login", "/verify", "/forgot", "/reset-password", "/resend",
-            "/error", "/profile", "/css/**", "/js/**", "/vendor/**", "/img/**")
+            "/error-page", "/profile", "/css/**", "/js/**", "/vendor/**", "/img/**")
         .permitAll()
         .anyRequest().authenticated())
 
         .formLogin(form -> form
             .loginPage("/login")
-            .defaultSuccessUrl("/dashboard", true)
-            // .successForwardUrl("/dashboard")
+            .defaultSuccessUrl("/", true)
+            //.successForwardUrl("/dashboard")
             .permitAll())
 
-        .exceptionHandling(handling -> handling.accessDeniedPage("/error"))
-        .logout(logout -> logout.invalidateHttpSession(true).clearAuthentication(true)
-            .logoutSuccessUrl("/login").permitAll())
+        .exceptionHandling(handling -> handling
+          .accessDeniedPage("/error"))
+
+        .logout(logout -> logout
+          .logoutUrl("/logout")
+          .addLogoutHandler(logoutHandler)
+          .invalidateHttpSession(true)
+          .clearAuthentication(true)
+          .deleteCookies("JSESSIONID")
+          .logoutSuccessUrl("/login?logout")
+          .permitAll())
 
         .sessionManagement(management -> management
             .maximumSessions(1)
+
             .expiredUrl("/login?expired=true"));
 
     return http.build();

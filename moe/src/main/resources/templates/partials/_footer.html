@@ -2,7 +2,7 @@
 		class="bi bi-arrow-up-short"></i></a>
 
 <!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
+<footer class="footer">
 	<div class="copyright">
 		Copyright &copy; <strong><span>Mfano</span></strong>. All Rights Reserved
 	</div>
@@ -39,6 +39,19 @@
 	}
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const alert = document.getElementById("floatingAlert");
+
+    if (alert) {
+        setTimeout(() => {
+            const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+            bsAlert.close();
+        }, 5000);
+    }
+});
+</script>
+
 <!-- Logout Modal-->
 <div class="modal fade" id="logout" tabindex="-1">
 	<div class="modal-dialog modal-sm">
@@ -49,7 +62,9 @@
 					Confirm to Logout
 				</h5>
 				<div class="row my-2 justify-content-center">
-					<a href="/logout" class="btn col-sm-4 btn-success mx-2" type="submit">Proceed</a>
+					<form class="col-sm-4 btn-success mx-2" th:action="@{/logout}" method="post">
+						<button class="btn btn-success" type="submit">Proceed</button>
+					</form>
 					<button class="btn col-sm-4 btn-warning mx-2" data-bs-dismiss="modal">Cancel</button>
 				</div>
 			</div>
@@ -57,3 +72,29 @@
 		</div>
 	</div>
 </div><!-- End Logout Modal-->
+
+<!-- Floating Alerts-->
+<div th:if="${message}" id="floatingAlert"
+     class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow"
+     role="alert"
+     style="z-index: 1080; min-width: 300px;">
+
+    <strong th:text="${message}">Success!</strong> 
+
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"></button>
+</div>
+<div th:if="${error}" id="floatingAlert"
+     class="alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow"
+     role="alert"
+     style="z-index: 1080; min-width: 300px;">
+ 
+    <strong th:text="${error}">Error!</strong> 
+
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"></button>
+</div><!-- End Floating Alerts-->

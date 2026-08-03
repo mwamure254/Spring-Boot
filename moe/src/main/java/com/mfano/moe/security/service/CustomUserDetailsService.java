@@ -8,21 +8,23 @@ import org.springframework.stereotype.Service;
 
 import com.mfano.moe.security.config.CustomUserDetails;
 import com.mfano.moe.security.model.User;
-import com.mfano.moe.security.repository.UserRepository;
+
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
-    private UserRepository userRepo;
+    private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findByEmail(username);
+        User user = userService.findByUserName(username);
+       
 
         if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+            throw new UsernameNotFoundException("User not Found");
         }
-        
+
         return new CustomUserDetails(user);
-    };
+    }
+
 }

@@ -50,7 +50,7 @@ public class UserService {
 
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setRoles(Set.of(roleService.findByName(role).get()));
+        user.setRoles(Set.of(roleService.findByName(role)));
         user.setEnabled(true);
 
         userRepository.save(user);
@@ -96,6 +96,10 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public User findByUserName(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -152,20 +156,19 @@ public class UserService {
 
     // check logged user
     public void redirectUser(Authentication auth, Model model) {
+        CustomUserDetails u = (CustomUserDetails) auth.getPrincipal();
 
         if (auth == null || !auth.isAuthenticated()) {
             model.addAttribute("error", "user not authenticated");
         } else {
-            CustomUserDetails u = (CustomUserDetails) auth.getPrincipal();
-
             // Add user info to model (for Thymeleaf dashboard pages)
             model.addAttribute("id", u.getId());
             model.addAttribute("username", u.getUsername());
             model.addAttribute("password", u.getPassword());
             model.addAttribute("roles", u.getRoles());
 
-            Profile profile = profileService.findByUserId(u.getId());
             profileService.checkProfile(u.getId(), model);
+            Profile profile = profileService.findByUserId(u.getId());
             model.addAttribute("logged", profile);
         }
     }

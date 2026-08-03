@@ -38,19 +38,20 @@ public class AuthController {
     private String msg = "security/message";
     private final String login = "redirect:/login";
 
+    // dashboard api
     @GetMapping("/dashboard")
-    public String redirectAfterLogin(Authentication auth, Model model) {
-        Object principal = auth.getPrincipal();
-        if (!(principal instanceof CustomUserDetails)) {
-            model.addAttribute("error", "Invalid Username or Password.");
-            return login;
+    public String redirectAfterLogin(Authentication auth, RedirectAttributes red) {
+
+        if (!(auth.getPrincipal() instanceof CustomUserDetails)) {
+            red.addFlashAttribute("error", "Invalid Username or Password.");
+            return "security/login";
         }
 
-        CustomUserDetails u = (CustomUserDetails) principal;
+        CustomUserDetails u = (CustomUserDetails) auth.getPrincipal();
         // Check if user is enabled
         if (!u.isEnabled()) {
-            model.addAttribute("error", "user not verified");
-            return login;
+            red.addFlashAttribute("error", "user not verified");
+            return "security/login";
         }
 
         // Extract roles
@@ -61,9 +62,12 @@ public class AuthController {
 
         // If user is not assigned any role
         if (roles.isEmpty()) {
-            model.addAttribute("error", "contact the system admin");
-            return login;
+            red.addFlashAttribute("error", "contact the system admin");
+            return "security/login";
         }
+
+        // Update Logs
+        auditService.record("user_login", "user", "User " + u.getUsername() + " logged in");
 
         // Redirect based on role priority
         if (roles.contains("ROLE_ADMIN")) {
@@ -77,10 +81,11 @@ public class AuthController {
         }
 
         // Fallback
-        model.addAttribute("error", "Please contact the system admin");
-        return login;
+        red.addFlashAttribute("error", "Contact the system admin.");
+        return "security/login";
     }
 
+    // register user
     @GetMapping("/register")
     public String registerForm(Model model) {
         model.addAttribute("roles", roleService.findAll());
@@ -89,78 +94,85 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerSubmit(@ModelAttribute UserDto userDto, Model model) {
+    public String registerSubmit(@ModelAttribute UserDto userDto, RedirectAttributes red) {
         try {
             userService.registerUser(userDto.getEmail(), userDto.getPassword(), userDto.getRole());
-            model.addAttribute("message", "Registration successful. Check your email for verification link.");
+            red.addFlashAttribute("message", "Registration successful. Check your email for verification link.");
             return msg;
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+            red.addFlashAttribute("error", e.getMessage());
             return "security/register";
         }
     }
 
+    // login user
     @GetMapping("/login")
     public String loginPage(
             @RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout,
-            Model model,
+            RedirectAttributes red,
             Authentication authentication) {
+
+        // Logout confirmation
+        if (logout != null) {
+            red.addFlashAttribute("message", "Logged out successfully.");
+        }
 
         // If user is already logged in → redirect to dashboard
         if (authentication != null && authentication.isAuthenticated()
                 && authentication.getPrincipal() instanceof CustomUserDetails) {
+            red.addFlashAttribute("message", "Already logged in.");
             return "redirect:/dashboard";
-        } 
+        }
 
         // Error from Spring Security (bad credentials or disabled)
         if (error != null) {
-            model.addAttribute("error", "Check your credentials and try again.");
-        }
-
-        // Logout confirmation
-        if (logout != null) {
-            model.addAttribute("message", "You have been logged out.");
+            red.addFlashAttribute("error", "Check your credentials and try again.");
         }
 
         return "security/login"; // Return login view
     }
 
+    // update user image
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/image/update/{userid}")
-    public String imageUpdate(@PathVariable Long userid, @RequestParam("image") MultipartFile file, Model model) {
+    public String imageUpdate(@PathVariable Long userid, @RequestParam("image") MultipartFile file,
+            RedirectAttributes red) {
         try {
-            profileService.updateProfileImage(userid, file, model);
+            profileService.updateProfileImage(userid, file, red);
         } catch (IOException e) {
-            model.addAttribute("error", e.getMessage());
+            red.addFlashAttribute("error", e.getMessage());
         }
         auditService.record("update_image", "user id=" + userid, "Updated their profile image");
+        red.addFlashAttribute("message", "Image updated successfully.");
         return "redirect:/profile";
     }
 
+    // delete user image
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/image/delete/{userid}")
-    public String imageDelete(@PathVariable Long userid, Model model) {
+    public String imageDelete(@PathVariable Long userid, RedirectAttributes red) {
         try {
-            profileService.deleteProfileImage(userid, model);
+            profileService.deleteProfileImage(userid, red);
         } catch (IOException e) {
-            model.addAttribute("error", e.getMessage());
+            red.addFlashAttribute("error", e.getMessage());
         }
         auditService.record("delete_image", "user id=" + userid, "Deleted their profile image");
+        red.addFlashAttribute("message", "Image deleted successfully.");
         return "redirect:/profile";
     }
 
+    // profile
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
-    public String userProfile(Authentication auth, Model model) {
-        userService.redirectUser(auth, model);
+    public String userProfile(Authentication auth, RedirectAttributes red, Model model) {
+
         if (!(auth.getPrincipal() instanceof CustomUserDetails)) {
-            model.addAttribute("error", "user not authenticated");
+            red.addFlashAttribute("error", "user not authenticated");
             return "redirect:/login";
         } else {
             userService.redirectUser(auth, model);
-            model.addAttribute("message", "Welcome to your profile");
-
+            red.addFlashAttribute("message", "Welcome to your profile");
             return "security/profile";
         }
     }
@@ -178,23 +190,22 @@ public class AuthController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/logout")
-    public String logout(Model model) {
-        model.addAttribute("message", "You have been logged out successfully");
-        return "redirect:/login";
+    @PostMapping("/logout")
+    public String logout() {
+        return login;
     }
 
     @GetMapping("/verify")
-    public String verify(@RequestParam("token") String token, Model model) {
+    public String verify(@RequestParam("token") String token, RedirectAttributes red) {
         String result = userService.validateVerificationToken(token);
         if ("valid".equals(result)) {
-            model.addAttribute("message", "Email verified! You can now login.");
+            red.addFlashAttribute("message", "Email verified! You can now login.");
             return msg;
         } else if ("expired".equals(result)) {
-            model.addAttribute("error", "Token expired. Please register again.");
+            red.addFlashAttribute("error", "Token expired. Please register again.");
             return msg;
         } else {
-            model.addAttribute("error", "Invalid token.");
+            red.addFlashAttribute("error", "Invalid token.");
             return msg;
         }
     }
@@ -205,19 +216,19 @@ public class AuthController {
     }
 
     @PostMapping("/resend")
-    public String resendSubmit(@RequestParam("email") String email, Model model) {
+    public String resendSubmit(@RequestParam("email") String email, RedirectAttributes red) {
         User user = userService.findByEmail(email);
         if (user == null) {
-            model.addAttribute("error", "No account with that email.");
+            red.addFlashAttribute("error", "No account with that email.");
             return "security/resend";
         }
 
         if (user.isEnabled()) {
-            model.addAttribute("message", "Email already verified. You can login.");
+            red.addFlashAttribute("message", "Email already verified. You can login.");
             return msg;
         }
         userService.createAndSendToken(user);
-        model.addAttribute("message", "Verification email resent. Check your inbox.");
+        red.addFlashAttribute("message", "Verification email resent. Check your inbox.");
         return msg;
     }
 
@@ -239,29 +250,30 @@ public class AuthController {
     }
 
     @GetMapping("/password-reset")
-    public String resetPasswordForm(@RequestParam("token") String token, Model model) {
+    public String resetPasswordForm(@RequestParam("token") String token, Model model, RedirectAttributes red) {
         String res = userService.validatePasswordResetToken(token);
         if ("valid".equals(res)) {
             model.addAttribute("token", token);
             return "security/reset-password";
         } else if ("expired".equals(res)) {
-            model.addAttribute("error", "Token expired.");
+            red.addFlashAttribute("error", "Token expired.");
             return msg;
         } else {
-            model.addAttribute("error", "Invalid token.");
+            red.addFlashAttribute("error", "Invalid token.");
             return msg;
         }
     }
 
     @PostMapping("/reset-password")
-    public String resetPasswordSubmit(@RequestParam String token, @RequestParam String password, Model model) {
+    public String resetPasswordSubmit(@RequestParam String token, @RequestParam String password,
+            RedirectAttributes red) {
         var optUser = userService.getUserByPasswordResetToken(token);
         if (optUser.isEmpty()) {
-            model.addAttribute("error", "Invalid token.");
+            red.addFlashAttribute("error", "Invalid token.");
             return msg;
         }
         userService.changePassword(optUser.get(), password);
-        model.addAttribute("message", "Password changed. You can now login.");
+        red.addFlashAttribute("message", "Password changed. You can now login.");
         return msg;
     }
 
@@ -269,11 +281,11 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/reset")
     public String resetPassword(Authentication auth, @RequestParam String password, @RequestParam String NP,
-            Model model) {
+            RedirectAttributes red) {
         CustomUserDetails u = (CustomUserDetails) auth.getPrincipal();
         User user = userService.findById(u.getId());
         if (!NP.equals(password) || NP.isEmpty() || password.isEmpty()) {
-            model.addAttribute("error", "Passwords do not match");
+            red.addFlashAttribute("error", "Passwords do not match");
             return "redirect:/profile";
         }
 
@@ -281,10 +293,10 @@ public class AuthController {
             user.setPassword(passwordEncoder.encode(password));
             userService.save(user);
             auditService.record("reset_password", "user id=" + user.getId(), "Reset password");
-            model.addAttribute("message", "Password reset successful");
+            red.addFlashAttribute("message", "Password reset successful");
             return "redirect:/profile";
         } else {
-            model.addAttribute("error", "Failed to reset password");
+            red.addFlashAttribute("error", "Failed to reset password");
             return "redirect:/profile";
         }
     }
