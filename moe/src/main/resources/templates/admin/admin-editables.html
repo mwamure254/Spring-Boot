@@ -162,9 +162,8 @@
     <div class="modal fade" id="nc" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h4>New Category</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header bg-secondary py-2">
+            <p class="mb-0">New Category</p>
           </div>
           <form class="py-2 px-4" th:action="@{/admin/status/category}" method="post">
             <div class="row mb-3">
@@ -181,22 +180,27 @@
               </div>
             </div>
 
-            <div class="text-end">
-              <button type="reset" class="btn btn-warning">clear</button>
-              <button type="submit" class="btn btn-primary">save</button>
+            <div class="row mb-3">
+              <div class="col-sm-4 text-start">
+                <button class="btn btn-sm btn-danger" data-bs-dismiss="modal">close</button>
+              </div>
+              <div class="col-sm-8 text-end">
+                <button type="reset" class="btn btn-sm btn-warning">clear</button>
+                <button type="submit" class="btn btn-sm btn-primary">save</button>
+              </div>
             </div>
-          </form>
         </div>
+        </form>
       </div>
+    </div>
     </div><!-- End SS Modal-->
 
     <!-- SS Modal-->
     <div class="modal fade" id="is" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h4>New Status</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header bg-secondary py-2">
+            <p class="mb-0">New Status</p>
           </div>
           <form class="py-2 px-4" th:action="@{/admin/status/institution}" method="post">
             <div class="row mb-3">
@@ -213,9 +217,14 @@
               </div>
             </div>
 
-            <div class="text-end">
-              <button type="reset" class="btn btn-warning">clear</button>
-              <button type="submit" class="btn btn-primary">save</button>
+            <div class="row mb-3">
+              <div class="col-sm-4 text-start">
+                <button class="btn btn-sm btn-danger" data-bs-dismiss="modal">close</button>
+              </div>
+              <div class="col-sm-8 text-end">
+                <button type="reset" class="btn btn-sm btn-warning">clear</button>
+                <button type="submit" class="btn btn-sm btn-primary">save</button>
+              </div>
             </div>
           </form>
         </div>
@@ -226,9 +235,8 @@
     <div class="modal fade" id="ss" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h4>New Status</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header bg-secondary py-2">
+            <p class="mb-0">New Status</p>
           </div>
           <form class="py-2 px-4" th:action="@{/admin/status/service}" method="post">
             <div class="row mb-3">
@@ -245,9 +253,14 @@
               </div>
             </div>
 
-            <div class="text-end">
-              <button type="reset" class="btn btn-warning">clear</button>
-              <button type="submit" class="btn btn-primary">save</button>
+            <div class="row mb-3">
+              <div class="col-sm-4 text-start">
+                <button class="btn btn-sm btn-danger" data-bs-dismiss="modal">close</button>
+              </div>
+              <div class="col-sm-8 text-end">
+                <button type="reset" class="btn btn-sm btn-warning">clear</button>
+                <button type="submit" class="btn btn-sm btn-primary">save</button>
+              </div>
             </div>
           </form>
         </div>
@@ -258,9 +271,8 @@
     <div class="modal fade" id="us" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h4>New Status</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header bg-secondary py-2">
+            <p class="mb-0">New Status</p>
           </div>
           <form class="py-2 px-4" th:action="@{/admin/status/user}" method="post">
             <div class="row mb-3">
@@ -277,9 +289,14 @@
               </div>
             </div>
 
-            <div class="text-end">
-              <button type="reset" class="btn btn-warning">clear</button>
-              <button type="submit" class="btn btn-primary">save</button>
+            <div class="row mb-3">
+              <div class="col-sm-4 text-start">
+                <button class="btn btn-sm btn-danger" data-bs-dismiss="modal">close</button>
+              </div>
+              <div class="col-sm-8 text-end">
+                <button type="reset" class="btn btn-sm btn-warning">clear</button>
+                <button type="submit" class="btn btn-sm btn-primary">save</button>
+              </div>
             </div>
           </form>
         </div>
@@ -290,9 +307,8 @@
     <div class="modal fade" id="ur" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h4>New Role</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header bg-secondary py-2">
+            <p class="mb-0">New Role</p>
           </div>
           <form class="py-2 px-4" th:action="@{/admin/status/role}" method="post">
             <div class="row mb-3">
@@ -309,9 +325,14 @@
               </div>
             </div>
 
-            <div class="text-end">
-              <button type="reset" class="btn btn-warning">clear</button>
-              <button type="submit" class="btn btn-primary">save</button>
+            <div class="row mb-3">
+              <div class="col-sm-4 text-start">
+                <button class="btn btn-sm btn-danger" data-bs-dismiss="modal">close</button>
+              </div>
+              <div class="col-sm-8 text-end">
+                <button type="reset" class="btn btn-sm btn-warning">clear</button>
+                <button type="submit" class="btn btn-sm btn-primary">save</button>
+              </div>
             </div>
           </form>
         </div>
@@ -322,9 +343,8 @@
     <div class="modal fade" id="nl" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h4>New Level</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header bg-secondary py-2">
+            <p class="mb-0">New Level</p>
           </div>
           <form class="py-2 px-4" th:action="@{/admin/status/level}" method="post">
             <div class="row mb-3">
@@ -341,9 +361,14 @@
               </div>
             </div>
 
-            <div class="text-end">
-              <button type="reset" class="btn btn-warning">clear</button>
-              <button type="submit" class="btn btn-primary">save</button>
+            <div class="row mb-3">
+              <div class="col-sm-4 text-start">
+                <button class="btn btn-sm btn-danger" data-bs-dismiss="modal">close</button>
+              </div>
+              <div class="col-sm-8 text-end">
+                <button type="reset" class="btn btn-sm btn-warning">clear</button>
+                <button type="submit" class="btn btn-sm btn-primary">save</button>
+              </div>
             </div>
           </form>
         </div>
@@ -354,9 +379,8 @@
     <div class="modal fade" id="nu" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h4>New User</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header bg-secondary py-2">
+            <p class="mb-0">New User</p>
           </div>
           <form class="py-2 px-4">
             <div class="row mb-3">
@@ -380,9 +404,14 @@
               </div>
             </div>
 
-            <div class="text-end">
-              <button type="reset" class="btn btn-warning">clear</button>
-              <button type="submit" class="btn btn-primary">save</button>
+            <div class="row mb-3">
+              <div class="col-sm-4 text-start">
+                <button class="btn btn-sm btn-danger" data-bs-dismiss="modal">close</button>
+              </div>
+              <div class="col-sm-8 text-end">
+                <button type="reset" class="btn btn-sm btn-warning">clear</button>
+                <button type="submit" class="btn btn-sm btn-primary">save</button>
+              </div>
             </div>
           </form>
         </div>
@@ -393,9 +422,8 @@
     <div class="modal fade" id="ns" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h4>New Station</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header bg-secondary py-2">
+            <p class="mb-0">New Station</p>
           </div>
           <form class="py-2 px-4">
             <div class="row mb-3">
@@ -412,9 +440,14 @@
               </div>
             </div>
 
-            <div class="text-end">
-              <button type="reset" class="btn btn-warning">clear</button>
-              <button type="submit" class="btn btn-primary">save</button>
+            <div class="row mb-3">
+              <div class="col-sm-4 text-start">
+                <button class="btn btn-sm btn-danger" data-bs-dismiss="modal">close</button>
+              </div>
+              <div class="col-sm-8 text-end">
+                <button type="reset" class="btn btn-sm btn-warning">clear</button>
+                <button type="submit" class="btn btn-sm btn-primary">save</button>
+              </div>
             </div>
           </form>
         </div>

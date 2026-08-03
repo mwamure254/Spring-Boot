@@ -368,9 +368,8 @@
     <div class="modal fade" id="image" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <p>Update profile image</p>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class=" modal-header bg-secondary py-2">
+            <p class="mb-0">Update profile image</p>
           </div>
           <form class="py-2 px-4" th:action="@{'/admin/image/update/' + ${profile.userid}}" method="post"
             enctype="multipart/form-data" accept="image">
@@ -381,9 +380,14 @@
               </div>
             </div>
 
-            <div class="text-end">
-              <button type="reset" class="btn btn-warning">clear</button>
-              <button type="submit" class="btn btn-primary">save</button>
+            <div class="row mb-3">
+              <div class="col-sm-4 text-start">
+                <button class="btn btn-sm btn-danger" data-bs-dismiss="modal">close</button>
+              </div>
+              <div class="col-sm-8 text-end">
+                <button type="reset" class="btn btn-sm btn-warning">clear</button>
+                <button type="submit" class="btn btn-sm btn-primary">save</button>
+              </div>
             </div>
           </form>
         </div>
@@ -399,8 +403,8 @@
             Confirm to Remove image
             <form class="py-2 px-4" th:action="@{'/admin/image/delete/' + ${profile.userid}}" method="post">
               <div class="text-center">
-                <button class="btn btn-success" type="submit">Remove</button>
-                <a class="btn btn-warning" data-bs-dismiss="modal">Cancel</a>
+                <button class="btn btn-sm btn-success" type="submit">Remove</button>
+                <a class="btn btn-sm btn-warning" data-bs-dismiss="modal">Cancel</a>
               </div>
             </form>
           </div>
