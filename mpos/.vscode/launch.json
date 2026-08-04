@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MposApplication<mpos>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.mfano.mpos.MposApplication",
+            "projectName": "mpos",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
