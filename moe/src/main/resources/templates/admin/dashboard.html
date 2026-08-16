@@ -74,43 +74,44 @@
                 <tr>
                   <th>S/N</th>
                   <th>User</th>
-                  <th>Roles</th>
                   <th>Status</th>
+                  <th>Roles</th>
                   <th>Actions</th>
+                  <th>Password</th>
                 </tr>
               </thead>
               <tbody>
                 <tr th:each="u, stat : ${users}">
                   <td th:text="${stat.count}"></td>
                   <td th:text="${u.email}"></td>
-                  <td>
-                    <a class="btn btn-sm btn-warning" th:href="@{'/admin/manage-user/' + ${u.id}}"><i
-                        class="bi bi-pen"></i></a>
-                  </td>
                   <td th:switch="${u.enabled} ? 'Yes': 'No'">
                     <span th:case="'Yes'" class="badge bg-success">Active</span>
                     <span th:case="'No'" class="badge bg-primary">Disabled</span>
                   </td>
                   <td>
-                    <div class="d-flex flex-wrap gap-1">
-                      <a th:href="@{'/admin/toggle/' + ${u.id}}" class="btn btn-sm btn-warning"><i
-                          class="bi bi-lock"></i></a>
-                      <a th:href="@{'/admin/delete/' + ${u.id}}" class="btn btn-sm btn-danger"
+                    <a class="btn btn-sm btn-warning" th:href="@{'/admin/manage-user/' + ${u.id}}"><i
+                        class="bi bi-pen"></i></a>
+                  </td>
+                  <td>
+                    <div class="dflex-inline gap-1 d-flex">
+                      <a th:href="@{'/admin/toggle/' + ${u.id}}">Lock/Unlock</a>
+                      <a class="btn btn-sm btn-danger" th:href="@{'/admin/delete/' + ${u.id}}"
                         onclick="return confirm('Delete this user?')">
-                        <i class=" ri-delete-bin-line"></i></a>
-                      <a th:href="@{'/admin/resend/' + ${u.id}}" class="btn btn-sm btn-info">Resend</a>
-
-                      <form th:action="@{'/admin/reset-password/' + ${u.id}}" method="post" class="d-inline-flex">
-                        <div class="input-group">
-                          <input type="password" name="newPassword" id="Password" placeholder="New Password">
-                          <button class="input-group-text btn btn-outline-secondary" type="button"
-                            onclick="togglePassword('Password', this)">
-                            <i class="bi bi-eye"></i>
-                            <button class="input-group-text btn btn-sm btn-secondary" type="submit">Reset</button>
-                          </button>
-                        </div>
-                      </form>
+                        <i class="bi bi-trash"></i></a>
+                      <a th:href="@{'/admin/resend/' + ${u.id}}">Resend</a>
                     </div>
+                  </td>
+                  <td>
+                    <form th:action="@{'/admin/reset-password/' + ${u.id}}" method="post" class="d-inline-flex">
+                      <div class="input-group">
+                        <button class="input-group-text btn btn-outline-secondary" type="button"
+                          onclick="togglePassword('Password', this)">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                        <input type="password" name="newPassword" id="Password" placeholder="New Password">
+                        <button class="input-group-text btn btn-sm btn-secondary" type="submit">Reset</button>
+                      </div>
+                    </form>
                   </td>
 
                 </tr>
@@ -197,16 +198,14 @@
             <div class="row mb-3">
               <label class="col-md-6 col-lg-4 col-form-label">Password</label>
               <div class="col-md-6 col-lg-8">
-                <input type="password" class="form-control" name="password" placeholder="Password"
-                  required>
+                <input type="password" class="form-control" name="password" placeholder="Password" required>
               </div>
             </div>
 
             <div class="row mb-3">
               <label class="col-md-6 col-lg-4 col-form-label">Confirm</label>
               <div class="col-md-6 col-lg-8">
-                <input type="password" class="form-control" name="confirm" placeholder="confirm password"
-                  required>
+                <input type="password" class="form-control" name="confirm" placeholder="confirm password" required>
               </div>
             </div>
 
