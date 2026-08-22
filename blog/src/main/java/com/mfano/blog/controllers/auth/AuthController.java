@@ -30,7 +30,7 @@ public class AuthController {
     private String msg = "security/message";
     private final String login = "redirect:/login?error";
 
-    @GetMapping("/dashboard")
+    @GetMapping("/")
     public String redirectAfterLogin(Authentication auth, RedirectAttributes model) {
 
         if (auth == null || !auth.isAuthenticated()) {

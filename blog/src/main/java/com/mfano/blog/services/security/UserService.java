@@ -1,6 +1,7 @@
 package com.mfano.blog.services.security;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 //import java.time.LocalDateTime;
 import java.util.Set;
@@ -140,6 +141,10 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         tokenRepository.deleteByUserId(user.getId());
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
 }
