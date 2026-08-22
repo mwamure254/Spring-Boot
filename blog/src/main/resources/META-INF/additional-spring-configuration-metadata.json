@@ -1,0 +1,47 @@
+{"properties": [
+  {
+    "name": "spring.mail.host",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.host'"
+  },
+  {
+    "name": "spring.mail.port",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.port'"
+  },
+  {
+    "name": "spring.mail.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.username'"
+  },
+  {
+    "name": "spring.mail.properties.mail.smtp.auth",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.properties.mail.smtp.auth'"
+  },
+  {
+    "name": "spring.mail.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.password'"
+  },
+  {
+    "name": "spring.mail.properties.mail.smtp.starttls.enable",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mail.properties.mail.smtp.starttls.enable'"
+  },
+  {
+    "name": "app.base-url",
+    "type": "java.lang.String",
+    "description": "A description for 'app.base-url'"
+  },
+  {
+    "name": "app.admin.email",
+    "type": "java.lang.String",
+    "description": "A description for 'app.admin.email'"
+  },
+  {
+    "name": "app.admin.password",
+    "type": "java.lang.String",
+    "description": "A description for 'app.admin.password'"
+  }
+]}
