@@ -69,6 +69,10 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    public User findByPassword(String password){
+        return userRepository.findByPassword(password);
+    }
+
     public void createAndSendToken(User user) {
         String token = UUID.randomUUID().toString();
         LocalDateTime expiry = LocalDateTime.now().plusHours(24);

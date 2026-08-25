@@ -24,12 +24,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, LogHandler logoutHandler) throws Exception {
         http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**", "/register").hasRole("ADMIN")
                 .requestMatchers("/author/**").hasRole("AUTHOR")
                 .requestMatchers("/editor/**").hasRole("EDITOR")
                 .requestMatchers("/user/**").hasRole("USER")
-                .requestMatchers("/", "/register", "/login", "/verify", "/forgot", "/reset-password", "/resend",
-                        "/error", "/profile", "/css/**", "/js/**", "/vendor/**", "/img/**")
+                .requestMatchers("/", "/login", "/verify", "/forgot", "/reset-password", "/resend",
+                        "/error", "/profile", "/css/**", "/js/**", "/vendor/**", "/image/**")
                 .permitAll()
                 .anyRequest().authenticated())
 

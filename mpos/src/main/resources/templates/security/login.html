@@ -34,7 +34,7 @@
                 <div th:if="${error}" class="alert alert-danger py-2" th:text="${error}"></div>
                 <div th:if="${message}" class="alert alert-success py-2" th:text="${message}"></div>
 
-                <form class="row g-3 py-2 needs-validation" th:action="@{/login}" method="post" novalidate>
+                <form class="row g-3 py-2 needs-validation" th:action="@{/login}" method="post">
 
                   <div class="col-12">
                     <label for="Username" class="form-label">Username</label>

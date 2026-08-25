@@ -25,10 +25,11 @@
 							</a>
 						</div><!-- End Logo -->
 
+						<div th:if="${error}" class="alert alert-danger py-2" th:text="${error}"></div>
+
 						<div class="card mb-3">
 							<div class="card-body">
-								<form class="row g-3 py-2 needs-validation" th:action="@{/forgot}" method="post"
-									novalidate>
+								<form class="row g-3 py-2 needs-validation" th:action="@{/forgot}" method="post">
 									<div class="col-12">
 										<div class="input-group">
 											<input type="text" name="email" class="form-control"

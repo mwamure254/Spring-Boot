@@ -21,36 +21,7 @@
 
 <!-- Template Main JS File -->
 <script th:src="@{/js/main.js}"></script>
-
-<script>
-	function togglePassword(fieldId, button) {
-		const input = document.getElementById(fieldId);
-		const icon = button.querySelector("i");
-
-		if (input.type === "password") {
-			input.type = "text";
-			icon.classList.remove("bi-eye");
-			icon.classList.add("bi-eye-slash");
-		} else {
-			input.type = "password";
-			icon.classList.remove("bi-eye-slash");
-			icon.classList.add("bi-eye");
-		}
-	}
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const alert = document.getElementById("floatingAlert");
-
-    if (alert) {
-        setTimeout(() => {
-            const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-            bsAlert.close();
-        }, 5000);
-    }
-});
-</script>
+<script th:src="@{/js/custom.js}"></script>
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logout" tabindex="-1">

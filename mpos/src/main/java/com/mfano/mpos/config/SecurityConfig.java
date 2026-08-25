@@ -13,59 +13,63 @@ import com.mfano.mpos.services.security.CustomDetailService;
 
 import lombok.RequiredArgsConstructor;
 
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final CustomDetailService customDetailService;
-    private final PasswordEncoder passwordEncoder;
+        private final CustomDetailService customDetailService;
+        private final PasswordEncoder passwordEncoder;
+        private final AuthHandler authHandler;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, LogHandler logoutHandler) throws Exception {
-        http.csrf(csrf -> csrf.disable());
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/manager/**").hasRole("MANAGER")
-                .requestMatchers("/cashier/**").hasRole("CASHIER")
-                .requestMatchers("/procurement/**").hasRole("PROCUREMENT")
-                .requestMatchers("/", "/register", "/login", "/verify", "/forgot", "/reset-password", "/resend",
-                        "/error", "/profile", "/css/**", "/js/**", "/vendor/**", "/img/**")
-                .permitAll()
-                .anyRequest().authenticated())
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http, LogHandler logoutHandler) throws Exception {
+                http.csrf(csrf -> csrf.disable());
+                http.authorizeHttpRequests(auth -> auth
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/manager/**").hasRole("MANAGER")
+                                .requestMatchers("/cashier/**").hasRole("CASHIER")
+                                .requestMatchers("/procurement/**").hasRole("PROCUREMENT")
+                                .requestMatchers("/", "/register", "/login", "/verify", "/forgot", "/reset-password",
+                                                "/resend",
+                                                "/error", "/profile", "/css/**", "/js/**", "/vendor/**", "/image/**")
+                                .permitAll()
+                                .anyRequest().authenticated())
 
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
-                        // .successForwardUrl("/dashboard")
-                        .permitAll())
+                                .formLogin(form -> form
+                                                .loginPage("/login")
+                                                .loginProcessingUrl("/login")
+                                                .successHandler(authHandler)
+                                                //.failureHandler(authHandler)
+                                                //.defaultSuccessUrl("/", true)
+                                                // .successForwardUrl("/dashboard")
+                                                .permitAll())
 
-                .exceptionHandling(handling -> handling
-                        .accessDeniedPage("/error"))
+                                .exceptionHandling(handling -> handling
+                                                .accessDeniedPage("/error"))
 
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .addLogoutHandler(logoutHandler)
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-                        .deleteCookies("JSESSIONID")
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll())
+                                .logout(logout -> logout
+                                                .logoutUrl("/logout")
+                                                .addLogoutHandler(logoutHandler)
+                                                .invalidateHttpSession(true)
+                                                .clearAuthentication(true)
+                                                .deleteCookies("JSESSIONID")
+                                                .logoutSuccessUrl("/login?logout")
+                                                .permitAll())
 
-                .sessionManagement(management -> management
-                        .maximumSessions(1)
+                                .sessionManagement(management -> management
+                                                .maximumSessions(1)
 
-                        .expiredUrl("/login?expired=true"));
+                                                .expiredUrl("/login?expired=true"));
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customDetailService);
+        @Bean
+        public AuthenticationProvider authenticationProvider() {
+                DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customDetailService);
 
-        provider.setPasswordEncoder(passwordEncoder);
-        return provider;
-    }
+                provider.setPasswordEncoder(passwordEncoder);
+                return provider;
+        }
 
 }

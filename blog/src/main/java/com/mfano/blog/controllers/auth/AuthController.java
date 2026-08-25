@@ -32,47 +32,40 @@ public class AuthController {
 
     @GetMapping("/")
     public String redirectAfterLogin(Authentication auth, RedirectAttributes model) {
-
         if (auth == null || !auth.isAuthenticated()) {
             model.addFlashAttribute("error", "user not authenticated");
             return login;
         }
-
         Object principal = auth.getPrincipal();
-        if (!(principal instanceof CustomUserDetails u)) {
+        // Extract roles
+        if (principal instanceof CustomUserDetails u) {
+            Set<String> roles = u.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toSet());
+
+            if (!u.isEnabled()) {
+                model.addFlashAttribute("error", "user not verified");
+                return login;
+            } else if (roles.isEmpty()) {
+                model.addFlashAttribute("error", "contact the system admin");
+                return login;
+            }
+
+            // Redirect based on role priority
+            if (roles.contains("ROLE_ADMIN")) {
+                return "redirect:/admin/dashboard";
+            } else if (roles.contains("ROLE_AUTHOR")) {
+                return "redirect:/author/dashboard";
+            } else if (roles.contains("ROLE_EDITOR")) {
+                return "redirect:/editor/dashboard";
+            } else if (roles.contains("ROLE_USER")) {
+                return "redirect:/user/dashboard";
+            }
+        } else {
             model.addFlashAttribute("error", "invalid user");
             return login;
         }
-
-        // Check if user is enabled
-        if (!u.isEnabled()) {
-            model.addFlashAttribute("error", "user not verified");
-            return login;
-        }
-
-        // Extract roles
-        Set<String> roles = u.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toSet());
-
-        // If user is not assigned any role
-        if (roles.isEmpty()) {
-            model.addFlashAttribute("error", "contact the system admin");
-            return login;
-        }
-
-        // Redirect based on role priority
-        if (roles.contains("ROLE_ADMIN")) {
-            return "redirect:/admin/dashboard";
-        } else if (roles.contains("ROLE_AUTHOR")) {
-            return "redirect:/author/dashboard";
-        } else if (roles.contains("ROLE_EDITOR")) {
-            return "redirect:/editor/dashboard";
-        } else if (roles.contains("ROLE_USER")) {
-            return "redirect:/user/dashboard";
-        }
-
         // Fallback
         model.addFlashAttribute("error", "Please contact the system admin");
         return login;
@@ -102,7 +95,7 @@ public class AuthController {
     public String loginPage(
             @RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout,
-            Model model,
+            RedirectAttributes model,
             Authentication authentication) {
 
         // If user is already logged in → redirect to dashboard
@@ -111,24 +104,29 @@ public class AuthController {
             return "redirect:/dashboard";
         }
 
-        // Error from Spring Security (bad credentials or disabled)
-        if (error != null) {
-            model.addAttribute("error", "Invalid Username or Password.");
-        }
-
         // Logout confirmation
         if (logout != null) {
-            model.addAttribute("message", "You have been logged out.");
+            model.addFlashAttribute("message", "You have been logged out.");
         }
 
         return "security/login"; // Return login view
     }
 
+    @PostMapping("/login")
+    public String loginUser(@RequestParam("username") String username, @RequestParam("password") String password,
+            RedirectAttributes model) {
+        if (userService.findByEmail(username) == null && userService.findByUsername(username) == null) {
+            model.addFlashAttribute("error", "Invalid email or username.");
+            return login;
+        }
+        return "redirect:/";
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
-    public String userProfile(Authentication auth, Model model) {
+    public String userProfile(Authentication auth, Model model, RedirectAttributes red) {
         if (!(auth.getPrincipal() instanceof CustomUserDetails u)) {
-            model.addAttribute("error", "user not authenticated");
+            red.addFlashAttribute("error", "user not authenticated");
             return "redirect:/login";
         }
         // Add user info to model (for Thymeleaf dashboard pages)
@@ -143,24 +141,23 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public String logout(Model model) {
-        model.addAttribute("message", "You have been logged out successfully");
+    public String logout(RedirectAttributes model) {
+        model.addFlashAttribute("message", "You have been logged out successfully");
         return "redirect:/login";
     }
 
     @GetMapping("/verify")
-    public String verify(@RequestParam("token") String token, Model model) {
+    public String verify(@RequestParam("token") String token, RedirectAttributes model) {
         String result = userService.validateVerificationToken(token);
         if ("valid".equals(result)) {
-            model.addAttribute("message", "Email verified! You can now login.");
-            return msg;
+            model.addFlashAttribute("message", "Email verified! You can now login.");
         } else if ("expired".equals(result)) {
-            model.addAttribute("error", "Token expired. Please register again.");
-            return msg;
+            model.addFlashAttribute("error", "Token expired. Please register again.");
         } else {
-            model.addAttribute("error", "Invalid token.");
-            return msg;
+            model.addFlashAttribute("error", "Invalid token.");
+
         }
+        return msg;
     }
 
     @GetMapping("/resend")
@@ -169,19 +166,19 @@ public class AuthController {
     }
 
     @PostMapping("/resend")
-    public String resendSubmit(@RequestParam("email") String email, Model model) {
+    public String resendSubmit(@RequestParam("email") String email, RedirectAttributes model) {
         User user = userService.findByEmail(email);
         if (user == null) {
-            model.addAttribute("error", "No account with that email.");
-            return "security/resend";
+            model.addFlashAttribute("error", "No account with that email.");
+            return "redirect:/resend";
         }
 
         if (user.isEnabled()) {
-            model.addAttribute("message", "Email already verified. You can login.");
+            model.addFlashAttribute("message", "Email already verified. You can login.");
             return msg;
         }
         userService.createAndSendToken(user);
-        model.addAttribute("message", "Verification email resent. Check your inbox.");
+        model.addFlashAttribute("message", "Verification email resent. Check your inbox.");
         return msg;
     }
 
@@ -192,41 +189,47 @@ public class AuthController {
     }
 
     @PostMapping("/forgot")
-    public String forgotSubmit(@RequestParam String email, Model model) {
+    public String forgotSubmit(@RequestParam String email, RedirectAttributes model) {
+        if (userService.findByEmail(email) == null) {
+            model.addFlashAttribute("error", "No account matches the email address.");
+            return "redirect:/forgot";
+        }
+
         try {
             userService.createPasswordResetToken(email);
-            model.addAttribute("message", "If an account exists, a reset link was sent.");
+            model.addFlashAttribute("message", "If an account exists, a reset link was sent.");
         } catch (Exception e) {
-            model.addAttribute("message", "If an account exists, a reset link was sent.");
+            model.addFlashAttribute("error", "Something went wrong, please try again.");
+            return "redirect:/forgot";
         }
         return msg;
     }
 
     @GetMapping("/password-reset")
-    public String resetPasswordForm(@RequestParam("token") String token, Model model) {
+    public String resetPasswordForm(@RequestParam("token") String token, Model model, RedirectAttributes red) {
         String res = userService.validatePasswordResetToken(token);
         if ("valid".equals(res)) {
             model.addAttribute("token", token);
             return "security/reset-password";
         } else if ("expired".equals(res)) {
-            model.addAttribute("error", "Token expired.");
+            red.addFlashAttribute("error", "Token expired.");
             return msg;
         } else {
-            model.addAttribute("error", "Invalid token.");
+            red.addFlashAttribute("error", "Invalid token.");
             return msg;
         }
     }
 
     @PostMapping("/reset-password")
-    public String resetPasswordSubmit(@RequestParam String token, @RequestParam String password, Model model) {
+    public String resetPasswordSubmit(@RequestParam String token, @RequestParam String password,
+            RedirectAttributes model) {
         var optUser = userService.getUserByPasswordResetToken(token);
         if (optUser.isEmpty()) {
-            model.addAttribute("error", "Invalid token.");
+            model.addFlashAttribute("error", "Invalid token.");
             return msg;
         }
         userService.changePassword(optUser.get(), password);
-        model.addAttribute("message", "Password changed. You can now login.");
+        model.addFlashAttribute("message", "Password changed. You can now login.");
         return msg;
     }
 }
-
