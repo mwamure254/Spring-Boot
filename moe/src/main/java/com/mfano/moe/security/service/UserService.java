@@ -161,12 +161,6 @@ public class UserService {
         if (auth == null || !auth.isAuthenticated()) {
             model.addAttribute("error", "user not authenticated");
         } else {
-            // Add user info to model (for Thymeleaf dashboard pages)
-            model.addAttribute("id", u.getId());
-            model.addAttribute("username", u.getUsername());
-            model.addAttribute("password", u.getPassword());
-            model.addAttribute("roles", u.getRoles());
-
             profileService.checkProfile(u.getId(), model);
             Profile profile = profileService.findByUserId(u.getId());
             model.addAttribute("logged", profile);

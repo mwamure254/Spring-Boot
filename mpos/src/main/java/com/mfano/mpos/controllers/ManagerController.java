@@ -12,13 +12,14 @@ import com.mfano.mpos.services.security.UserService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/inventory")
+@RequestMapping("/manager")
 @RequiredArgsConstructor
-public class InventoryController {
+public class ManagerController {
+
     private final UserService userService;
     @GetMapping("/dashboard")
     public String dashboard(@AuthenticationPrincipal CustomUserDetails auth, RedirectAttributes red) {
          userService.redirectUser(auth, red);
-        return "inventory/index";
+        return "manager/index";
     }
 }

@@ -15,10 +15,12 @@ import com.mfano.mpos.repositories.BranchRepository;
 import com.mfano.mpos.repositories.security.RoleRepository;
 import com.mfano.mpos.repositories.security.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class Initializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
@@ -34,43 +36,72 @@ public class Initializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // initialize roles
-        List<String> defaultRoles = List.of("ADMIN", "MANAGER", "CASHIER", "PROCUREMENT");
 
-        for (String r : defaultRoles) {
-            if (roleRepo.findByName(r).isEmpty()) {
+        // =========================
+        // Initialize Roles
+        // =========================
+
+        List<String> defaultRoles = List.of(
+                "ADMIN",
+                "MANAGER",
+                "CASHIER",
+                "PROCUREMENT",
+                "USER");
+
+        for (String roleName : defaultRoles) {
+
+            if (roleRepo.findByName(roleName).isEmpty()) {
+
                 Role role = new Role();
-                role.setName(r);
+                role.setName(roleName);
                 role.setCreatedBy("sys");
+
                 roleRepo.save(role);
-
             }
         }
-        // initialize branches
-        List<String> defaultBranches = List.of("HQ", "OTHER");
 
-        for (String r : defaultBranches) {
-            if (roleRepo.findByName(r).isEmpty()) {
+        // =========================
+        // Initialize Branches
+        // =========================
+
+        List<String> defaultBranches = List.of(
+                "HQ",
+                "OTHER");
+
+        for (String branchName : defaultBranches) {
+
+            if (branchRepo.findByName(branchName) == null) {
+
                 Branch branch = new Branch();
-                branch.setName(r);
+                branch.setName(branchName);
                 branch.setCreatedBy("sys");
-                branchRepo.save(branch);
 
+                branchRepo.save(branch);
             }
         }
-        // initialize admin
+
+        // =========================
+        // Initialize Admin
+        // =========================
+
         if (userRepository.findByEmail(adminEmail) == null) {
+
+            Role adminRole = roleRepo.findByName("ADMIN")
+                    .orElseThrow(() -> new IllegalStateException(
+                            "ADMIN role was not initialized"));
+
+            Branch hqBranch = branchRepo.findByName("HQ");
+
             User admin = new User();
 
             admin.setEmail(adminEmail);
             admin.setPassword(passwordEncoder.encode(adminPassword));
             admin.setEnabled(true);
-            admin.setBranch(branchRepo.findByName("HQ"));
+            admin.setBranch(hqBranch);
             admin.setCreatedBy("sys");
-            admin.setRoles(Set.of(roleRepo.findByName("ADMIN").get()));
+            admin.setRoles(Set.of(adminRole));
 
             userRepository.save(admin);
         }
     }
-
 }

@@ -6,10 +6,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
+import com.mfano.mpos.config.CustomUserDetails;
+import com.mfano.mpos.models.security.Profile;
 import com.mfano.mpos.models.security.Role;
 import com.mfano.mpos.models.security.User;
 import com.mfano.mpos.models.security.VerificationToken;
@@ -26,6 +32,7 @@ public class UserService {
    
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ProfileService profileService;
 
     private final TokenRepositories tokenRepository;
     private final MailService emailService;
@@ -57,6 +64,10 @@ public class UserService {
         return user;
     }
 
+    public User save(User user){
+        return userRepository.save(user);
+    } 
+
     // Get User By Id
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
@@ -68,6 +79,10 @@ public class UserService {
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public User findByBranch_Id(Long storeId) {
+     return userRepository.findByBranch_Id(storeId);
     }
 
     public void createAndSendToken(User user) {
@@ -146,5 +161,16 @@ public class UserService {
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+     // check logged user
+    public void redirectUser(@AuthenticationPrincipal CustomUserDetails auth, Model model) {
+        if (auth == null) {
+            model.addAttribute("error", "user not authenticated");
+        } else {
+            profileService.checkProfile(auth.getId());
+            Profile profile = profileService.findByUser_Id(auth.getId());
+            model.addAttribute("profile", profile);
+        }
     }
 }

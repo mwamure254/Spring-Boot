@@ -8,6 +8,7 @@ import com.mfano.mpos.cart.CartItem;
 import com.mfano.mpos.cart.CartRepository;
 import com.mfano.mpos.dtos.OrderStatus;
 import com.mfano.mpos.models.security.User;
+import com.mfano.mpos.repositories.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +19,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
+    private final ProductRepository productRepository;
 
     public Order checkout(User user) {
 

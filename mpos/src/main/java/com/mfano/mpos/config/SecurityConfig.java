@@ -19,28 +19,29 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
         private final CustomDetailService customDetailService;
         private final PasswordEncoder passwordEncoder;
-        private final AuthHandler authHandler;
 
         @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http, LogHandler logoutHandler) throws Exception {
+        public SecurityFilterChain filterChain(HttpSecurity http, AuthHandler authHandler) throws Exception {
                 http.csrf(csrf -> csrf.disable());
                 http.authorizeHttpRequests(auth -> auth
+
+                                .requestMatchers("/**/dashboard").authenticated()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/manager/**").hasRole("MANAGER")
                                 .requestMatchers("/cashier/**").hasRole("CASHIER")
                                 .requestMatchers("/procurement/**").hasRole("PROCUREMENT")
                                 .requestMatchers("/", "/register", "/login", "/verify", "/forgot", "/reset-password",
-                                                "/resend",
-                                                "/error", "/profile", "/css/**", "/js/**", "/vendor/**", "/image/**")
+                                                "/resend", "/error", "/profile", "/css/**", "/js/**", "/vendor/**",
+                                                "/image/**")
                                 .permitAll()
                                 .anyRequest().authenticated())
 
                                 .formLogin(form -> form
                                                 .loginPage("/login")
-                                                .loginProcessingUrl("/login")
+                                                // .loginProcessingUrl("/login")
                                                 .successHandler(authHandler)
-                                                //.failureHandler(authHandler)
-                                                //.defaultSuccessUrl("/", true)
+                                                .failureHandler(authHandler)
+                                                .defaultSuccessUrl("/", true)
                                                 // .successForwardUrl("/dashboard")
                                                 .permitAll())
 
@@ -49,7 +50,7 @@ public class SecurityConfig {
 
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
-                                                .addLogoutHandler(logoutHandler)
+                                                .addLogoutHandler(authHandler)
                                                 .invalidateHttpSession(true)
                                                 .clearAuthentication(true)
                                                 .deleteCookies("JSESSIONID")

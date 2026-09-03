@@ -2,6 +2,7 @@ package com.mfano.mpos.repositories.security;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.mfano.mpos.models.security.Profile;
 import com.mfano.mpos.models.security.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -20,4 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmailOrUsernameAndPassword(String email, String username, String password);
     
     User findByEmailAndUsernameAndPassword(String email, String username, String password);
+
+    User findByBranch_Id(Long storeId);
+
 }

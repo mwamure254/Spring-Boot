@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{partials/_header :: common_header(~{::title/text()},~{::link},~{::meta})}">
+    <!-- Custom meta data for this template-->
+    <meta name="description" content="meo home page">
+    <meta name="author" content="mfano">
+    <!-- Custom title for this page-->
+    <title>MPOS | Admin Branches</title>
+    <!-- Custom styles for this page-->
+</th:block>
+
+<body>
+
+    <!-- ======= Header ======= -->
+    <th:block th:insert="~{partials/_topbar}" />
+    <!-- =====End Header===== -->
+
+    <!-- ======= Sidebar ======= -->
+    <th:block th:insert="~{partials/_sidebar1}" />
+    <!-- =====End Sidebar=====-->
+
+    <main id="main" class="main">
+
+        <h1>All Stores</h1>
+        <table class="table">
+            <tr th:each="s : ${stores}">
+                <td th:text="${s.name}"></td>
+                <td th:text="${s.location}"></td>
+                <td><a th:href="@{/admin/users(storeId=${s.id})}">Manage Users</a></td>
+                <td><a th:href="@{/admin/inventory(storeId=${s.id})}">Inventory</a></td>
+            </tr>
+        </table>
+        <a href="/admin/users/new">Create User</a>
+
+
+    </main><!-- End #main -->
+
+    <!-- =====footer===== -->
+    <th:block th:insert="~{partials/_footer}" />
+</body>
+
+</html>

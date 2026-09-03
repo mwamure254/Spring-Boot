@@ -6,6 +6,7 @@ import java.util.Set;
 import com.mfano.mpos.models.BaseObject;
 import com.mfano.mpos.models.Branch;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,7 +28,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseObject{
+public class User extends BaseObject {
     private String fin;
     private String lan;
     private String username;

@@ -1,24 +1,31 @@
 package com.mfano.mpos.controllers.security;
 
+import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mfano.mpos.config.AuthHandler;
 import com.mfano.mpos.config.CustomUserDetails;
 import com.mfano.mpos.dtos.UserDto;
+import com.mfano.mpos.models.security.Profile;
 import com.mfano.mpos.models.security.User;
-import com.mfano.mpos.repositories.security.RoleRepository;
+import com.mfano.mpos.services.security.AuditService;
+import com.mfano.mpos.services.security.ProfileService;
+import com.mfano.mpos.services.security.RoleService;
 import com.mfano.mpos.services.security.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,41 +34,37 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
-    private final RoleRepository roleRepo;
+    private final RoleService roleService;
+    private final ProfileService profileService;
+
+    private final PasswordEncoder passwordEncoder;
     private String msg = "security/message";
     private final String login = "redirect:/login?error";
-    private final AuthHandler authHandler;
 
-    //guest user
+    private final AuditService auditService;
+
+    // guest user
     @GetMapping("/")
-    public String redirectAfterLogin(Authentication auth, RedirectAttributes model) {
+    public String redirectAfterLogin(@AuthenticationPrincipal CustomUserDetails auth, RedirectAttributes model) {
 
-        if (auth == null || !auth.isAuthenticated()) {
-            model.addFlashAttribute("error", "user not authenticated");
-            return login;
-        }
-
-        Object principal = auth.getPrincipal();
-        if (!(principal instanceof CustomUserDetails u)) {
-            model.addFlashAttribute("error", "invalid user");
-            return login;
-        }
-
-        // Check if user is enabled
-        if (!u.isEnabled()) {
-            model.addFlashAttribute("error", "user not verified");
-            return login;
+        userService.redirectUser(auth, model);
+        if (auth == null) {
+            model.addFlashAttribute("error", "User not authenticated, login to proceed.");
+            return "redirect:/login";
         }
 
         // Extract roles
-        Set<String> roles = u.getAuthorities()
+        Set<String> roles = auth.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
         // If user is not assigned any role
         if (roles.isEmpty()) {
-            model.addFlashAttribute("error", "contact the system admin");
+            model.addFlashAttribute("error", "Please contact the system admin for mapping.");
+            return login;
+        } else if (!auth.isEnabled()) {
+            model.addFlashAttribute("error", "Contact the system admin for account verification.");
             return login;
         }
 
@@ -74,6 +77,8 @@ public class AuthController {
             return "redirect:/cashier/dashboard";
         } else if (roles.contains("ROLE_PROCUREMENT")) {
             return "redirect:/procurement/dashboard";
+        } else if (roles.contains("ROLE_USER")) {
+            return "redirect:/guest/dashboard";
         }
 
         // Fallback
@@ -84,7 +89,7 @@ public class AuthController {
     @GetMapping("/register")
     public String registerForm(Model model) {
 
-        model.addAttribute("roles", roleRepo.findAll());
+        model.addAttribute("roles", roleService.findAll());
         model.addAttribute("userDto", new UserDto());
         return "security/register";
     }
@@ -124,26 +129,64 @@ public class AuthController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
-    public String userProfile(Authentication auth, Model model) {
-        if (!(auth.getPrincipal() instanceof CustomUserDetails u)) {
+    public String userProfile(@AuthenticationPrincipal CustomUserDetails auth, Model model) {
+        userService.redirectUser(auth, model);
+
+        if (auth == null) {
             model.addAttribute("error", "user not authenticated");
             return "redirect:/login";
         }
         // Add user info to model (for Thymeleaf dashboard pages)
-        model.addAttribute("id", u.getId());
-        model.addAttribute("username", u.getUsername());
-        model.addAttribute("email", u.getEmail());
-        model.addAttribute("firstname", u.getFin());
-        model.addAttribute("lastname", u.getLan());
-        model.addAttribute("roles", u.getRoles());
+        model.addAttribute("user", userService.findById(auth.getId()));
+        model.addAttribute("profile", profileService.findByUser_Id(auth.getId()));
 
         return "security/profile";
     }
 
+    // profile/update @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/profile/update")
+    public String userProfileUpdate(@AuthenticationPrincipal CustomUserDetails auth,
+            @ModelAttribute("profile") Profile profile) {
+
+        profileService.update(auth.getId(), profile);
+        auditService.record("update_profile", "user id=" + auth.getId(), "Updated their profile");
+        return "redirect:/profile";
+    }
+
+    // update user image
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/image/update/{userid}")
+    public String imageUpdate(@PathVariable Long userid, @RequestParam("image") MultipartFile file,
+            RedirectAttributes red) {
+        try {
+            profileService.updateProfileImage(userid, file, red);
+        } catch (IOException e) {
+            red.addFlashAttribute("error", e.getMessage());
+        }
+        auditService.record("update_image", "user id=" + userid, "Updated their profile image");
+        red.addFlashAttribute("message", "Image updated successfully.");
+        return "redirect:/profile";
+    }
+
+    // delete user image
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/image/delete/{userid}")
+    public String imageDelete(@PathVariable Long userid, RedirectAttributes red) {
+        try {
+            profileService.deleteProfileImage(userid, red);
+        } catch (IOException e) {
+            red.addFlashAttribute("error", e.getMessage());
+        }
+        auditService.record("delete_image", "user id=" + userid, "Deleted their profile image");
+        red.addFlashAttribute("message", "Image deleted successfully.");
+        return "redirect:/profile";
+    }
+
     @GetMapping("/logout")
-    public String logout(Model model) {
-        model.addAttribute("message", "You have been logged out successfully");
-        return "redirect:/login";
+    public String logout(RedirectAttributes model) {
+        model.addFlashAttribute("message", "You have been logged out successfully");
+        return "redirect:/login?logout";
     }
 
     @GetMapping("/verify")
@@ -205,7 +248,8 @@ public class AuthController {
         }
         return "redirect:/login";
     }
-
+    
+//self-serve password email change
     @GetMapping("/password-reset")
     public String resetPasswordForm(@RequestParam("token") String token, Model model) {
         String res = userService.validatePasswordResetToken(token);
@@ -221,6 +265,7 @@ public class AuthController {
         }
     }
 
+//self-serve password change request
     @PostMapping("/reset-password")
     public String resetPasswordSubmit(@RequestParam String token, @RequestParam String password, Model model) {
         var optUser = userService.getUserByPasswordResetToken(token);
@@ -231,5 +276,30 @@ public class AuthController {
         userService.changePassword(optUser.get(), password);
         model.addAttribute("message", "Password changed. You can now login.");
         return msg;
+    }
+
+//logged user change password
+    // Reset user password
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/reset")
+    public String resetPassword(Authentication auth, @RequestParam String password, @RequestParam String NP,
+            RedirectAttributes red) {
+        CustomUserDetails u = (CustomUserDetails) auth.getPrincipal();
+        User user = userService.findById(u.getId());
+        if (!NP.equals(password) || NP.isEmpty() || password.isEmpty()) {
+            red.addFlashAttribute("error", "Passwords do not match");
+            return "redirect:/profile";
+        }
+
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode(password));
+            userService.save(user);
+            auditService.record("reset_password", "user id=" + user.getId(), "Reset password");
+            red.addFlashAttribute("message", "Password reset successful");
+            return "redirect:/profile";
+        } else {
+            red.addFlashAttribute("error", "Failed to reset password");
+            return "redirect:/profile";
+        }
     }
 }

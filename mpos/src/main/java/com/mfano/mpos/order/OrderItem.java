@@ -29,13 +29,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class OrderItem {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id") // <-- This owns the FK
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -47,23 +47,34 @@ public class OrderItem {
 
     /**
      * Price captured when the order was created.
-     * Do not calculate historical orders from Product.price.
+     * Historical orders must not depend on Product.price.
      */
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal unitPrice;
 
+    /**
+     * Quantity × unitPrice.
+     */
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal subtotal;
-
-    public BigDecimal getSubtotal() {
-        return unitPrice.multiply(
-                BigDecimal.valueOf(quantity)
-        );
-    }
 
     @PrePersist
     @PreUpdate
     protected void calculateSubtotal() {
-        subtotal = getSubtotal();
+        if (unitPrice == null || quantity == null) {
+            throw new IllegalStateException(
+                    "Unit price and quantity are required"
+            );
+        }
+
+        if (quantity <= 0) {
+            throw new IllegalStateException(
+                    "Quantity must be greater than zero"
+            );
+        }
+
+        subtotal = unitPrice.multiply(
+                BigDecimal.valueOf(quantity)
+        );
     }
 }

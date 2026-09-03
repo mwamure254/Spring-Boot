@@ -119,7 +119,7 @@
 
           <li class="message-item">
             <a href="#">
-              <img th:src="@{/img/messages-1.jpg}" alt="" class="rounded-circle">
+              <img th:src="@{/image/messages-1.jpg}" alt="" class="rounded-circle">
               <div>
                 <h4>Maria Hudson</h4>
                 <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -133,7 +133,7 @@
 
           <li class="message-item">
             <a href="#">
-              <img th:src="@{/img/messages-2.jpg}" alt="" class="rounded-circle">
+              <img th:src="@{/image/messages-2.jpg}" alt="" class="rounded-circle">
               <div>
                 <h4>Anna Nelson</h4>
                 <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -147,7 +147,7 @@
 
           <li class="message-item">
             <a href="#">
-              <img th:src="@{/img/messages-3.jpg}" alt="" class="rounded-circle">
+              <img th:src="@{/image/messages-3.jpg}" alt="" class="rounded-circle">
               <div>
                 <h4>David Muldon</h4>
                 <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -170,14 +170,14 @@
       <li class="nav-item dropdown pe-3">
 
         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-          <img th:src="${#strings.isEmpty(logged.image)} ? @{/img/profile-img.jpg} : '/img/profile/' + ${logged.image}"
+          <img th:src="${#strings.isEmpty(logged.image)} ? @{/image/profile-img.jpg} : '/image/profile/' + ${logged.image}"
             alt="MY" class="rounded-circle" height="38" width="38">
         </a><!-- End Profile Iamge Icon -->
 
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
           <li class="dropdown-header">
             <h6 th:text="${logged.fin + ' ' + logged.lan}">First Last</h6>
-            <span th:text="${profile.designation}">Your Designation</span>
+            <span th:text="${logged.designation}">Your Designation</span>
 
           </li>
           <li>

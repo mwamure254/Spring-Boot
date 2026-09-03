@@ -1,7 +1,9 @@
 package com.mfano.mpos.services;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import com.mfano.mpos.models.Branch;
@@ -36,6 +38,14 @@ public class BranchService {
 
     public List<Branch> getAllBranches() {
         return branchRepository.findAll();
+    }
+
+    public List<Branch> findAll() {
+        return branchRepository.findAll();
+    }
+
+    public Branch findById(Long id) {
+        return branchRepository.findById(id).orElse(null);
     }
 
 }

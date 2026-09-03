@@ -6,7 +6,7 @@
   <meta name="description" content="meo home page">
   <meta name="author" content="mfano">
   <!-- Custom title for this page-->
-  <title>MoE | Profile</title>
+  <title>MPOS | Profile</title>
   <!-- Custom styles for this page-->
 </th:block>
 
@@ -17,7 +17,7 @@
   <!-- =====End Header===== -->
 
   <!-- ======= Sidebar ======= -->
-  <th:block th:insert="~{partials/_sidebar}" />
+  <th:block th:insert="~{partials/_sidebar1}" />
   <!-- =====End Sidebar=====-->
 
   <main id="main" class="main">
@@ -40,9 +40,11 @@
           <div class="card">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-              <img
-                th:src="${#strings.isEmpty(profile.image)} ? @{/img/profile-img.jpg} : '/img/profile/' + ${profile.image}"
-                alt="Profile" class="rounded-circle" height="120" width="120">
+              <img th:src="${profile.image == null or profile.image.isEmpty()}
+        ? @{/image/profile-img.jpg}
+        : @{/image/profile/{filename}(filename=${profile.image})}" alt="Profile" class="rounded-circle" height="120"
+                width="120">
+
               <div class="pt-2">
                 <a data-bs-toggle="modal" data-bs-target="#image" class="btn btn-primary btn-sm"
                   title="Upload new profile image"><i class="bi bi-upload"></i></a>
@@ -115,16 +117,11 @@
                     <div class="col-lg-9 col-md-8" th:text="${profile.gender}">Male</div>
                   </div>
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label">IDN</div>
-                    <div class="col-lg-9 col-md-8" th:text="${profile.IDN}">3*****5</div>
+                    <div class="col-lg-3 col-md-4 label">ID</div>
+                    <div class="col-lg-9 col-md-8" th:text="${profile.SN}">3*****5</div>
                   </div>
 
                   <hr class="fas fa-divide">
-
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Service Number</div>
-                    <div class="col-lg-9 col-md-8" th:text="${profile.SN}">23**12</div>
-                  </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Institution</div>
@@ -169,28 +166,28 @@
                       <label for="about" class="col-md-4 col-lg-3 col-form-label">About</label>
                       <div class="col-md-8 col-lg-9">
                         <textarea th:field="*{about}" class="form-control" id="about"
-                          style="height: 100px">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</textarea>
+                          style="height: 100px" required>Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</textarea>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="fin" class="col-md-4 col-lg-3 col-form-label">First Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input th:field="*{fin}" type="text" class="form-control" id="fin">
+                        <input th:field="*{fin}" type="text" class="form-control" id="fin" required>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="lan" class="col-md-4 col-lg-3 col-form-label">Other Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input th:field="*{other}" type="text" class="form-control" id="lan">
+                        <input th:field="*{other}" type="text" class="form-control" id="lan" required>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="other" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input th:field="*{lan}" type="text" class="form-control" id="other">
+                        <input th:field="*{lan}" type="text" class="form-control" id="other" required>
                       </div>
                     </div>
 
@@ -206,20 +203,13 @@
                     </div>
 
                     <div class="row mb-3">
-                      <label for="IDN" class="col-md-4 col-lg-3 col-form-label">IDN</label>
+                      <label for="ID" class="col-md-4 col-lg-3 col-form-label">ID</label>
                       <div class="col-md-8 col-lg-9">
-                        <input th:field="*{IDN}" type="text" class="form-control" id="IDN">
+                        <input th:field="*{SN}" type="text" class="form-control" id="ID" required>
                       </div>
                     </div>
 
                     <hr class="fas fa-divide">
-
-                    <div class="row mb-3">
-                      <label for="serviceNumber" class="col-md-4 col-lg-3 col-form-label">Service Number</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input th:field="*{SN}" type="text" class="form-control" id="serviceNumber">
-                      </div>
-                    </div>
 
                     <div class="row mb-3">
                       <label for="institutionid" class="col-md-4 col-lg-3 col-form-label">Institution</label>
@@ -232,14 +222,14 @@
                     <div class="row mb-3">
                       <label for="designation" class="col-md-4 col-lg-3 col-form-label">Designation</label>
                       <div class="col-md-8 col-lg-9">
-                        <input th:field="*{designation}" type="text" class="form-control" id="designation">
+                        <input th:field="*{designation}" type="text" class="form-control" id="designation" required>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="country" class="col-md-4 col-lg-3 col-form-label">County</label>
                       <div class="col-md-8 col-lg-9">
-                        <input th:field="*{county}" type="text" class="form-control" id="country">
+                        <input th:field="*{county}" type="text" class="form-control" id="country" required>
                       </div>
                     </div>
 
@@ -248,14 +238,14 @@
                     <div class="row mb-3">
                       <label for="address" class="col-md-4 col-lg-3 col-form-label">Address</label>
                       <div class="col-md-8 col-lg-9">
-                        <input th:field="*{address}" type="text" class="form-control" id="address">
+                        <input th:field="*{address}" type="text" class="form-control" id="address" required>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
                       <div class="col-md-8 col-lg-9">
-                        <input th:field="*{phone}" type="text" class="form-control" id="Phone">
+                        <input th:field="*{phone}" type="text" class="form-control" id="Phone" required>
                       </div>
                     </div>
 
@@ -313,7 +303,7 @@
                       <div class="col-md-8 col-lg-9 input-group">
                         <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
                         <input th:value="${password}" type="password" class="form-control" id="currentPassword"
-                          readonly>
+                          placeholder="Current password" readonly>
                         <button class="input-group-text btn btn-outline-secondary" type="button"
                           onclick="togglePassword('currentPassword', this)">
                           <i class="bi bi-eye"></i>
@@ -323,7 +313,7 @@
                     <div class="row mb-3">
                       <div class="col-md-8 col-lg-9 input-group">
                         <label for="Np" class="col-md-4 col-lg-3 col-form-label">New Password</label>
-                        <input name="NP" type="password" class="form-control" id="Np" placeholder="new password"
+                        <input name="NP" type="password" class="form-control" id="Np" placeholder="New password"
                           required>
                         <button class="input-group-text btn btn-outline-secondary" type="button"
                           onclick="togglePassword('Np', this)">
@@ -335,7 +325,7 @@
                       <div class="col-md-8 col-lg-9 input-group">
                         <label for="Password" class="col-md-4 col-lg-3 col-form-label">Confirm Password</label>
                         <input name="password" type="password" class="form-control" id="Password"
-                          placeholder="confirm password" required>
+                          placeholder="Confirm password" required>
                         <button class="input-group-text btn btn-outline-secondary" type="button"
                           onclick="togglePassword('Password', this)">
                           <i class="bi bi-eye"></i>
@@ -368,7 +358,7 @@
           <div class="modal-header bg-secondary py-2">
             <p class="mb-0">Update profile image</p>
           </div>
-          <form class="py-2 px-4" th:action="@{'/image/update/' + ${profile.userid}}" method="post"
+          <form class="py-2 px-4" th:action="@{/image/update/{id}(id=${profile.user.id})}" method="post"
             enctype="multipart/form-data" accept="image">
             <div class="row mb-3">
               <label class="col-md-6 col-lg-4 col-form-label">Select image</label>
@@ -397,16 +387,17 @@
           <div class="modal-body text-center">
             <h1><a href="#"><i class="bi bi-info-circle text-danger"></i></a></h1>
             Confirm to Remove image
-            <form class="py-2 px-4" th:action="@{'/image/delete/' + ${profile.userid}}" method="post">
+            <form class="py-2 px-4" th:action="@{/image/delete/{id}(id=${profile.user.id})}" method="post">
               <div class="text-center">
-                <button class="btn btn-sm btn-success" type="submit">Remove</button>
                 <a class="btn btn-sm btn-warning" data-bs-dismiss="modal">Cancel</a>
+                <button class="btn btn-sm btn-success" type="submit">Remove</button>
               </div>
             </form>
           </div>
         </div>
       </div><!-- End Delete Modal-->
   </main><!-- End #main -->
+
   <!-- =====footer===== -->
   <th:block th:insert="~{partials/_footer}" />
 

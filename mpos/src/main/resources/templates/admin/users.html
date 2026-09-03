@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{partials/_header :: common_header(~{::title/text()},~{::link},~{::meta})}">
+    <!-- Custom meta data for this template-->
+    <meta name="description" content="meo home page">
+    <meta name="author" content="mfano">
+    <!-- Custom title for this page-->
+    <title>MPOS | Admin Users</title>
+    <!-- Custom styles for this page-->
+</th:block>
+
+<body>
+
+    <!-- ======= Header ======= -->
+    <th:block th:insert="~{partials/_topbar}" />
+    <!-- =====End Header===== -->
+
+    <!-- ======= Sidebar ======= -->
+    <th:block th:insert="~{partials/_sidebar1}" />
+    <!-- =====End Sidebar=====-->
+
+    <main id="main" class="main">
+
+        <h1 class="text-2xl font-bold">Manage Users</h1>
+        <form th:action="@{/admin/users/save}" method="post" class="bg-white p-4 rounded mb-4">
+            <input name="username" placeholder="Username" required />
+            <input name="password" type="password" placeholder="Password" required />
+            <select name="role">
+                <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+            </select>
+            <select name="storeId">
+                <option th:each="s : ${stores}" th:value="${s.id}" th:text="${s.name}"></option>
+            </select>
+            <button>Create User</button>
+        </form>
+
+        <table class="w-full bg-white">
+            <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Store</th>
+            </tr>
+            <tr th:each="u : ${users}">
+                <td th:text="${u.username}"></td>
+                <td th:text="${u.role}"></td>
+                <td th:text="${u.store.name}"></td>
+            </tr>
+        </table>
+        
+    </main><!-- End #main -->
+
+    <!-- =====footer===== -->
+    <th:block th:insert="~{partials/_footer}" />
+</body>
+
+</html>
