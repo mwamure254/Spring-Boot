@@ -47,7 +47,6 @@ public class AuthController {
     @GetMapping("/")
     public String redirectAfterLogin(@AuthenticationPrincipal CustomUserDetails auth, RedirectAttributes model) {
 
-        userService.redirectUser(auth, model);
         if (auth == null) {
             model.addFlashAttribute("error", "User not authenticated, login to proceed.");
             return "redirect:/login";
@@ -67,6 +66,7 @@ public class AuthController {
             model.addFlashAttribute("error", "Contact the system admin for account verification.");
             return login;
         }
+        model.addFlashAttribute("profile", profileService.checkProfile(auth.getId()));
 
         // Redirect based on role priority
         if (roles.contains("ROLE_ADMIN")) {
@@ -130,15 +130,13 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public String userProfile(@AuthenticationPrincipal CustomUserDetails auth, Model model) {
-        userService.redirectUser(auth, model);
-
         if (auth == null) {
-            model.addAttribute("error", "user not authenticated");
-            return "redirect:/login";
+            model.addAttribute("error", "User not authenticated, login to proceed.");
+            return login;
         }
+        model.addAttribute("profile", profileService.checkProfile(auth.getId()));
         // Add user info to model (for Thymeleaf dashboard pages)
         model.addAttribute("user", userService.findById(auth.getId()));
-        model.addAttribute("profile", profileService.findByUser_Id(auth.getId()));
 
         return "security/profile";
     }
@@ -248,8 +246,8 @@ public class AuthController {
         }
         return "redirect:/login";
     }
-    
-//self-serve password email change
+
+    // self-serve password email change
     @GetMapping("/password-reset")
     public String resetPasswordForm(@RequestParam("token") String token, Model model) {
         String res = userService.validatePasswordResetToken(token);
@@ -265,7 +263,7 @@ public class AuthController {
         }
     }
 
-//self-serve password change request
+    // self-serve password change request
     @PostMapping("/reset-password")
     public String resetPasswordSubmit(@RequestParam String token, @RequestParam String password, Model model) {
         var optUser = userService.getUserByPasswordResetToken(token);
@@ -278,7 +276,7 @@ public class AuthController {
         return msg;
     }
 
-//logged user change password
+    // logged user change password
     // Reset user password
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/reset")

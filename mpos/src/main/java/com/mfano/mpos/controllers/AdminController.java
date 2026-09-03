@@ -16,6 +16,8 @@ import com.mfano.mpos.config.CustomUserDetails;
 import com.mfano.mpos.models.security.Role;
 import com.mfano.mpos.models.security.User;
 import com.mfano.mpos.services.BranchService;
+import com.mfano.mpos.services.security.AuditService;
+import com.mfano.mpos.services.security.ProfileService;
 import com.mfano.mpos.services.security.RoleService;
 import com.mfano.mpos.services.security.UserService;
 
@@ -28,31 +30,40 @@ import lombok.RequiredArgsConstructor;
 public class AdminController {
     private final UserService userService;
     // private final PostService postService;
-
+    private final ProfileService profileService;
+private final AuditService auditService;
     private final RoleService roleService;
     private final BranchService storeService;
+
     private final PasswordEncoder encoder;
 
     @GetMapping("/dashboard")
     public String dashboard(@AuthenticationPrincipal CustomUserDetails auth, RedirectAttributes red) {
-        userService.redirectUser(auth, red);
+        red.addAttribute("users", userService.findAll());
+        red.addAttribute("stores", storeService.findAll());
+        red.addAttribute("roles", roleService.findAll());
+        red.addAttribute("audits", auditService.findAll());
+        red.addFlashAttribute("profile", profileService.checkProfile(auth.getId()));
         return "admin/index";
     }
 
     @GetMapping("/stores")
     public String stores(@AuthenticationPrincipal CustomUserDetails auth, RedirectAttributes red) {
-        userService.redirectUser(auth, red);
+        red.addFlashAttribute("profile", profileService.checkProfile(auth.getId()));
         red.addAttribute("stores", storeService.findAll());
         return "admin/stores";
     }
 
     @GetMapping("/users")
-    public String users(@RequestParam(required = false) Long storeId, @AuthenticationPrincipal CustomUserDetails auth, RedirectAttributes red) {
-        userService.redirectUser(auth, red);
-        if (storeId != null)
+    public String users(@RequestParam(required = false) Long storeId, @AuthenticationPrincipal CustomUserDetails auth,
+            RedirectAttributes red) {
+        red.addFlashAttribute("profile", profileService.checkProfile(auth.getId()));
+        if (storeId != null) {
             red.addAttribute("users", userService.findByBranch_Id(storeId));
-        else
+
+        } else {
             red.addAttribute("users", userService.findAll());
+        }
         red.addAttribute("stores", storeService.findAll());
         red.addAttribute("roles", roleService.findAll());
         return "admin/users";

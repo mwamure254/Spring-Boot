@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
+    private Profile profile,existing;
     private final ProfileRepository profileRepository;
     private final String baseDirectory = "src/main/resources/static/image/profile/";
 
@@ -47,7 +48,7 @@ public class ProfileService {
 
     // Update Profile Image
     public void updateProfileImage(Long userid, MultipartFile file, RedirectAttributes red) throws IOException {
-        Profile existing = findByUser_Id(userid);
+        existing = findByUser_Id(userid);
         try {
             Path path = Path.of(baseDirectory + file.getOriginalFilename());
             Files.createDirectories(path.getParent());
@@ -65,7 +66,7 @@ public class ProfileService {
 
     // Update Profile Image
     public void deleteProfileImage(Long userid, RedirectAttributes red) throws IOException {
-        Profile existing = findByUser_Id(userid);
+        existing = findByUser_Id(userid);
         try {
             String image = existing.getImage();
             Path path = Path.of(baseDirectory + image);
@@ -82,7 +83,7 @@ public class ProfileService {
 
     // Update Profile
     public void update(Long userid, Profile profile) {
-        Profile existing = findByUser_Id(userid);
+        existing = findByUser_Id(userid);
 
         // update only editable fields
         existing.setFin(profile.getFin());
@@ -105,13 +106,15 @@ public class ProfileService {
     }
 
     // check profile
-    public void checkProfile(Long userid) {
-        Profile profile = findByUser_Id(userid);
+    public Profile checkProfile(Long userid) {
+        profile = findByUser_Id(userid);
         if (profile == null) {
             profile = new Profile();
             profile.setUserid(userid);
             save(profile);
+
         } 
+        return profile;
     }
 
 }

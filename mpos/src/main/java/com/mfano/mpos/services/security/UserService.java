@@ -162,15 +162,4 @@ public class UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
-
-     // check logged user
-    public void redirectUser(@AuthenticationPrincipal CustomUserDetails auth, Model model) {
-        if (auth == null) {
-            model.addAttribute("error", "user not authenticated");
-        } else {
-            profileService.checkProfile(auth.getId());
-            Profile profile = profileService.findByUser_Id(auth.getId());
-            model.addAttribute("profile", profile);
-        }
-    }
 }

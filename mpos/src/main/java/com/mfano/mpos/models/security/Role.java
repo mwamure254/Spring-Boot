@@ -12,5 +12,5 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Role extends CommonObject {
-
+    private String createdBy;
 }

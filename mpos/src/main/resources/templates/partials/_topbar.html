@@ -170,14 +170,17 @@
       <li class="nav-item dropdown pe-3">
 
         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-          <img th:src="${#strings.isEmpty(logged.image)} ? @{/image/profile-img.jpg} : '/image/profile/' + ${logged.image}"
-            alt="MY" class="rounded-circle" height="38" width="38">
-        </a><!-- End Profile Iamge Icon -->
+
+          <img th:src="${#strings.isEmpty(profile.image) || profile.image == null || profile.image == ''
+        ? '/image/profile-img.jpg'
+        : '/image/profile/' + profile.image}" alt="MY" class="rounded-circle" height="38" width="38">
+
+        </a>
 
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
           <li class="dropdown-header">
-            <h6 th:text="${logged.fin + ' ' + logged.lan}">First Last</h6>
-            <span th:text="${logged.designation}">Your Designation</span>
+            <h6 th:text="${profile.fin + ' ' + profile.lan}">First Last</h6>
+            <span th:text="${profile.designation}">Your Designation</span>
 
           </li>
           <li>
