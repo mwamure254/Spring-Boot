@@ -17,37 +17,43 @@
     <!-- =====End Header===== -->
 
     <!-- ======= Sidebar ======= -->
-    <th:block th:insert="~{partials/_sidebar1}" />
+    <th:block th:insert="~{partials/_sidebar}" />
     <!-- =====End Sidebar=====-->
 
     <main id="main" class="main">
 
         <h1 class="text-2xl font-bold">Manage Users</h1>
         <form th:action="@{/admin/users/save}" method="post" class="bg-white p-4 rounded mb-4">
-            <input name="username" placeholder="Username" required />
+            <input name="email" type="email" placeholder="Email" required />
             <input name="password" type="password" placeholder="Password" required />
             <select name="role">
-                <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+                <option value="">-- Role --</option>
+                <option th:each="r : ${roles}" th:value="${r}" th:text="${r.name}" required></option>
             </select>
-            <select name="storeId">
-                <option th:each="s : ${stores}" th:value="${s.id}" th:text="${s.name}"></option>
+
+            <select name="branch">
+                <option value="">-- Branch --</option>
+                <option th:each="s : ${stores}" th:value="${s.id}" th:text="${s.name}" required></option>
             </select>
-            <button>Create User</button>
+            <button class="bg-primary">Create User</button>
         </form>
 
         <table class="w-full bg-white">
             <tr>
-                <th>Username</th>
+                <th>Email</th>
                 <th>Role</th>
-                <th>Store</th>
+                <th>Branch</th>
             </tr>
             <tr th:each="u : ${users}">
-                <td th:text="${u.username}"></td>
-                <td th:text="${u.role}"></td>
-                <td th:text="${u.store.name}"></td>
+                <td th:text="${u.email}"></td>
+                <td>
+                    <span th:each="role : ${u.roles}" class="badge bg-primary me-1" th:text="${role.name}">
+                    </span>
+                </td>
+                <td th:text="${u.branch != null ? u.branch.name : 'No Branch'}"></td>
             </tr>
         </table>
-        
+
     </main><!-- End #main -->
 
     <!-- =====footer===== -->

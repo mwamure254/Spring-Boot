@@ -42,11 +42,11 @@ public class Initializer implements CommandLineRunner {
         // =========================
 
         List<String> defaultRoles = List.of(
+                "USER",
                 "ADMIN",
                 "MANAGER",
                 "CASHIER",
-                "PROCUREMENT",
-                "USER");
+                "PROCUREMENT");
 
         for (String roleName : defaultRoles) {
 

@@ -15,7 +15,8 @@ public class UserDto {
   private String password;
   private String fin;
   private String lan;
+  private Long branch;
   
   private Set<Role> roles = new HashSet<>();
- 
+
 }

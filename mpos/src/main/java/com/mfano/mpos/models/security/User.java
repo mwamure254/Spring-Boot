@@ -1,6 +1,7 @@
 package com.mfano.mpos.models.security;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import com.mfano.mpos.models.BaseObject;
@@ -13,6 +14,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -31,14 +33,16 @@ import lombok.Setter;
 public class User extends BaseObject {
     private String fin;
     private String lan;
-    private String username;
+
     @Column(unique = true)
     private String email;
-    private String password;
-    private boolean enabled;
+    private String username = email;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "branch_id", nullable = false)
+    private String password;
+    private boolean enabled = false;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "branch_id")
     private Branch branch;
 
     @ManyToMany(fetch = FetchType.EAGER)

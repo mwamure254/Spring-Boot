@@ -6,21 +6,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
-import com.mfano.mpos.config.CustomUserDetails;
-import com.mfano.mpos.models.security.Profile;
+import com.mfano.mpos.models.Branch;
 import com.mfano.mpos.models.security.Role;
 import com.mfano.mpos.models.security.User;
 import com.mfano.mpos.models.security.VerificationToken;
 import com.mfano.mpos.repositories.security.TokenRepositories;
 import com.mfano.mpos.repositories.security.UserRepository;
+import com.mfano.mpos.services.BranchService;
 import com.mfano.mpos.utils.mail.MailService;
 
 import jakarta.transaction.Transactional;
@@ -29,10 +25,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-   
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ProfileService profileService;
+    // private final ProfileService profileService;
+    private final BranchService branchService;
 
     private final TokenRepositories tokenRepository;
     private final MailService emailService;
@@ -41,32 +38,32 @@ public class UserService {
     private String appBaseUrl;
 
     @Transactional
-    public User registerUser(String email, String rawPassword, Set<Role> role) {
-
+    public void registerUser(String email, String rawPassword, Long branch, Set<Role> role) {
         if (userRepository.findByEmail(email) != null) {
             throw new RuntimeException("Email already in use");
         }
-
         if (role == null || role.isEmpty()) {
-            Role userRole = new Role();
-            userRole.setName("USER");
-            role = Set.of(userRole);
+            throw new RuntimeException("At least one role is required");
+        }
+
+        if (branch == null) {
+            throw new RuntimeException("Branch can not be empty.");
         }
 
         User user = new User();
-        
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setRoles(role);
-
+        user.setRoles(Set.of(role.iterator().next()));
+        user.setEnabled(true);
+        user.setBranch(branchService.findById(branch));
         userRepository.save(user);
         // createAndSendToken(user);
-        return user;
+
     }
 
-    public User save(User user){
+    public User save(User user) {
         return userRepository.save(user);
-    } 
+    }
 
     // Get User By Id
     public User findById(Long id) {
@@ -82,7 +79,7 @@ public class UserService {
     }
 
     public User findByBranch_Id(Long storeId) {
-     return userRepository.findByBranch_Id(storeId);
+        return userRepository.findByBranch_Id(storeId);
     }
 
     public void createAndSendToken(User user) {

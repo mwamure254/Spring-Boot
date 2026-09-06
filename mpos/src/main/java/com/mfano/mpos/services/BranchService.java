@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BranchService {
     private final BranchRepository branchRepository;
+
     public void createBranch(Branch branch) {
         branchRepository.save(branch);
     }
@@ -48,4 +49,7 @@ public class BranchService {
         return branchRepository.findById(id).orElse(null);
     }
 
+    public Branch findByName(String name) {
+        return branchRepository.findByName(name);
+    }
 }

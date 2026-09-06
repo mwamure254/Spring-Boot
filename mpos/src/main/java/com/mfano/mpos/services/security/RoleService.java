@@ -43,4 +43,7 @@ public class RoleService {
     public Set<Role> getUserRoles(User user) {
         return user.getRoles();
     }
+    public Role findByName(String name) {
+        return roleRepository.findByName(name).orElse(null);
+    }
 }

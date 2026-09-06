@@ -31,20 +31,7 @@
             <div class="card mb-3">
 
               <div class="card-body">
-                <div th:if="${error}" class="alert alert-danger py-2">
-                  <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                  <span th:text="${error}">
-                    Invalid username or password
-                  </span>
-                </div>
-
-                <div th:if="${message}" class="alert alert-success py-2">
-                  <i class="bi bi-info me-2"></i>
-                  <span th:text="${message}">
-                    Invalid username or password
-                  </span>
-                </div>
-
+             
                 <form class="row g-3 py-2 needs-validation" th:action="@{/login}" method="post">
 
                   <div class="col-12">
@@ -92,22 +79,28 @@
 
   </main><!-- End #main -->
 
-  <script>
-    function togglePassword(fieldId, button) {
-      const input = document.getElementById(fieldId);
-      const icon = button.querySelector("i");
+  <!-- Floating Alerts-->
+  <div th:if="${message}" id="floatingAlert"
+    class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow" role="alert"
+    style="z-index: 1080; min-width: 300px;">
 
-      if (input.type === "password") {
-        input.type = "text";
-        icon.classList.remove("bi-eye");
-        icon.classList.add("bi-eye-slash");
-      } else {
-        input.type = "password";
-        icon.classList.remove("bi-eye-slash");
-        icon.classList.add("bi-eye");
-      }
-    }
-  </script>
+    <i class="bi bi-info-circle me-2"></i>
+    <strong th:text="${message}">Success!</strong>
+
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  
+  <div th:if="${error}" id="floatingAlert"
+    class="alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow" role="alert"
+    style="z-index: 1080; min-width: 300px;">
+
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <strong th:text="${error}">Error!</strong>
+
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div><!-- End Floating Alerts-->
+
+  <script th:src="@{/js/custom.js}"></script>
 
 </body>
 

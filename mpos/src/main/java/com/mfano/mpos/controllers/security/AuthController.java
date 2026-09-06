@@ -94,18 +94,6 @@ public class AuthController {
         return "security/register";
     }
 
-    @PostMapping("/register")
-    public String registerSubmit(@ModelAttribute UserDto userDto, RedirectAttributes model) {
-        try {
-            userService.registerUser(userDto.getEmail(), userDto.getPassword(), userDto.getRoles());
-            model.addFlashAttribute("message", "Registration successful. Check your email for verification link.");
-            return msg;
-        } catch (Exception e) {
-            model.addFlashAttribute("error", e.getMessage());
-            return "security/register";
-        }
-    }
-
     @GetMapping("/login")
     public String loginPage(
             @RequestParam(value = "error", required = false) String error,

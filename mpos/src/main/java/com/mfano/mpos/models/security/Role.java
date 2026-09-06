@@ -13,4 +13,9 @@ import lombok.Setter;
 @Getter
 public class Role extends CommonObject {
     private String createdBy;
+
+    public boolean isEmpty() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'isEmpty'");
+    }
 }

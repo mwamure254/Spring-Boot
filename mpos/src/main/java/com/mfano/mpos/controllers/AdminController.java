@@ -4,17 +4,18 @@ import java.util.Set;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mfano.mpos.config.CustomUserDetails;
+import com.mfano.mpos.dtos.UserDto;
 import com.mfano.mpos.models.security.Role;
-import com.mfano.mpos.models.security.User;
 import com.mfano.mpos.services.BranchService;
 import com.mfano.mpos.services.security.AuditService;
 import com.mfano.mpos.services.security.ProfileService;
@@ -31,11 +32,9 @@ public class AdminController {
     private final UserService userService;
     // private final PostService postService;
     private final ProfileService profileService;
-private final AuditService auditService;
+    private final AuditService auditService;
     private final RoleService roleService;
     private final BranchService storeService;
-
-    private final PasswordEncoder encoder;
 
     @GetMapping("/dashboard")
     public String dashboard(@AuthenticationPrincipal CustomUserDetails auth, RedirectAttributes red) {
@@ -55,11 +54,15 @@ private final AuditService auditService;
     }
 
     @GetMapping("/users")
-    public String users(@RequestParam(required = false) Long storeId, @AuthenticationPrincipal CustomUserDetails auth,
-            RedirectAttributes red) {
-        red.addFlashAttribute("profile", profileService.checkProfile(auth.getId()));
+    public String users(@AuthenticationPrincipal CustomUserDetails auth,
+            Model red) {
+        red.addAttribute("profile", profileService.checkProfile(auth.getId()));
+        red.addAttribute("userDto", new UserDto());
+        Long storeId = auth.getBranch().getId();
+
         if (storeId != null) {
-            red.addAttribute("users", userService.findByBranch_Id(storeId));
+            // red.addAttribute("users", userService.findByBranch_Id(storeId));
+            red.addAttribute("users", userService.findAll());
 
         } else {
             red.addAttribute("users", userService.findAll());
@@ -70,14 +73,15 @@ private final AuditService auditService;
     }
 
     @PostMapping("/users/save")
-    public String saveUser(@RequestParam String username, @RequestParam String password,
-            @RequestParam Role role, @RequestParam Long storeId) {
-        User u = new User();
-        u.setUsername(username);
-        u.setPassword(encoder.encode(password));
-        u.setRoles(Set.of(role));
-        u.setBranch(storeService.findById(storeId));
-        userService.save(u);
+    public String saveUser(@ModelAttribute UserDto userDto, RedirectAttributes red) {
+        try {
+            userService.registerUser(userDto.getEmail(), userDto.getPassword(), userDto.getBranch(),
+                    userDto.getRoles());
+            auditService.record("CREATE_USER", "admin", "Created user: " + userDto.getEmail());
+            red.addFlashAttribute("message", "User created successfully!");
+        } catch (Exception e) {
+            red.addAttribute("error", e.getMessage());
+        }
         return "redirect:/admin/users";
     }
 }

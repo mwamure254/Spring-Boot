@@ -1,57 +1,78 @@
-<aside id="sidebar" class="sidebar">
+<!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-      <li class="nav-item" sec:authorize="isAuthenticated">
-        <a class="nav-link collapsed" href="/">
-          <i class="bi bi-house-door"></i>
-          <span>Home</span>
+      <li class="nav-item">
+        <a class="nav-link " href="/">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
 
-      <hr>
-
-      <li class="nav-item" sec:authorize="hasRole('HOI')">
-        <a class="nav-link collapsed" th:href="@{/service-board}">
-          <i class="bi bi-list-task"></i>
-          <span>Service Board</span>
+      <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT', 'CASHIER')">
+        <a class="nav-link collapsed" href="/products">
+          <i class="bi bi-box-seam"></i>
+          <span>Products</span>
         </a>
-      </li><!-- End Service Board -->
-
-      <li class="nav-item" sec:authorize="hasRole('DIRECTOR')">
-        <a class="nav-link collapsed" th:href="@{/director/schools}">
-          <i class="bi bi-stack"></i><span>Schools</span>
+      </li><!-- End Products Page Nav -->
+      <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT')">
+        <a class="nav-link collapsed" href="/transfers">
+          <i class="bi bi-arrow-repeat"></i>
+          <span>Transfers</span>
         </a>
-      </li><!-- End Schools -->
+      </li><!-- End Transfers Page Nav -->
 
-      <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-        <a class="nav-link collapsed" th:href="@{/admin/editables}">
-          <i class="bi bi-pen"></i>
-          <span>Editables</span>
+      <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+        <a class="nav-link collapsed" href="/admin/users">
+          <i class="bi bi-person"></i>
+          <span>Users</span>
         </a>
-      </li><!-- End Updatables -->
+      </li><!-- End Users Page Nav -->
 
-      <li class="nav-item" sec:authorize="isAuthenticated">
-        <a class="nav-link collapsed" href="/reports">
-          <i class="bi bi-folder"></i><span>Records</span>
+      <li class="nav-item" sec:authorize="hasAnyRole('ADMIN')">
+        <a class="nav-link collapsed" href="/roles">
+          <i class="bi bi-question-circle"></i>
+          <span>Roles</span>
         </a>
-      </li><!-- End Records -->
+      </li><!-- End Roles Page Nav -->
 
-      <li class="nav-item" sec:authorize="isAuthenticated">
-        <a class="nav-link collapsed" href="/leaderboard">
-          <i class="bi bi-grid"></i><span>service Board</span>
+
+      <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+        <a class="nav-link collapsed" href="/stores">
+          <i class="bi bi-diagram-3"></i>
+          <span>Branches</span>
         </a>
-      </li><!-- End Leaderboard -->
-      <hr>
+      </li><!-- End Stores Page Nav -->
+
+      <li class="nav-item" sec:authorize="hasAnyRole('MANAGER')">
+        <a class="nav-link collapsed" href="/employees">
+          <i class="bi bi-people-fill"></i>
+          <span>Employees</span>
+        </a>
+      </li><!-- End Employees Page Nav -->
+
+      <li class="nav-item" sec:authorize="hasAnyRole('MANAGER', 'PROCUREMENT', 'CASHIER')">
+        <a class="nav-link collapsed" href="/sales">
+          <i class="bi bi-cart-check"></i>
+          <span>Sales</span>
+        </a>
+      </li><!-- End Sales Page Nav -->
+
+      <li class="nav-item" sec:authorize="hasAnyRole('MANAGER', 'PROCUREMENT', 'CASHIER')">
+        <a class="nav-link collapsed" href="/pos">
+          <i class="bi bi-shop"></i>
+          <span>POS</span>
+        </a>
+      </li><!-- End POS Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-bs-toggle="modal"
-									data-bs-target="#logout">
+        <a class="nav-link collapsed" href="/logout">
           <i class="bi bi-box-arrow-right"></i>
-          <strong>Sign Out</strong>
+          <span>Logout</span>
         </a>
-      </li><!-- End Logout-->
+      </li><!-- End Logout Page Nav -->
 
     </ul>
 
-  </aside>
+  </aside><!-- End Sidebar-->

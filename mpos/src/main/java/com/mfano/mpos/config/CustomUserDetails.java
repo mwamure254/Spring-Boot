@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.mfano.mpos.models.Branch;
 import com.mfano.mpos.models.security.User;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
-
 
     private User user;
     public User getUser() {
@@ -68,6 +68,10 @@ public class CustomUserDetails implements UserDetails {
     }
     public String getLan() {
         return user.getLan();
+    }
+
+    public Branch getBranch() {
+        return user.getBranch();
     }
 
     public Long getId() { return user.getId(); }
