@@ -19,7 +19,6 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
-    private final ProductRepository productRepository;
 
     public Order checkout(User user) {
 
@@ -57,5 +56,9 @@ public class OrderService {
         cartRepository.save(cart);
 
         return savedOrder;
+    }
+
+     public Order getById(Long id) {
+        return orderRepository.findById(id).orElse(null);
     }
 }

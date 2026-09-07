@@ -1,0 +1,25 @@
+<div class="flex gap-2 mb-4">
+  <a th:href="@{/manager/analytics(tab='DAILY')}" 
+     th:class="${tab=='DAILY'} ? 'bg-blue-600 text-white px-4 py-2 rounded' : 'bg-gray-200 px-4 py-2 rounded'">Daily</a>
+  <a th:href="@{/manager/analytics(tab='WEEKLY')}" 
+     th:class="${tab=='WEEKLY'} ? 'bg-blue-600 text-white px-4 py-2 rounded' : 'bg-gray-200 px-4 py-2 rounded'">Weekly</a>
+  <a th:href="@{/manager/analytics(tab='MONTHLY')}" 
+     th:class="${tab=='MONTHLY'} ? 'bg-blue-600 text-white px-4 py-2 rounded' : 'bg-gray-200 px-4 py-2 rounded'">Monthly</a>
+</div>
+
+<div class="grid grid-cols-3 gap-4">
+  <div class="bg-white p-4 rounded shadow">
+    <p>Total Sales</p>
+    <p class="text-3xl font-bold" th:text="'KES ' + ${summary.totalSales}"></p>
+  </div>
+  <div class="bg-white p-4 rounded shadow">
+    <p>Total Orders</p>
+    <p class="text-3xl font-bold" th:text="${summary.totalOrders}"></p>
+  </div>
+</div>
+
+<canvas id="salesChart"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// plot ${trend} into Chart.js line chart
+</script>

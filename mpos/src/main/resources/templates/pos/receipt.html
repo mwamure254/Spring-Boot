@@ -1,0 +1,15 @@
+<body class="p-4 font-mono text-sm">
+    <h2 class="text-center font-bold">Mfano Stores</h2>
+    <p class="text-center">Nanyuki, KE</p>
+    <hr/>
+    <p>Order #: <span th:text="${order.id}"></span></p>
+    <p>Date: <span th:text="${order.createdAt}"></span></p>
+    <div th:each="item : ${order.items}">
+        <span th:text="${item.name}"></span> 
+        <span th:text="${item.qty} + 'x KES' + ${item.price}"></span>
+    </div>
+    <hr/>
+    <p class="font-bold">TOTAL: KES <span th:text="${order.total}"></span></p>
+    <p class="text-center mt-4">Thank you!</p>
+    <script>window.print()</script>
+</body>

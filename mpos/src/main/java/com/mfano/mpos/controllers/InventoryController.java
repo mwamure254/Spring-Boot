@@ -13,7 +13,7 @@ import com.mfano.mpos.services.security.UserService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/inventory")
+@RequestMapping("/procurement")
 @RequiredArgsConstructor
 public class InventoryController {
     private final UserService userService;
@@ -23,4 +23,5 @@ public class InventoryController {
         red.addFlashAttribute("profile", profileService.checkProfile(auth.getId()));
         return "inventory/index";
     }
+
 }

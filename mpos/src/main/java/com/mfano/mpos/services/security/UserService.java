@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.mfano.mpos.models.Branch;
-import com.mfano.mpos.models.security.Role;
+import com.mfano.mpos.dtos.UserDto;
 import com.mfano.mpos.models.security.User;
 import com.mfano.mpos.models.security.VerificationToken;
 import com.mfano.mpos.repositories.security.TokenRepositories;
@@ -30,6 +29,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     // private final ProfileService profileService;
     private final BranchService branchService;
+    private final RoleService roleService;
 
     private final TokenRepositories tokenRepository;
     private final MailService emailService;
@@ -38,24 +38,23 @@ public class UserService {
     private String appBaseUrl;
 
     @Transactional
-    public void registerUser(String email, String rawPassword, Long branch, Set<Role> role) {
-        if (userRepository.findByEmail(email) != null) {
+    public void registerUser(UserDto userDto) {
+        if (userRepository.findByEmail(userDto.getEmail()) != null) {
             throw new RuntimeException("Email already in use");
         }
-        if (role == null || role.isEmpty()) {
+        if (userDto.getRole() == null) {
             throw new RuntimeException("At least one role is required");
         }
-
-        if (branch == null) {
+        if (userDto.getBranch() == null) {
             throw new RuntimeException("Branch can not be empty.");
         }
 
         User user = new User();
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setRoles(Set.of(role.iterator().next()));
+        user.setEmail(userDto.getEmail());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEnabled(true);
-        user.setBranch(branchService.findById(branch));
+        user.setBranch(branchService.findById(userDto.getBranch()));
+        user.setRoles(Set.of(roleService.findById(userDto.getRole())));
         userRepository.save(user);
         // createAndSendToken(user);
 

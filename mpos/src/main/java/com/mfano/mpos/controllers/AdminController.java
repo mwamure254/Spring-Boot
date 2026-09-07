@@ -75,8 +75,7 @@ public class AdminController {
     @PostMapping("/users/save")
     public String saveUser(@ModelAttribute UserDto userDto, RedirectAttributes red) {
         try {
-            userService.registerUser(userDto.getEmail(), userDto.getPassword(), userDto.getBranch(),
-                    userDto.getRoles());
+            userService.registerUser(userDto);
             auditService.record("CREATE_USER", "admin", "Created user: " + userDto.getEmail());
             red.addFlashAttribute("message", "User created successfully!");
         } catch (Exception e) {

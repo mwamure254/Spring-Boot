@@ -26,12 +26,12 @@
         <form th:action="@{/admin/users/save}" method="post" class="bg-white p-4 rounded mb-4">
             <input name="email" type="email" placeholder="Email" required />
             <input name="password" type="password" placeholder="Password" required />
-            <select name="role">
+            <select name="role" required>
                 <option value="">-- Role --</option>
-                <option th:each="r : ${roles}" th:value="${r}" th:text="${r.name}" required></option>
+                <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.name}" required></option>
             </select>
 
-            <select name="branch">
+            <select name="branch" required>
                 <option value="">-- Branch --</option>
                 <option th:each="s : ${stores}" th:value="${s.id}" th:text="${s.name}" required></option>
             </select>

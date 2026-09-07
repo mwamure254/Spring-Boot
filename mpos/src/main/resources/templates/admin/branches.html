@@ -1,0 +1,10 @@
+<h1>All Stores</h1>
+<table class="table">
+  <tr th:each="s : ${stores}">
+    <td th:text="${s.name}"></td>
+    <td th:text="${s.location}"></td>
+    <td><a th:href="@{/admin/users(storeId=${s.id})}">Manage Users</a></td>
+    <td><a th:href="@{/admin/inventory(storeId=${s.id})}">Inventory</a></td>
+  </tr>
+</table>
+<a href="/admin/users/new">Create User</a>
