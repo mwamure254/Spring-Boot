@@ -23,3 +23,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 5000);
     }
 });
+
+// PRODUCT SEARCH
+document.getElementById("productSearch")
+    .addEventListener("keyup", function () {
+
+        let search = this.value.toLowerCase();
+
+        document
+            .querySelectorAll("#productTable tbody tr")
+            .forEach(function (row) {
+
+                let text = row.innerText.toLowerCase();
+
+                row.style.display =
+                    text.includes(search)
+                        ? ""
+                        : "none";
+
+            });
+
+    });

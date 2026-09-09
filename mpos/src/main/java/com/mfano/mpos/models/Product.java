@@ -35,7 +35,7 @@ public class Product extends CommonObject {
     private Integer stockQuantity = 0;
 
     @Column(length = 500)
-    private String imageUrl;
+    private String image;
 
     @Column(nullable = false)
     @Builder.Default

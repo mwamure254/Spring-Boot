@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthHandler implements AuthenticationSuccessHandler,
         AuthenticationFailureHandler, LogoutHandler {
-            
+
     private final AuditService auditService;
     String message = "Invalid username or password";
 
@@ -42,15 +42,9 @@ public class AuthHandler implements AuthenticationSuccessHandler,
         // log activity info
         if (authentication != null &&
                 authentication.getPrincipal() instanceof CustomUserDetails user) {
-
-            auditService.record(
-                    "user_login",
-                    "user",
-                    "User " + user.getUsername() + " logged in successfully.");
-
+            response.sendRedirect("/");
         }
-
-        response.sendRedirect("/");
+        response.sendRedirect("/login");
     }
 
     @Override
@@ -85,17 +79,16 @@ public class AuthHandler implements AuthenticationSuccessHandler,
 
     @Override
     public void logout(HttpServletRequest request,
-                       HttpServletResponse response,
-                       Authentication authentication) {
+            HttpServletResponse response,
+            Authentication authentication) {
 
         if (authentication != null &&
-            authentication.getPrincipal() instanceof CustomUserDetails user) {
+                authentication.getPrincipal() instanceof CustomUserDetails user) {
 
             auditService.record(
                     "user_logout",
                     "user",
-                    "User " + user.getUsername() + " logged out"
-            );
+                    "User " + user.getUsername() + " logged out");
         }
     }
 }

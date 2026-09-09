@@ -67,9 +67,14 @@ public class AuthController {
             return login;
         }
         model.addFlashAttribute("profile", profileService.checkProfile(auth.getId()));
+        auditService.record(
+                "user_login",
+                "user",
+                "User " + auth.getUsername() + " logged in successfully.");
 
         // Redirect based on role priority
-        if (roles.contains("ROLE_ADMIN")) {
+        if (roles.contains("ROLE_ADMIN"))
+        {
             return "redirect:/admin/dashboard";
         } else if (roles.contains("ROLE_MANAGER")) {
             return "redirect:/manager/dashboard";
@@ -79,11 +84,11 @@ public class AuthController {
             return "redirect:/procurement/dashboard";
         } else if (roles.contains("ROLE_USER")) {
             return "redirect:/guest/dashboard";
+        }else {
+            model.addFlashAttribute("error", "Please contact the system admin for role mapping.");
+            return login;
         }
 
-        // Fallback
-        model.addFlashAttribute("error", "Please contact the system admin");
-        return login;
     }
 
     @GetMapping("/register")
