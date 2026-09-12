@@ -24,7 +24,10 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Dashboard</h1>
+            <h1 class="fw-bold mb-1">
+                <i class="bi bi-box-seam"></i>
+                Products
+            </h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -38,11 +41,6 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
 
                 <div>
-                    <h3 class="fw-bold mb-1">
-                        <i class="bi bi-box-seam"></i>
-                        Products
-                    </h3>
-
                     <p class="text-muted mb-0">
                         Manage products, stock and availability
                     </p>
@@ -60,438 +58,364 @@
 
             <!-- ALERT -->
             <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
-
                 <i class="bi bi-check-circle"></i>
 
                 <span th:text="${success}"></span>
 
                 <button type="button" class="btn-close" data-bs-dismiss="alert">
                 </button>
-
             </div>
 
 
             <!-- SEARCH -->
-            <div class="card border-0 shadow-sm mb-4">
+            <div class="card borde-0">
+                <div class="input-group p-2">
+                    <span class="input-group-text">
+                        <i class="bi bi-search"></i>
+                    </span>
 
-                <div class="card-body">
-
-                    <div class="row">
-
-                        <div class="col-md-6">
-
-                            <div class="input-group">
-
-                                <span class="input-group-text">
-                                    <i class="bi bi-search"></i>
-                                </span>
-
-                                <input type="text" id="productSearch" class="form-control"
-                                    placeholder="Search products...">
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
+                    <input type="text" id="productSearch" class="form-control" placeholder="Search products...">
                 </div>
 
-            </div>
+                <!-- PRODUCTS TABLE -->
+                <div class="card border-0 shadow-sm">
+                    <div class="table-responsive p-2">
+                        <table class="table table-hover align-middle mb-0" id="productTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Product</th>
+                                    <th>SKU</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                    <th class="text-end">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
 
-
-            <!-- PRODUCTS TABLE -->
-            <div class="card border-0 shadow-sm">
-
-                <div class="table-responsive">
-
-                    <table class="table table-hover align-middle mb-0" id="productTable">
-
-                        <thead class="table-light">
-
-                            <tr>
-
-                                <th>#</th>
-
-                                <th>Product</th>
-
-                                <th>SKU</th>
-
-                                <th>Price</th>
-
-                                <th>Stock</th>
-
-                                <th>Status</th>
-
-                                <th class="text-end">
-                                    Actions
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            <tr th:each="p, stat : ${products}">
-
-                                <!-- ID -->
-                                <td th:text="${stat.count}">
-                                    1
-                                </td>
-
-
-                                <!-- PRODUCT -->
-                                <td>
-
-                                    <div class="d-flex align-items-center">
-
-                                        <img th:if="${p.image != null
-                                        and !p.image.isEmpty()}" th:src="${p.image}" width="45" height="45"
-                                            class="rounded object-fit-cover me-3">
-
-                                        <div th:unless="${p.image != null
-                                             and !p.image.isEmpty()}" class="bg-light rounded
-                                        d-flex align-items-center
-                                        justify-content-center
-                                        me-3" style="width:45px;height:45px">
-
-                                            <i class="bi bi-box text-muted"></i>
-
-                                        </div>
-
-                                        <div>
-
-                                            <div class="fw-semibold" th:text="${p.name}">
-                                                Product name
+                            <tbody>
+                                <tr th:each="p, stat : ${products}">
+                                    <!-- ID -->
+                                    <td th:text="${stat.count}">
+                                        1
+                                    </td>
+                                    <!-- PRODUCT -->
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img th:src="${p.image == null or p.image.isEmpty()}
+        ? @{/image/products/product-2.jpg}
+        : @{/image/products/{product}(product=${p.image})}" class="rounded object-fit-cover me-3" height="45"
+                                                width="45">
+                                            <div>
+                                                <div class="fw-semibold text-truncate d-inline-block" th:text="${p.name}"
+                                                style="max-width: 120px;">
+                                                    Product name
+                                                </div>
                                             </div>
-
                                         </div>
-
-                                    </div>
-
-                                </td>
-
-
-                                <!-- SKU -->
-                                <td th:text="${p.sku}">
-                                    SKU001
-                                </td>
-
-
-                                <!-- PRICE -->
-                                <td>
-
-                                    <strong>
-                                        KSh
-                                        <span th:text="${p.price}">
-                                            0.00
+                                    </td>
+                                    <!-- SKU -->
+                                    <td th:text="${p.sku}">
+                                        SKU001
+                                    </td>
+                                    <!-- PRICE -->
+                                    <td>
+                                        <strong>
+                                            KSh
+                                            <span th:text="${p.price}">
+                                                0.00
+                                            </span>
+                                        </strong>
+                                    </td>
+                                    <!-- STOCK -->
+                                    <td>
+                                        <span th:if="${p.stockQuantity == null or p.stockQuantity == 0}"
+                                            class="badge bg-danger">
+                                            Out of Stock
                                         </span>
-                                    </strong>
+                                        <span
+                                            th:if="${p.stockQuantity != null and p.stockQuantity > 0 and p.stockQuantity <= 10}"
+                                            class="badge bg-warning">
+                                            Low Stock
+                                        </span>
+                                        <span th:if="${p.stockQuantity != null and p.stockQuantity > 10}"
+                                            class="badge bg-success">
+                                            In Stock
+                                        </span>
+                                    </td>
+                                    <!-- STATUS -->
+                                    <td>
+                                        <span th:if="${p.active}" class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i>
+                                            Active
+                                        </span>
+                                        <span th:unless="${p.active}" class="badge bg-secondary">
+                                            <i class="bi bi-x-circle"></i>
+                                            Inactive
+                                        </span>
+                                    </td>
+                                    <!-- ACTIONS -->
+                                    <td class="text-end">
+                                        <div class="btn-group">
+                                            <!-- EDIT -->
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal" th:data-bs-target="'#editProductModal' + ${p.id}"
+                                                title="Edit">
 
-                                </td>
-
-
-                                <!-- STOCK -->
-                                <td>
-                                    <span th:if="${p.stockQuantity == null or p.stockQuantity == 0}"
-                                        class="badge bg-danger">
-                                        Out of Stock
-                                    </span>
-
-                                    <span
-                                        th:if="${p.stockQuantity != null and p.stockQuantity > 0 and p.stockQuantity <= 10}"
-                                        class="badge bg-warning">
-                                        Low Stock
-                                    </span>
-
-                                    <span th:if="${p.stockQuantity != null and p.stockQuantity > 10}"
-                                        class="badge bg-success">
-                                        In Stock
-                                    </span>
-                                </td>
-
-
-                                <!-- STATUS -->
-                                <td>
-
-                                    <span th:if="${p.active}" class="badge bg-success">
-
-                                        <i class="bi bi-check-circle"></i>
-                                        Active
-
-                                    </span>
-
-                                    <span th:unless="${p.active}" class="badge bg-secondary">
-
-                                        <i class="bi bi-x-circle"></i>
-                                        Inactive
-
-                                    </span>
-
-                                </td>
-
-
-                                <!-- ACTIONS -->
-                                <td class="text-end">
-
-                                    <div class="btn-group">
-
-                                        <!-- EDIT -->
-                                        <a th:href="@{/products/edit/{id}(id=${p.id})}"
-                                            class="btn btn-sm btn-outline-primary" title="Edit">
-
-                                            <i class="bi bi-pencil"></i>
-
-                                        </a>
-
-
-                                        <!-- TOGGLE -->
-                                        <form th:action="@{/products/toggle/{id}(id=${p.id})}" method="post"
-                                            class="d-inline">
-
-                                            <button type="submit" class="btn btn-sm btn-outline-warning" th:title="${p.active}
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <!-- TOGGLE -->
+                                            <form th:action="@{/products/toggle/{id}(id=${p.id})}" method="post"
+                                                class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-warning" th:title="${p.active}
                                             ? 'Deactivate'
                                             : 'Activate'">
-
-                                                <i th:class="${p.active}
+                                                    <i th:class="${p.active}
                                         ? 'bi bi-toggle-on'
                                         : 'bi bi-toggle-off'">
-                                                </i>
-
-                                            </button>
-
-                                        </form>
-
-
-                                        <!-- DELETE -->
-                                        <button type="button" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${p.id}">
-
-                                            <i class="bi bi-trash"></i>
-
-                                        </button>
-
-                                    </div>
-
-                                    <!-- DELETE MODAL -->
-                                    <div class="modal fade" th:id="'deleteModal' + ${p.id}" tabindex="-1">
-
-                                        <div class="modal-dialog modal-dialog-centered">
-
-                                            <div class="modal-content">
-
-                                                <div class="modal-header">
-
-                                                    <h5 class="modal-title">
-                                                        Delete Product
-                                                    </h5>
-
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal">
-                                                    </button>
-
-                                                </div>
-
-                                                <div class="modal-body text-start">
-
-                                                    Are you sure you want to delete
-
-                                                    <strong th:text="${p.name}">
-                                                        Product
-                                                    </strong>?
-
-                                                    <br>
-
-                                                    <small class="text-danger">
-                                                        This action cannot be undone.
-                                                    </small>
-
-                                                </div>
-
-                                                <div class="modal-footer">
-
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">
-
-                                                        Cancel
-
-                                                    </button>
-
-                                                    <form th:action="@{/products/delete/{id}(id=${p.id})}"
-                                                        method="post">
-
-                                                        <button type="submit" class="btn btn-danger">
-
-                                                            <i class="bi bi-trash"></i>
-                                                            Delete
-
-                                                        </button>
-
-                                                    </form>
-
-                                                </div>
-
-                                            </div>
-
+                                                    </i>
+                                                </button>
+                                            </form>
+                                            <!-- DELETE -->
+                                            <a class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                                th:data-bs-target="'#deleteModal' + ${p.id}" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
                                         </div>
 
-                                    </div>
+                                        <!-- DELETE MODAL -->
+                                        <div class="modal fade" th:id="'deleteModal' + ${p.id}" tabindex="-1">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">
+                                                            Delete Product
+                                                        </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-start">
+                                                        Are you sure you want to delete
+                                                        <strong th:text="${p.name}">
+                                                            Product
+                                                        </strong>?
+                                                        <br>
+                                                        <small class="text-danger">
+                                                            This action cannot be undone.
+                                                        </small>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">
+                                                            Cancel
+                                                        </button>
+                                                        <form th:action="@{/products/delete/{id}(id=${p.id})}"
+                                                            method="post">
+                                                            <button type="submit" class="btn btn-danger">
+                                                                <i class="bi bi-trash"></i>
+                                                                Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                </td>
+                                        <!-- EDIT PRODUCT MODAL -->
+                                        <div class="modal fade" th:id="'editProductModal' + ${p.id}" tabindex="-1"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <form th:action="@{/products/update/{id}(id=${p.id})}" method="post"
+                                                        th:object="${product2}" enctype="multipart/form-data">
+                                                        <!-- HEADER -->
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">
+                                                                <i class="bi bi-pencil-square"></i>
+                                                                Edit Product
+                                                            </h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal">
+                                                            </button>
+                                                        </div>
 
-                            </tr>
+                                                        <!-- BODY -->
+                                                        <div class="modal-body">
+                                                            <div class="row g-3">
+                                                                <!-- NAME -->
+                                                                <div class="col-md-8">
+                                                                    <label class="form-label">
+                                                                        Product Name
+                                                                    </label>
+                                                                    <input type="text" name="name" class="form-control"
+                                                                        placeholder="Product name" th:value="${p.name}" required>
+                                                                </div>
+                                                                <!-- SKU -->
+                                                                <div class="col-md-4">
+                                                                    <label class="form-label">
+                                                                        SKU
+                                                                    </label>
+                                                                    <input type="text" name="sku" class="form-control"
+                                                                        placeholder="SKU001" th:value="${p.sku}" required>
+                                                                </div>
+                                                                <!-- PRICE -->
+                                                                <div class="col-md-6">
+                                                                    <label class="form-label">
+                                                                        Price
+                                                                    </label>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text">
+                                                                            KSh
+                                                                        </span>
+                                                                        <input type="number" name="price" th:value="${p.price}"
+                                                                            class="form-control" step="0.01" min="0"
+                                                                            required>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- STOCK -->
+                                                                <div class="col-md-6">
+                                                                    <label class="form-label">
+                                                                        Quantity
+                                                                    </label>
+                                                                    <input type="number" name="stock" th:value="${p.stockQuantity}"
+                                                                        class="form-control" min="0" required>
+                                                                </div>
+                                                                <!-- IMAGE -->
+                                                                <div class="col-12">
+                                                                    <label class="form-label">
+                                                                        Image URL
+                                                                    </label>
+                                                                    <input type="file" accept="image/*" name="image"
+                                                                        class="form-control" th:value="${p.image}"
+                                                                        placeholder="/images/products/product.jpg">
+                                                                </div>
+                                                                <!-- ACTIVE -->
+                                                                <div class="col-12">
+                                                                    <div class="form-check form-switch">
+                                                                        <input class="form-check-input" th:value="${p.active}" type="checkbox"
+                                                                            name="active" checked>
+                                                                        <label class="form-check-label">
+                                                                            Product is active
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
+                                                        <!-- FOOTER -->
+                                                        <div class="modal-footer">
+                                                            <button type="reset" class="btn btn-warning"
+                                                                data-bs-dismiss="modal">
+                                                                Clear
+                                                            </button>
+                                                            <button type="submit" class="btn btn-primary">
+                                                                <i class="bi bi-save"></i>
+                                                                Save
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
 
-                            <!-- EMPTY -->
-                            <tr th:if="${#lists.isEmpty(products)}">
-
-                                <td colspan="7" class="text-center py-5">
-
-                                    <i class="bi bi-box-seam fs-1 text-muted"></i>
-
-                                    <h5 class="mt-3">
-                                        No products found
-                                    </h5>
-
-                                    <p class="text-muted">
-                                        Add your first product to get started.
-                                    </p>
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
+                                <!-- EMPTY -->
+                                <tr th:if="${#lists.isEmpty(products)}">
+                                    <td colspan="7" class="text-center py-5">
+                                        <i class="bi bi-box-seam fs-1 text-muted"></i>
+                                        <h5 class="mt-3">
+                                            No products found
+                                        </h5>
+                                        <p class="text-muted">
+                                            Add your first product to get started.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
             </div>
-
-            </div>
-
 
             <!-- ADD PRODUCT MODAL -->
-
             <div class="modal fade" id="addProductModal" tabindex="-1">
-
                 <div class="modal-dialog modal-lg modal-dialog-centered">
-
                     <div class="modal-content">
-
-                        <form th:action="@{/products/save}" th:object="${product}" method="post"
+                        <form th:action="@{/products/save}" th:object="${product1}" method="post"
                             enctype="multipart/form-data">
-
                             <div class="modal-header">
-
                                 <h5 class="modal-title">
-
                                     <i class="bi bi-plus-circle"></i>
                                     Add Product
-
                                 </h5>
-
                                 <button type="button" class="btn-close" data-bs-dismiss="modal">
                                 </button>
-
                             </div>
 
-
                             <div class="modal-body">
-
                                 <div class="row g-3">
-
                                     <!-- NAME -->
                                     <div class="col-md-8">
                                         <label class="form-label">
                                             Product Name
                                         </label>
-
                                         <input type="text" name="name" class="form-control" placeholder="Product name"
                                             required>
-
                                     </div>
-
                                     <!-- SKU -->
                                     <div class="col-md-4">
-
                                         <label class="form-label">
                                             SKU
                                         </label>
-
                                         <input type="text" name="sku" class="form-control" placeholder="SKU001"
                                             required>
-
                                     </div>
-
                                     <!-- PRICE -->
                                     <div class="col-md-6">
-
                                         <label class="form-label">
                                             Price
                                         </label>
-
                                         <div class="input-group">
-
                                             <span class="input-group-text">
                                                 KSh
                                             </span>
-
                                             <input type="number" name="price" class="form-control" step="0.01" min="0"
                                                 required>
-
                                         </div>
-
                                     </div>
-
                                     <!-- STOCK -->
                                     <div class="col-md-6">
-
                                         <label class="form-label">
-                                            Stock Quantity
+                                            Quantity
                                         </label>
-
                                         <input type="number" name="stock" class="form-control" min="0" required>
-
                                     </div>
-
                                     <!-- IMAGE -->
                                     <div class="col-12">
-
                                         <label class="form-label">
                                             Image URL
                                         </label>
-
                                         <input type="file" accept="image/*" name="image" class="form-control"
                                             placeholder="/images/products/product.jpg">
-
                                     </div>
-
                                     <!-- ACTIVE -->
                                     <div class="col-12">
-
                                         <div class="form-check form-switch">
-
                                             <input class="form-check-input" type="checkbox" name="active" checked>
-
                                             <label class="form-check-label">
                                                 Product is active
                                             </label>
-
                                         </div>
-
                                     </div>
-
                                 </div>
-
                             </div>
 
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-
-                                    Cancel
-
+                                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">
+                                    Clear
                                 </button>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="bi bi-save"></i>

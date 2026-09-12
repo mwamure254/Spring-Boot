@@ -3,12 +3,12 @@ package com.mfano.mpos.services;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mfano.mpos.config.CustomUserDetails;
 import com.mfano.mpos.dtos.ProductDto;
@@ -60,17 +60,18 @@ public class ProductService {
         productRepo.save(product);
     }
 
-    public void update(ProductDto productDto) {
-
-        product = new Product();
-        // Set product properties from productDto
-        product.setName(productDto.getName());
-        product.setPrice(productDto.getPrice());
-        product.setStockQuantity(productDto.getStock());
-        product.setDescription(productDto.getDescription());
-        product.setSku(productDto.getSku());
-        product.setImage(imagePath(productDto.getImage()));
-        productRepo.save(product);
+    public void update(Product productDto, MultipartFile file) throws IOException {
+        existing = getById(productDto.getId());
+        existing.setName(productDto.getName());
+        existing.setStockQuantity(productDto.getStockQuantity());
+        existing.setPrice(productDto.getPrice());
+        existing.setUpdatedAt(LocalDateTime.now());
+        // Only replace image when a new image was selected
+        if (file != null && !file.isEmpty()) {
+            updateProductImage(productDto.getId());
+            product.setImage(imagePath(file));
+        }
+        productRepo.save(existing);
     }
 
     public String imagePath(MultipartFile file) {
@@ -79,7 +80,7 @@ public class ProductService {
                 Path path = Path.of(baseDirectory + file.getOriginalFilename());
                 Files.createDirectories(path.getParent());
                 Files.write(path, file.getBytes());
-                return baseDirectory + file.getOriginalFilename();
+                return file.getOriginalFilename();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -87,18 +88,8 @@ public class ProductService {
         return null;
     }
 
-    // Update Product Image
-    public void updateProductImage(Long id, MultipartFile file) throws IOException {
-        existing = getById(id);
-
-        String img = file.getOriginalFilename();
-        existing.setImage(img);
-        save(existing);
-
-    }
-
     // Update Profile Image
-    public void deleteProductImage(Long id, RedirectAttributes red) throws IOException {
+    public void updateProductImage(Long id) throws IOException {
         existing = getById(id);
         try {
             String image = existing.getImage();
@@ -107,9 +98,8 @@ public class ProductService {
 
             existing.setImage(null);
             save(existing);
-            red.addFlashAttribute("message", "Profile image deleted successfully");
         } catch (Exception e) {
-            red.addFlashAttribute("error", e.getMessage());
+            e.printStackTrace();
         }
 
     }

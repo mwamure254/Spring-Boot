@@ -1,5 +1,7 @@
 package com.mfano.mpos.controllers;
 
+import java.io.IOException;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,10 +11,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mfano.mpos.config.CustomUserDetails;
 import com.mfano.mpos.dtos.ProductDto;
+import com.mfano.mpos.models.Product;
 import com.mfano.mpos.services.ProductService;
 import com.mfano.mpos.services.security.ProfileService;
 
@@ -31,13 +36,14 @@ public class ProductController {
     public String products(@AuthenticationPrincipal CustomUserDetails auth, Model model) {
         model.addAttribute("profile", profileService.checkProfile(auth.getId()));
         model.addAttribute("products", productService.findAll());
-        model.addAttribute("product", new ProductDto());
+        model.addAttribute("product1", new ProductDto());
+        model.addAttribute("product2", new Product());
         return "pos/products";
     }
 
     @PostMapping("/save")
     public String save(
-            @Valid @ModelAttribute("product") ProductDto productDto,
+            @Valid @ModelAttribute("product1") ProductDto productDto,
             BindingResult result,
             RedirectAttributes redirectAttributes,
             @AuthenticationPrincipal CustomUserDetails auth) {
@@ -58,30 +64,30 @@ public class ProductController {
 
     @GetMapping("/edit/{id}")
     public String edit(
-            @PathVariable Long id,
-            Model model) {
+            @PathVariable Long id,@AuthenticationPrincipal CustomUserDetails auth, Model model) {
+        model.addAttribute("profile", profileService.checkProfile(auth.getId()));
+        model.addAttribute("product", new Product());
+        model.addAttribute("products", productService.getById(id));
 
-        model.addAttribute("product", productService.getById(id));
-        model.addAttribute("products", productService.findAll());
-
-        return "products/edit";
+        return "pos/pedit";
     }
 
     @PostMapping("/update/{id}")
     public String update(
             @PathVariable Long id,
-            @Valid @ModelAttribute("product") ProductDto productDto,
-            BindingResult result,
-            RedirectAttributes redirectAttributes) {
+            @Valid @ModelAttribute("product2") Product productDto,
+            BindingResult result, @RequestParam("image") MultipartFile image,
+            RedirectAttributes redirectAttributes) throws IOException {
 
         if (result.hasErrors()) {
-            return "products/edit";
+            
+        return "redirect:/products";
         }
 
-        productService.update(productDto);
+        productService.update(productDto, image);
 
         redirectAttributes.addFlashAttribute(
-                "success",
+                "message",
                 "Product updated successfully."
         );
 
@@ -96,7 +102,7 @@ public class ProductController {
         productService.deleteById(id);
 
         redirectAttributes.addFlashAttribute(
-                "success",
+                "message",
                 "Product deleted successfully."
         );
 
@@ -111,7 +117,7 @@ public class ProductController {
         productService.toggleActive(id);
 
         redirectAttributes.addFlashAttribute(
-                "success",
+                "message",
                 "Product status updated."
         );
 
