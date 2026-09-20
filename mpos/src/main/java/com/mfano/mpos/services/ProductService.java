@@ -50,7 +50,6 @@ public class ProductService {
         product = new Product();
         // Set product properties from productDto
         product.setBranch(auth.getBranch());
-        product.setCreatedBy(auth.getEmail());
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setStockQuantity(productDto.getStock());
@@ -60,16 +59,15 @@ public class ProductService {
         productRepo.save(product);
     }
 
-    public void update(Product productDto, MultipartFile file) throws IOException {
-        existing = getById(productDto.getId());
+    public void update(Long id, ProductDto productDto, MultipartFile file) throws IOException {
+        existing = getById(id);
         existing.setName(productDto.getName());
-        existing.setStockQuantity(productDto.getStockQuantity());
+        existing.setStockQuantity(productDto.getStock());
         existing.setPrice(productDto.getPrice());
-        existing.setUpdatedAt(LocalDateTime.now());
         // Only replace image when a new image was selected
         if (file != null && !file.isEmpty()) {
-            updateProductImage(productDto.getId());
-            product.setImage(imagePath(file));
+            updateProductImage(id);
+            existing.setImage(imagePath(file));
         }
         productRepo.save(existing);
     }

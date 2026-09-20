@@ -1,15 +1,110 @@
-<body class="p-4 font-mono text-sm">
-    <h2 class="text-center font-bold">Mfano Stores</h2>
-    <p class="text-center">Nanyuki, KE</p>
-    <hr/>
-    <p>Order #: <span th:text="${order.id}"></span></p>
-    <p>Date: <span th:text="${order.createdAt}"></span></p>
-    <div th:each="item : ${order.items}">
-        <span th:text="${item.name}"></span> 
-        <span th:text="${item.qty} + 'x KES' + ${item.price}"></span>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{partials/_header :: common_header(~{::title/text()},~{::link},~{::meta})}">
+
+    <!-- Page Metadata -->
+    <meta name="description" content="MPOS sales receipt">
+    <meta name="author" content="Mfano">
+
+    <!-- Page Title -->
+    <title>MPOS | Receipt</title>
+
+</th:block>
+
+<body class="bg-white text-dark">
+
+    <div class="receipt mx-auto p-4 font-monospace">
+
+        <!-- Header -->
+        <div class="text-center mb-3">
+            <h2 class="fw-bold mb-1">Mfano POS</h2>
+            <p class="mb-1">Nanyuki, KE</p>
+            <small class="text-muted">Sales Receipt</small>
+        </div>
+
+        <hr class="border-dark">
+
+        <!-- Order Information -->
+        <div class="mb-3">
+            <div class="d-flex justify-content-between">
+                <span>Order #:</span>
+                <strong th:text="${order.orderNumber}">ORD-0001</strong>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <span>Date:</span>
+                <span th:text="${order.createdAt}">2026-09-14</span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <span>Cashier:</span>
+                <span th:text="${order.createdBy}">Cashier</span>
+            </div>
+        </div>
+
+        <hr class="border-dark">
+
+        <!-- Items Header -->
+        <div class="row fw-bold mb-2">
+            <div class="col-1">#</div>
+            <div class="col-5">Item</div>
+            <div class="col-2 text-center">Price</div>
+            <div class="col-4 text-end">Amout(Ksh)</div>
+        </div>
+
+        <!-- Items -->
+        <div th:each="item, stat : ${order.items}" class="row mb-2">
+
+            <div class="col-1" th:text="${stat.count}">1</div>
+            <div class="col-5">
+                <span th:text="${item.product.name}"></span>
+                <span> x </span>
+                <span th:text="${item.quantity}"></span>
+            </div>
+
+            <div class="col-2 text-center" th:text="${#numbers.formatDecimal(item.unitPrice, 1, 'COMMA', 2, 'POINT')}">
+                1
+            </div>
+
+            <div class="col-4 text-end">
+                <span th:text="${#numbers.formatDecimal(item.subtotal, 1, 'COMMA', 2, 'POINT')}">
+                    Ksh 0.00
+                </span>
+            </div>
+
+        </div>
+
+        <hr class="border-dark">
+
+        <!-- Totals -->
+        <div class="d-flex justify-content-between fw-bold fs-5">
+            <span>TOTAL:</span>
+            <span th:text="'Ksh ' + ${#numbers.formatDecimal(order.getTotal(), 1, 'COMMA', 2, 'POINT')}">
+                Ksh 0.00
+            </span>
+        </div>
+
+        <hr class="border-dark">
+
+        <!-- Payment -->
+        <div class="d-flex justify-content-between">
+            <span>Payment:</span>
+            <span th:text="${order.pm}">CASH</span>
+        </div>
+        <div class="text-center mt-4">
+            <p class="fw-bold mb-1">Thank you!</p>
+            <small>We appreciate your loyalty.</small>
+        </div>
     </div>
-    <hr/>
-    <p class="font-bold">TOTAL: KES <span th:text="${order.total}"></span></p>
-    <p class="text-center mt-4">Thank you!</p>
-    <script>window.print()</script>
+
+    <!-- Auto Print -->
+    <script>
+        window.onload = function () {
+            window.print();
+        };
+    </script>
+
 </body>
+
+</html>

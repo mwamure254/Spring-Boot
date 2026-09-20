@@ -14,10 +14,9 @@ import lombok.RequiredArgsConstructor;
 public class AuditService {
      private final AuditRepository repo;
 
-    public void record(String action, String performedBy, String details) {
+    public void record(String action, String details) {
         AuditEntry entry = new AuditEntry();
         entry.setAction(action);
-        entry.setPerformedBy(performedBy);
         entry.setDetails(details);
         repo.save(entry);
     }

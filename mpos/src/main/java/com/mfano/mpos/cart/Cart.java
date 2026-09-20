@@ -44,6 +44,7 @@ public class Cart {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
+    @Builder.Default
     private List<CartItem> items = new ArrayList<>();
 
     public BigDecimal getTotal() {
@@ -53,25 +54,27 @@ public class Cart {
     }
 
     public void addItem(Product product, int quantity) {
-        items.stream()
-                .filter(item -> item.getProduct().getId().equals(product.getId()))
-                .findFirst()
-                .ifPresentOrElse(
-                        item -> item.setQuantity(item.getQuantity() + quantity),
-                        () -> {
-                            CartItem item = CartItem.builder()
-                                    .product(product)
-                                    .quantity(quantity)
-                                    .build();
+    
+    CartItem existingItem = items.stream()
+            .filter(item -> item.getProduct().getId().equals(product.getId()))
+            .findFirst()
+            .orElse(null);
 
-                            items.add(item);
-                        }
-                );
+    if (existingItem != null) {
+        existingItem.setQuantity(existingItem.getQuantity() + quantity);
+    } else {
+        CartItem item = new CartItem();
+        item.setCart(this);
+        item.setProduct(product);
+        item.setQuantity(quantity);
+
+        items.add(item);
     }
+}
 
-    public void removeItem(Long productId) {
+    public void removeItem(Long id) {
         items.removeIf(item ->
-                item.getProduct().getId().equals(productId)
+                item.getId().equals(id)
         );
     }
 

@@ -31,7 +31,7 @@ public class SecurityConfig {
                                 .requestMatchers("/cashier/**").hasRole("CASHIER")
                                 .requestMatchers("/procurement/**").hasRole("PROCUREMENT")
                                 .requestMatchers("/", "/register", "/login", "/verify", "/forgot", "/reset-password",
-                                                "/resend", "/error", "/profile", "/css/**", "/js/**", "/vendor/**",
+                                                "/resend", "/error/403", "/profile", "/css/**", "/js/**", "/vendor/**",
                                                 "/image/**")
                                 .permitAll()
                                 .anyRequest().authenticated())
@@ -41,12 +41,12 @@ public class SecurityConfig {
                                                 // .loginProcessingUrl("/login")
                                                 .successHandler(authHandler)
                                                 .failureHandler(authHandler)
-                                                .defaultSuccessUrl("/", true)
+                                                //.defaultSuccessUrl("/", true)
                                                 // .successForwardUrl("/dashboard")
                                                 .permitAll())
 
                                 .exceptionHandling(handling -> handling
-                                                .accessDeniedPage("/error"))
+                                                .accessDeniedPage("/error/403"))
 
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")

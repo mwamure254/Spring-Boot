@@ -75,16 +75,11 @@ public class ProductController {
     @PostMapping("/update/{id}")
     public String update(
             @PathVariable Long id,
-            @Valid @ModelAttribute("product2") Product productDto,
-            BindingResult result, @RequestParam("image") MultipartFile image,
+            @Valid ProductDto productDto,
+            @RequestParam("image") MultipartFile image,
             RedirectAttributes redirectAttributes) throws IOException {
 
-        if (result.hasErrors()) {
-            
-        return "redirect:/products";
-        }
-
-        productService.update(productDto, image);
+        productService.update(id, productDto, image);
 
         redirectAttributes.addFlashAttribute(
                 "message",

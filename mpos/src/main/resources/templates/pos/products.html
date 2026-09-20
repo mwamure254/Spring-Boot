@@ -22,7 +22,6 @@
 
 
     <main id="main" class="main">
-
         <div class="pagetitle">
             <h1 class="fw-bold mb-1">
                 <i class="bi bi-box-seam"></i>
@@ -30,7 +29,7 @@
             </h1>
             <nav>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
                     <li class="breadcrumb-item active">Dashboard</li>
                 </ol>
             </nav>
@@ -89,7 +88,7 @@
                                     <th>Price</th>
                                     <th>Stock</th>
                                     <th>Status</th>
-                                    <th class="text-end">
+                                    <th class="text-end" sec:authorize="hasAnyRole('MANAGER', 'PROCUREMENT', 'ADMIN')">
                                         Actions
                                     </th>
                                 </tr>
@@ -104,18 +103,25 @@
                                     <!-- PRODUCT -->
                                     <td>
                                         <div class="d-flex align-items-center">
+                                            <!-- Product image -->
                                             <img th:src="${p.image == null or p.image.isEmpty()}
-        ? @{/image/products/product-2.jpg}
-        : @{/image/products/{product}(product=${p.image})}" class="rounded object-fit-cover me-3" height="45"
+            ? @{/image/products/product-2.jpg}
+            : @{/image/products/{product}(product=${p.image})}" class="rounded object-fit-cover me-3" height="45"
                                                 width="45">
-                                            <div>
-                                                <div class="fw-semibold text-truncate d-inline-block" th:text="${p.name}"
-                                                style="max-width: 120px;">
-                                                    Product name
-                                                </div>
-                                            </div>
+
+                                            <!-- Product name -->
+                                            <span class="fw-semibold text-truncate d-inline-block flex-shrink-1"
+                                                th:text="${p.name}" style="max-width: 120px;">
+                                                Product name
+                                            </span>
+
+                                            <!-- More -->
+                                            <a href="#" class="ms-2">
+                                                show more
+                                            </a>
                                         </div>
                                     </td>
+
                                     <!-- SKU -->
                                     <td th:text="${p.sku}">
                                         SKU001
@@ -157,7 +163,7 @@
                                         </span>
                                     </td>
                                     <!-- ACTIONS -->
-                                    <td class="text-end">
+                                    <td class="text-end" sec:authorize="hasAnyRole('MANAGER', 'PROCUREMENT', 'ADMIN')">
                                         <div class="btn-group">
                                             <!-- EDIT -->
                                             <button type="button" class="btn btn-sm btn-outline-primary"
@@ -179,7 +185,8 @@
                                                 </button>
                                             </form>
                                             <!-- DELETE -->
-                                            <a class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                            <a sec:authorize="hasAnyRole('PROCUREMENT')"
+                                             class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
                                                 th:data-bs-target="'#deleteModal' + ${p.id}" title="Delete">
                                                 <i class="bi bi-trash"></i>
                                             </a>
@@ -229,7 +236,7 @@
                                             <div class="modal-dialog modal-lg modal-dialog-centered">
                                                 <div class="modal-content">
                                                     <form th:action="@{/products/update/{id}(id=${p.id})}" method="post"
-                                                        th:object="${product2}" enctype="multipart/form-data">
+                                                        enctype="multipart/form-data">
                                                         <!-- HEADER -->
                                                         <div class="modal-header">
                                                             <h5 class="modal-title">
@@ -244,21 +251,24 @@
                                                         <!-- BODY -->
                                                         <div class="modal-body">
                                                             <div class="row g-3">
+
                                                                 <!-- NAME -->
                                                                 <div class="col-md-8">
-                                                                    <label class="form-label">
+                                                                    <label for="name" class="form-label">
                                                                         Product Name
                                                                     </label>
-                                                                    <input type="text" name="name" class="form-control"
-                                                                        placeholder="Product name" th:value="${p.name}" required>
+                                                                    <input type="text" id="name" class="form-control"
+                                                                        name="name" placeholder="Product name"
+                                                                        th:value="${p.name}" required>
                                                                 </div>
                                                                 <!-- SKU -->
                                                                 <div class="col-md-4">
                                                                     <label class="form-label">
                                                                         SKU
                                                                     </label>
-                                                                    <input type="text" name="sku" class="form-control"
-                                                                        placeholder="SKU001" th:value="${p.sku}" required>
+                                                                    <input type="text" id="sku" class="form-control"
+                                                                        name="sku" placeholder="SKU001"
+                                                                        th:value="${p.sku}" required>
                                                                 </div>
                                                                 <!-- PRICE -->
                                                                 <div class="col-md-6">
@@ -269,9 +279,9 @@
                                                                         <span class="input-group-text">
                                                                             KSh
                                                                         </span>
-                                                                        <input type="number" name="price" th:value="${p.price}"
-                                                                            class="form-control" step="0.01" min="0"
-                                                                            required>
+                                                                        <input type="number" id="price"
+                                                                            th:Value="${p.price}" class="form-control"
+                                                                            step="0.01" min="0" name="price" required>
                                                                     </div>
                                                                 </div>
                                                                 <!-- STOCK -->
@@ -279,27 +289,19 @@
                                                                     <label class="form-label">
                                                                         Quantity
                                                                     </label>
-                                                                    <input type="number" name="stock" th:value="${p.stockQuantity}"
-                                                                        class="form-control" min="0" required>
+                                                                    <input type="number" th:value="${p.stockQuantity}"
+                                                                        id="stockQuantity" class="form-control"
+                                                                        min="0" name="stock" required>
                                                                 </div>
+
                                                                 <!-- IMAGE -->
                                                                 <div class="col-12">
                                                                     <label class="form-label">
                                                                         Image URL
                                                                     </label>
                                                                     <input type="file" accept="image/*" name="image"
-                                                                        class="form-control" th:value="${p.image}"
+                                                                        class="form-control" id="image"
                                                                         placeholder="/images/products/product.jpg">
-                                                                </div>
-                                                                <!-- ACTIVE -->
-                                                                <div class="col-12">
-                                                                    <div class="form-check form-switch">
-                                                                        <input class="form-check-input" th:value="${p.active}" type="checkbox"
-                                                                            name="active" checked>
-                                                                        <label class="form-check-label">
-                                                                            Product is active
-                                                                        </label>
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -400,15 +402,6 @@
                                         </label>
                                         <input type="file" accept="image/*" name="image" class="form-control"
                                             placeholder="/images/products/product.jpg">
-                                    </div>
-                                    <!-- ACTIVE -->
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" name="active" checked>
-                                            <label class="form-check-label">
-                                                Product is active
-                                            </label>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -79,26 +79,8 @@
 
   </main><!-- End #main -->
 
-  <!-- Floating Alerts-->
-  <div th:if="${message}" id="floatingAlert"
-    class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow" role="alert"
-    style="z-index: 1080; min-width: 300px;">
-
-    <i class="bi bi-info-circle me-2"></i>
-    <strong th:text="${message}">Success!</strong>
-
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-  
-  <div th:if="${error}" id="floatingAlert"
-    class="alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow" role="alert"
-    style="z-index: 1080; min-width: 300px;">
-
-    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-    <strong th:text="${error}">Error!</strong>
-
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div><!-- End Floating Alerts-->
+  <!-- =====footer===== -->
+  <th:block th:insert="~{partials/_footer}" />
 
   <script th:src="@{/js/custom.js}"></script>
 

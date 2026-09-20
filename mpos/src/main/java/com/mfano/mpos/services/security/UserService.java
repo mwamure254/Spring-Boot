@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.mfano.mpos.dtos.UserDto;
 import com.mfano.mpos.models.security.User;
+import com.mfano.mpos.models.security.Role;
 import com.mfano.mpos.models.security.VerificationToken;
 import com.mfano.mpos.repositories.security.TokenRepositories;
 import com.mfano.mpos.repositories.security.UserRepository;
@@ -39,7 +40,7 @@ public class UserService {
 
     @Transactional
     public void registerUser(UserDto userDto) {
-        if (userRepository.findByEmail(userDto.getEmail()) != null) {
+        if (findByEmail(userDto.getEmail()) != null) {
             throw new RuntimeException("Email already in use");
         }
         if (userDto.getRole() == null) {
@@ -53,15 +54,44 @@ public class UserService {
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEnabled(true);
+        user.setFin(userDto.getFin());
+        user.setLan(userDto.getLan());             
+        user.setGender(userDto.getGender());  
+
         user.setBranch(branchService.findById(userDto.getBranch()));
         user.setRoles(Set.of(roleService.findById(userDto.getRole())));
-        userRepository.save(user);
+        save(user);
         // createAndSendToken(user);
 
     }
 
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    public void update(Long id, UserDto userDto){
+        User existing = findById(id);
+
+        existing.setFin(userDto.getFin());
+        existing.setLan(userDto.getLan());                     
+        existing.setGender(userDto.getGender());  
+
+        existing.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        existing.setEnabled(true);
+        existing.setBranch(branchService.findById(userDto.getBranch()));
+        //existing.setRoles(Set.of(roleService.findById(userDto.getRole())));
+        existing.getRoles().add(roleService.findById(userDto.getRole()));
+        save(existing);
+    }
+
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public void toggleActive(Long id) {
+        User existing = findById(id);
+        existing.setEnabled(!Boolean.TRUE.equals(existing.isEnabled()));
+        save(existing);
     }
 
     // Get User By Id
@@ -71,10 +101,6 @@ public class UserService {
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
-    }
-
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
     }
 
     public User findByBranch_Id(Long storeId) {
@@ -107,14 +133,14 @@ public class UserService {
         }
         User user = vt.getUser();
         user.setEnabled(true);
-        userRepository.save(user);
+        save(user);
         tokenRepository.delete(vt);
         return "valid";
     }
 
     // Password reset flow
     public void createPasswordResetToken(String email) {
-        User user = userRepository.findByEmail(email);
+        User user = findByEmail(email);
         if (user == null) {
             throw new RuntimeException("No user with the email provided");
         }
@@ -151,11 +177,26 @@ public class UserService {
     @Transactional
     public void changePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+        save(user);
         tokenRepository.deleteByUserId(user.getId());
     }
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    //To Do
+    public void assignRoleToUser(Long userId, Long roleId) {
+        User user = findById(userId);
+        Role role = roleService.findById(roleId);
+        user.getRoles().add(role);
+        save(user);
+    }
+
+     public void removeRoleFromUser(Long userId, Long roleId) {
+        User user = findById(userId);
+        Role role = roleService.findById(roleId);
+        user.getRoles().removeIf(r->r.getId().equals(role.getId()));
+        save(user);
     }
 }

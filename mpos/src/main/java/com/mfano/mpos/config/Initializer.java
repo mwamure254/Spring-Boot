@@ -98,6 +98,9 @@ public class Initializer implements CommandLineRunner {
             admin.setPassword(passwordEncoder.encode(adminPassword));
             admin.setEnabled(true);
             admin.setBranch(hqBranch);
+            admin.setGender("sys");
+            admin.setFin("sys");
+            admin.setLan("sys");
             admin.setCreatedBy("sys");
             admin.setRoles(Set.of(adminRole));
 

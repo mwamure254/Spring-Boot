@@ -43,6 +43,7 @@ public class AuthHandler implements AuthenticationSuccessHandler,
         if (authentication != null &&
                 authentication.getPrincipal() instanceof CustomUserDetails user) {
             response.sendRedirect("/");
+            return;
         }
         response.sendRedirect("/login");
     }
@@ -87,7 +88,6 @@ public class AuthHandler implements AuthenticationSuccessHandler,
 
             auditService.record(
                     "user_logout",
-                    "user",
                     "User " + user.getUsername() + " logged out");
         }
     }

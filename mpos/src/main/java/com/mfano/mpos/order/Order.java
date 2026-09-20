@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Objects;
 
 import com.mfano.mpos.dtos.OrderStatus;
 import com.mfano.mpos.models.BaseObject;
@@ -36,6 +37,7 @@ import lombok.Setter;
 public class Order extends BaseObject{
     @Column(nullable = false, unique = true, updatable = false)
     private String orderNumber;
+    private String pm;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -51,15 +53,14 @@ public class Order extends BaseObject{
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-     private List<OrderItem> items = new ArrayList<>();
-
-    @Column(nullable = false, precision = 19, scale = 2)
     @Builder.Default
-    private BigDecimal subtotal = BigDecimal.ZERO;
+    private List<OrderItem> items = new ArrayList<>();
 
-    @Column(nullable = false, precision = 19, scale = 2)
-    @Builder.Default
-    private BigDecimal total = BigDecimal.ZERO;
+    public BigDecimal getTotal() {
+        return items.stream()
+                .map(OrderItem::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -67,20 +68,14 @@ public class Order extends BaseObject{
             orderNumber = UUID.randomUUID()
                     .toString()
                     .replace("-", "")
-                    .substring(0, 12)
+                    .substring(0, 6)
                     .toUpperCase();
         }
     }
 
     public void addItem(OrderItem item) {
+        item.setOrder(this);
         items.add(item);
     }
 
-    public void calculateTotals() {
-        subtotal = items.stream()
-                .map(OrderItem::getSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        total = subtotal;
-    }
 }

@@ -27,13 +27,28 @@ public class RoleService {
     }
 
     // Delete Role
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         roleRepository.deleteById(id);
+    }
+
+    public void toggleActive(Long id) {
+        Role existing = findById(id);
+        existing.setActive(!Boolean.TRUE.equals(existing.isActive()));
+        save(existing);
     }
 
     // Update Role
     public void save(Role role) {
         roleRepository.save(role);
+    }
+    
+    public void update(Long id, Role role){
+        Role existing = findById(id);
+
+        existing.setName(role.getName());
+        existing.setDescription(role.getDescription());        
+
+        save(existing);
     }
 
     public List<Role> getUserNotRoles(User user) {

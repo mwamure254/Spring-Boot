@@ -41,7 +41,7 @@ public class CartItem {
     private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id") // <-- This owns the FK
+    @JoinColumn(name = "cart_id", nullable = false) // <-- This owns the FK
     private Cart cart;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

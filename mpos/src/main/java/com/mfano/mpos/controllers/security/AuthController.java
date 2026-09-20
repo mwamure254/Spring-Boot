@@ -69,7 +69,6 @@ public class AuthController {
         model.addFlashAttribute("profile", profileService.checkProfile(auth.getId()));
         auditService.record(
                 "user_login",
-                "user",
                 "User " + auth.getUsername() + " logged in successfully.");
 
         // Redirect based on role priority
@@ -119,6 +118,11 @@ public class AuthController {
 
         return "security/login"; // Return login view
     }
+    
+    @GetMapping("/error/403")
+    public String forbidden() {
+        return "error/403";
+    }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
@@ -141,7 +145,7 @@ public class AuthController {
             @ModelAttribute("profile") Profile profile) {
 
         profileService.update(auth.getId(), profile);
-        auditService.record("update_profile", "user id=" + auth.getId(), "Updated their profile");
+        auditService.record("update_profile", "user id=" + auth.getId() + "Updated their profile");
         return "redirect:/profile";
     }
 
@@ -155,7 +159,7 @@ public class AuthController {
         } catch (IOException e) {
             red.addFlashAttribute("error", e.getMessage());
         }
-        auditService.record("update_image", "user id=" + userid, "Updated their profile image");
+        auditService.record("update_image", "user id=" + userid + "Updated their profile image");
         red.addFlashAttribute("message", "Image updated successfully.");
         return "redirect:/profile";
     }
@@ -169,7 +173,7 @@ public class AuthController {
         } catch (IOException e) {
             red.addFlashAttribute("error", e.getMessage());
         }
-        auditService.record("delete_image", "user id=" + userid, "Deleted their profile image");
+        auditService.record("delete_image", "user id=" + userid + "Deleted their profile image");
         red.addFlashAttribute("message", "Image deleted successfully.");
         return "redirect:/profile";
     }
@@ -285,7 +289,7 @@ public class AuthController {
         if (user != null) {
             user.setPassword(passwordEncoder.encode(password));
             userService.save(user);
-            auditService.record("reset_password", "user id=" + user.getId(), "Reset password");
+            auditService.record("reset_password", "user id=" + user.getId() + "Reset password");
             red.addFlashAttribute("message", "Password reset successful");
             return "redirect:/profile";
         } else {

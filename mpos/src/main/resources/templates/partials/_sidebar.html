@@ -6,7 +6,7 @@
       <li class="nav-item">
         <a class="nav-link " href="/">
           <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
+          <span>Overview</span>
         </a>
       </li><!-- End Dashboard Nav -->
 
@@ -31,12 +31,11 @@
       </li><!-- End Users Page Nav -->
 
       <li class="nav-item" sec:authorize="hasAnyRole('ADMIN')">
-        <a class="nav-link collapsed" href="/roles">
+        <a class="nav-link collapsed" href="/admin/roles">
           <i class="bi bi-question-circle"></i>
           <span>Roles</span>
         </a>
       </li><!-- End Roles Page Nav -->
-
 
       <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
         <a class="nav-link collapsed" href="/stores">

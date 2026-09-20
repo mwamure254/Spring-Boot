@@ -41,7 +41,7 @@ public class Profile extends BaseObject{
     private String instagram;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid", nullable = false, insertable=false, updatable=false)
+    @JoinColumn(name = "userid", nullable = true, insertable=false, updatable=false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
     private Long userid;
