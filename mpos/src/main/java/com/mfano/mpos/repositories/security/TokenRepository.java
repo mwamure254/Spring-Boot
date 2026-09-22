@@ -8,7 +8,7 @@ import com.mfano.mpos.models.security.User;
 import com.mfano.mpos.models.security.VerificationToken;
 import java.util.List;
 
-public interface TokenRepositories extends JpaRepository<VerificationToken, Long> {
+public interface TokenRepository extends JpaRepository<VerificationToken, Long> {
 
     Optional<VerificationToken> findByToken(String token);
 

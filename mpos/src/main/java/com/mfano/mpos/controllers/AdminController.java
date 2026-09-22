@@ -206,13 +206,8 @@ public class AdminController {
             case "profile":
                 // Add user info to model (for Thymeleaf dashboard pages)
                 model.addAttribute("profile", profileService.checkProfile(auth.getId()));
-                model.addAttribute("id1", user.getId());
-                model.addAttribute("username1", user.getEmail());
-                model.addAttribute("password1", user.getPassword());
-                model.addAttribute("roles1", user.getRoles());
-
-                profileService.checkProfile(id);
-                dir = "admin/user_profile";
+                model.addAttribute("profile1", profileService.checkProfile(user.getId()));
+                dir = "admin/user-profile";
                 break;
 
             // Resend verification link

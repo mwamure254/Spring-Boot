@@ -34,4 +34,8 @@ public class VerificationToken extends BaseObject {
   private User user;
 
   private LocalDateTime expiryDate;
+  
+    public boolean isExpired() {
+    return expiryDate.isBefore(LocalDateTime.now());
+  }
 }

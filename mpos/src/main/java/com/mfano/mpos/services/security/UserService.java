@@ -14,7 +14,7 @@ import com.mfano.mpos.dtos.UserDto;
 import com.mfano.mpos.models.security.User;
 import com.mfano.mpos.models.security.Role;
 import com.mfano.mpos.models.security.VerificationToken;
-import com.mfano.mpos.repositories.security.TokenRepositories;
+import com.mfano.mpos.repositories.security.TokenRepository;
 import com.mfano.mpos.repositories.security.UserRepository;
 import com.mfano.mpos.services.BranchService;
 import com.mfano.mpos.utils.mail.MailService;
@@ -32,7 +32,7 @@ public class UserService {
     private final BranchService branchService;
     private final RoleService roleService;
 
-    private final TokenRepositories tokenRepository;
+    private final TokenRepository tokenRepository;
     private final MailService emailService;
 
     @Value("${app.base-url}")
@@ -61,7 +61,7 @@ public class UserService {
         user.setBranch(branchService.findById(userDto.getBranch()));
         user.setRoles(Set.of(roleService.findById(userDto.getRole())));
         save(user);
-        // createAndSendToken(user);
+        createAndSendToken(user);
 
     }
 
