@@ -30,8 +30,8 @@ public class TransferItem{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-     @ManyToOne
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "transfer_id") // This side owns the FK
     private Transfer transfer;
 

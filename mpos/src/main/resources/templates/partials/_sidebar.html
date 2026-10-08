@@ -10,20 +10,20 @@
         </a>
       </li><!-- End Dashboard Nav -->
 
-      <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT', 'CASHIER')">
+      <li class="nav-item" sec:authorize="hasAnyRole('MANAGER', 'PROCUREMENT', 'CASHIER')">
         <a class="nav-link collapsed" href="/products">
           <i class="bi bi-box-seam"></i>
           <span>Products</span>
         </a>
       </li><!-- End Products Page Nav -->
-      <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT')">
-        <a class="nav-link collapsed" href="/transfers">
+      <li class="nav-item" sec:authorize="hasAnyRole('MANAGER', 'PROCUREMENT')">
+        <a class="nav-link collapsed" href="/procurement/transfers">
           <i class="bi bi-arrow-repeat"></i>
           <span>Transfers</span>
         </a>
       </li><!-- End Transfers Page Nav -->
 
-      <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+      <li class="nav-item" sec:authorize="hasAnyRole('ADMIN')">
         <a class="nav-link collapsed" href="/admin/users">
           <i class="bi bi-person"></i>
           <span>Users</span>

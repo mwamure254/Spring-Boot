@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{partials/_header :: common_header(
+    ~{::title/text()},
+    ~{::link},
+    ~{::meta}
+)}">
+
+    <meta name="description" content="MPOS stock transfers">
+    <meta name="author" content="mfano">
+
+    <title>MPOS | Transfers</title>
+
+</th:block>
+
+<body>
+
+    <!-- TOPBAR -->
+    <th:block th:insert="~{partials/_topbar}" />
+
+    <!-- SIDEBAR -->
+    <th:block th:insert="~{partials/_sidebar}" />
+
+    <main id="main" class="main">
+        <!-- PAGE TITLE -->
+        <div class="pagetitle">
+
+            <h1 class="fw-bold mb-1">
+                <i class="bi bi-arrow-left-right"></i>
+                Stock Transfers
+            </h1>
+        </div>
+
+        <section class="section dashboard">
+            <!-- HEADER -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <p class="text-muted mb-0">
+                        Manage stock transfers between stores
+                    </p>
+                </div>
+
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addTransferModal">
+
+                    <i class="bi bi-plus-lg"></i>
+                    New Transfer
+                </button>
+            </div>
+
+            <!-- SUCCESS -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+
+                <i class="bi bi-check-circle"></i>
+                <span th:text="${success}">
+                    Transfer saved successfully
+                </span>
+
+                <button type="button" class="btn-close" data-bs-dismiss="alert">
+                </button>
+            </div>
+
+            <!-- SEARCH -->
+            <div class="card border-0 shadow-sm">
+                <div class="input-group p-2">
+                    <span class="input-group-text">
+                        <i class="bi bi-search"></i>
+                    </span>
+
+                    <input type="text" id="tableSearch" class="form-control" placeholder="Search transfers...">
+
+                </div>
+
+                <!-- TABLE -->
+                <div class="table-responsive p-2">
+                    <table class="table table-hover align-middle mb-0" id="table">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Transfer No.</th>
+                                <th>From Store</th>
+                                <th>To Store</th>
+                                <th>Items</th>
+                                <th>User</th>
+                                <th>Status</th>
+                                <th>Date</th>
+
+                                <th class="text-end" sec:authorize="hasAnyRole(
+                                    'MANAGER',
+                                    'PROCUREMENT',
+                                    'ADMIN'
+                                    )">
+
+                                    Actions
+
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:each="t, stat : ${transfers}">
+
+                                <!-- NUMBER -->
+                                <td th:text="${stat.count}">
+                                    1
+                                </td>
+
+                                <!-- TRANSFER NUMBER -->
+                                <td>
+                                    <span class="fw-semibold" th:text="${t.transferNumber}">
+
+                                        TRF001
+                                    </span>
+                                </td>
+
+                                <!-- FROM -->
+                                <td th:text="${t.fromStoreId != null
+                                ? from.name : 'N/A'}">
+                                    HQ
+                                </td>
+
+                                <!-- TO -->
+                                <td th:text="${t.toStoreId != null
+                                ? to.name : 'N/A'}">
+                                    Branch
+                                </td>
+
+                                <!-- ITEMS -->
+                                <td>
+                                    <span class="badge bg-info" th:text="${t.items != null ? t.items.size() : 0}">
+
+                                        0
+
+                                    </span>
+                                </td>
+
+                                <!-- USER -->
+                                <td th:text="${t.createdBy}">
+                                    admin@example.com
+                                </td>
+
+                                <!-- STATUS -->
+                                <td>
+
+                                    <span th:if="${t.status.name() == 'PENDING'}" class="badge bg-warning">
+
+                                        Pending
+                                    </span>
+
+                                    <span th:if="${t.status.name() == 'IN_PROGRESS'}" class="badge bg-info">
+
+                                        In Progress
+                                    </span>
+
+                                    <span th:if="${t.status.name() == 'COMPLETED'}" class="badge bg-success">
+
+                                        Completed
+                                    </span>
+
+                                    <span th:if="${t.status.name() == 'REJECTED'}" class="badge bg-danger">
+
+                                        Rejected
+                                    </span>
+                                </td>
+
+                                <!-- DATE -->
+                                <td th:text="${#temporals.format(t.createdAt, 'dd MMM yyyy HH:mm')}">
+                                    2026-10-08
+                                </td>
+
+                                <!-- ACTIONS -->
+                                <td class="text-end" sec:authorize="hasAnyRole(
+                                    'MANAGER',
+                                    'PROCUREMENT',
+                                    'ADMIN'
+                                    )">
+
+                                    <div class="btn-group">
+                                        <!-- VIEW -->
+                                        <a class="btn btn-sm btn-outline-info" title="View" data-bs-toggle="modal"
+                                            th:data-bs-target="'#viewModal' + ${t.id}">
+
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+
+                                        <!-- EDIT -->
+                                        <button type="button" class="btn btn-sm btn-outline-primary"
+                                            data-bs-toggle="modal" th:data-bs-target="'#editTransferModal' + ${t.id}"
+                                            title="Edit">
+
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+
+                                        <!-- DELETE -->
+                                        <a class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                            th:data-bs-target="'#deleteModal' + ${t.id}" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+
+                                <!-- ================= DELETE MODAL ================= -->
+                                <div class="modal fade" th:id="'deleteModal' + ${t.id}" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">
+                                                    Delete Transfer
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body text-start">
+                                                Are you sure you want to delete
+                                                <strong>
+                                                    this transfer?
+                                                </strong>
+                                                <br>
+                                                <small class="text-danger">
+                                                    This action cannot be undone.
+                                                </small>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Cancel
+                                                </button>
+                                                <form th:action="@{/procurement/transfers/delete/{id}(id=${t.id})}" method="post">
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="bi bi-trash"></i>
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ============== END DELETE MODAL ============== -->
+
+                                <!-- VIEW TRANSFER MODAL -->
+                                <div class="modal fade" th:id="'viewModal' + ${t.id}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                        <div class="modal-content">
+
+                                            <!-- HEADER -->
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">
+                                                    <i class="bi bi-eye"></i>
+                                                    Transfer Details
+                                                </h5>
+
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close">
+                                                </button>
+                                            </div>
+
+                                            <!-- BODY -->
+                                            <div class="modal-body">
+                                                <div class="row g-3">
+
+                                                    <!-- TRANSFER ID -->
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-bold">
+                                                            Transfer ID
+                                                        </label>
+                                                        <input type="text" class="form-control" th:value="${t.id}"
+                                                            readonly>
+                                                    </div>
+
+                                                    <!-- REFERENCE -->
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-bold">
+                                                            Reference Number
+                                                        </label>
+                                                        <input type="text" class="form-control"
+                                                            th:value="${t.transferNumber}" readonly>
+                                                    </div>
+
+                                                    <!-- FROM STORE -->
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-bold">
+                                                            From Store
+                                                        </label>
+                                                        <input type="text" class="form-control" th:value="${t.fromStoreId != null
+                                ? from.name : 'N/A'}" readonly>
+                                                    </div>
+
+                                                    <!-- TO STORE -->
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-bold">
+                                                            To Store
+                                                        </label>
+                                                        <input type="text" class="form-control" th:value="${t.toStoreId != null
+                                ? to.name : 'N/A'}" readonly>
+                                                    </div>
+
+                                                    <!-- STATUS -->
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-bold">
+                                                            Status
+                                                        </label>
+                                                        <input type="text" class="form-control" th:value="${t.status}"
+                                                            readonly>
+                                                    </div>
+
+                                                    <!-- CREATED BY -->
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-bold">
+                                                            Created By
+                                                        </label>
+                                                        <input type="text" class="form-control" th:value="${t.createdBy != null
+                                ? t.createdBy : 'N/A'}" readonly>
+                                                    </div>
+
+                                                    <!-- CREATED DATE -->
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-bold">
+                                                            Created Date
+                                                        </label>
+                                                        <input type="text" class="form-control" th:value="${t.createdAt != null
+                                ? #temporals.format(t.createdAt,
+                                  'dd-MM-yyyy HH:mm') : 'N/A'}" readonly>
+                                                    </div>
+
+                                                    <!-- UPDATED DATE -->
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-bold">
+                                                            Last Updated
+                                                        </label>
+                                                        <input type="text" class="form-control" th:value="${t.updatedAt != null
+                                ? #temporals.format(t.updatedAt,
+                                  'dd-MM-yyyy HH:mm') : 'N/A'}" readonly>
+                                                    </div>
+
+                                                    <!-- COMMENT -->
+                                                    <div class="col-12">
+                                                        <label class="form-label fw-bold">
+                                                            Comment
+                                                        </label>
+                                                        <textarea class="form-control" rows="3" th:text="${t.comment}"
+                                                            readonly></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- FOOTER -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    <i class="bi bi-x-circle"></i> Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--END VIEW MODAL-->
+                                </div>
+                            </tr>
+
+                            <!-- EMPTY -->
+                            <tr th:if="${#lists.isEmpty(transfers)}">
+                                <td colspan="9" class="text-center py-5">
+
+                                    <i class="bi bi-arrow-left-right
+                                        fs-1 text-muted"></i>
+
+                                    <h5 class="mt-3">
+                                        No transfers found
+                                    </h5>
+
+                                    <p class="text-muted">
+                                        Create your first stock transfer.
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ================= ADD TRANSFER MODAL ================= -->
+            <div class="modal fade" id="addTransferModal" tabindex="-1" aria-hidden="true">
+
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <form th:action="@{/procurement/transfer}" method="post">
+
+                            <!-- HEADER -->
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="bi bi-plus-circle"></i>
+                                    New Stock Transfer
+
+                                </h5>
+
+                                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                </button>
+                            </div>
+
+                            <!-- BODY -->
+                            <div class="modal-body">
+
+                                <div class="row g-3">
+
+                                    <!-- TO STORE -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">
+                                            To Store
+                                        </label>
+
+                                        <select name="branch" class="form-control" required>
+                                            <option value="" disabled selected>
+                                                SELECT
+                                            </option>
+                                            <option th:each="s : ${stores}" th:value="${s.id}" th:text="${s.name}">
+                                            </option>
+
+                                        </select>
+                                    </div>
+
+                                    <!-- STATUS -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">
+                                            Status
+                                        </label>
+
+                                        <select name="status" class="form-control">
+                                            <option value="PENDING" selected>
+                                                Pending
+                                            </option>
+
+                                            <option value="COMPLETED">
+                                                Completed
+                                            </option>
+
+                                            <option value="REJECTED">
+                                                Rejected
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- COMMENT -->
+                                <div class="col-12">
+                                    <label class="form-label">
+                                        Comment
+                                    </label>
+
+                                    <textarea name="comment" class="form-control" rows="3" maxlength="200"
+                                        placeholder="Transfer comment...">
+                                        </textarea>
+                                </div>
+                            </div>
+
+                            <!-- FOOTER -->
+                            <div class="modal-footer">
+                                <button type="reset" class="btn btn-warning" data-bs-dismiss="modal">
+
+                                    Clear
+                                </button>
+
+                                <button type="submit" class="btn btn-primary">
+
+                                    <i class="bi bi-save"></i>
+
+                                    Create Transfer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--END ADD MODAL-->
+    </main>
+
+    <th:block th:insert="~{partials/_footer}" />
+</body>
+
+</html>

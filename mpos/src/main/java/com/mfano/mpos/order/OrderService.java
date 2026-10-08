@@ -1,51 +1,57 @@
 package com.mfano.mpos.order;
 
+import com.mfano.mpos.repositories.security.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mfano.mpos.cart.Cart;
 import com.mfano.mpos.models.Product;
 import com.mfano.mpos.cart.CartItem;
 import com.mfano.mpos.cart.CartRepository;
+import com.mfano.mpos.config.CustomUserDetails;
 import com.mfano.mpos.dtos.OrderStatus;
 import com.mfano.mpos.models.security.User;
-
-import lombok.Builder;
+import com.mfano.mpos.services.security.UserService;
 
 @Transactional
 @Service
-@Builder 
 public class OrderService {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
+    private final UserService userService;
 
-    public OrderService(OrderRepository orderRepository, CartRepository cartRepository) {
+    public OrderService(OrderRepository orderRepository, CartRepository cartRepository,
+            UserService userService) {
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
+        this.userService = userService;
     }
 
-    public Order checkout(User user, String pm) {
-        Cart cart = cartRepository.findByUser(user)
+    public Order checkout(CustomUserDetails user, String pm, RedirectAttributes red) {
+        User staff = userService.findById(user.getId());
+        Cart cart = cartRepository.findByUser(staff)
                 .orElseThrow(() -> new IllegalStateException("Cart not found"));
 
         if (cart.getItems().isEmpty()) {
-            throw new IllegalStateException(
-                    "Cannot checkout an empty cart");
+            red.addFlashAttribute(
+                    "error", "Cannot checkout an empty cart");
+                    
         }
 
         Order order = Order.builder()
-                // .createdBy(user.getEmail())
-                .user(user)
                 .pm(pm)
                 .status(OrderStatus.PENDING)
                 .build();
+
+       order.setCreatedBy(user.getEmail());
 
         for (CartItem cartItem : cart.getItems()) {
             Product product = cartItem.getProduct();
 
             if (product.getStockQuantity() < cartItem.getQuantity()) {
-                throw new IllegalStateException(
-                        "Insufficient stock for product: "
+            red.addFlashAttribute(
+                    "error", "Insufficient stock for product: "
                                 + product.getName());
             }
 

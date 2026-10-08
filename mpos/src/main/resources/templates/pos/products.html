@@ -97,8 +97,8 @@
                                         <div class="d-flex align-items-center">
                                             <!-- Product image -->
                                             <img th:src="${p.image == null or p.image.isEmpty()}
-            ? @{/image/products/product-2.jpg}
-            : @{/image/products/{product}(product=${p.image})}" class="rounded object-fit-cover me-3" height="45"
+            ? @{/image/product-2.jpg}
+            : @{/products/{product}(product=${p.image})}" class="rounded object-fit-cover me-3" height="45"
                                                 width="45">
 
                                             <!-- Product name -->

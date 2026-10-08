@@ -1,6 +1,7 @@
 package com.mfano.mpos.cart;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mfano.mpos.models.Product;
 import com.mfano.mpos.config.CustomUserDetails;
@@ -36,18 +37,36 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public Cart addToCart(CustomUserDetails auth, Long productId, int quantity) {
-        User user = userService.findById(auth.getId());
+    public Cart addToCart(CustomUserDetails auth, Long productId, int quantity, RedirectAttributes red) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException(
-                    "Quantity must be greater than zero"
-            );
+            red.addFlashAttribute(
+                    "error", "Quantity must be greater than zero");
         }
 
+        User user = userService.findById(auth.getId());
         Product product = productRepository.findById(productId)
-                .orElseThrow(() ->
-                        new RuntimeException("Product not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
         Cart cart = getCart(user);
+
+        // Check existing quantity in cart
+        int existingQuantity = cart.getItems().stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .mapToInt(CartItem::getQuantity)
+                .findFirst()
+                .orElse(0);
+
+        int newQuantity = existingQuantity + quantity;
+
+        if (newQuantity > product.getStockQuantity()) {
+            red.addFlashAttribute(
+                    "error",
+                    "Stock is not enough. Available: "
+                            + product.getStockQuantity()
+                            + ", already in cart: "
+                            + existingQuantity);
+        }
+
         cart.addItem(product, quantity);
         return cartRepository.save(cart);
     }

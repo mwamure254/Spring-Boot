@@ -42,7 +42,7 @@
 
               <img th:src="${profile.image == null or profile.image.isEmpty()}
         ? @{/image/profile-img.jpg}
-        : @{/image/profile/{filename}(filename=${profile.image})}" alt="Profile" class="rounded-circle" height="120"
+        : @{/profiles/{filename}(filename=${profile.image})}" alt="Profile" class="rounded-circle" height="120"
                 width="120">
 
               <div class="pt-2">

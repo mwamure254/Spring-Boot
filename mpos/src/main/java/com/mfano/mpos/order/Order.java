@@ -4,11 +4,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.Objects;
 
 import com.mfano.mpos.dtos.OrderStatus;
 import com.mfano.mpos.models.BaseObject;
-import com.mfano.mpos.models.security.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -16,8 +14,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -35,10 +31,6 @@ public class Order extends BaseObject{
     private String orderNumber;
     private String pm;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     @Builder.Default
@@ -52,21 +44,20 @@ public class Order extends BaseObject{
     @Builder.Default
     private List<OrderItem> items = new ArrayList<>();
 
-    public BigDecimal getTotal() {
-        return items.stream()
-                .map(OrderItem::getSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public Order(String orderNumber, String pm, User user, OrderStatus status, List<OrderItem> items) {
+    public Order(String orderNumber, String pm, OrderStatus status, List<OrderItem> items) {
         this.orderNumber = orderNumber;
         this.pm = pm;
-        this.user = user;
         this.status = status;
         this.items = items;
     }
 
     public Order() {
+    }
+
+    public BigDecimal getTotal() {
+        return items.stream()
+                .map(OrderItem::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @PrePersist

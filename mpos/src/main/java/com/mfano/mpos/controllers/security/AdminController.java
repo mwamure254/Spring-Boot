@@ -1,4 +1,4 @@
-package com.mfano.mpos.controllers;
+package com.mfano.mpos.controllers.security;
 
 import java.io.IOException;
 import org.springframework.security.access.prepost.PreAuthorize;

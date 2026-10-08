@@ -3,9 +3,12 @@ package com.mfano.mpos.services;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,10 +22,13 @@ import com.mfano.mpos.repositories.ProductRepository;
 public class ProductService {
     private final ProductRepository productRepo;
     private Product product, existing;
-    private String baseDirectory = "src/main/resources/static/image/products/";
 
-    public ProductService(ProductRepository productRepo){
-        this.productRepo=productRepo;
+    @Value("${app.upload-dir}")
+    private String baseDirectory;
+    // private String baseDirectory = "src/main/resources/static/image/products/";
+
+    public ProductService(ProductRepository productRepo) {
+        this.productRepo = productRepo;
     }
 
     public Product getById(long id) {
@@ -38,7 +44,12 @@ public class ProductService {
     }
 
     public void deleteById(Long id) {
-        productRepo.deleteById(id);
+        try {
+            updateProductImage(id);
+            productRepo.deleteById(id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void toggleActive(Long id) {
@@ -56,7 +67,9 @@ public class ProductService {
         product.setStockQuantity(productDto.getStock());
         product.setDescription(productDto.getDescription());
         product.setSku(productDto.getSku());
-        product.setImage(imagePath(productDto.getImage()));
+        if (productDto.getImage() != null && !productDto.getImage().isEmpty()) {
+            product.setImage(imagePath(productDto.getImage()));
+        }
         productRepo.save(product);
     }
 
@@ -76,10 +89,27 @@ public class ProductService {
     public String imagePath(MultipartFile file) {
         if (file != null) {
             try {
-                Path path = Path.of(baseDirectory + file.getOriginalFilename());
-                Files.createDirectories(path.getParent());
-                Files.write(path, file.getBytes());
-                return file.getOriginalFilename();
+                // Create profile directory
+                Path path = Paths.get(baseDirectory, "products");
+                Files.createDirectories(path);
+                // Get extension
+                String originalName = file.getOriginalFilename();
+                String extension = "";
+
+                if (originalName != null && originalName.contains(".")) {
+                    extension = originalName.substring(
+                            originalName.lastIndexOf(".")).toLowerCase();
+                }
+
+                // Generate safe unique filename
+                String filename = UUID.randomUUID() + extension;
+                Path destination = path.resolve(filename)
+                        .toAbsolutePath()
+                        .normalize();
+
+                Files.copy(file.getInputStream(), destination,
+                        StandardCopyOption.REPLACE_EXISTING);
+                return filename;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -92,7 +122,9 @@ public class ProductService {
         existing = getById(id);
         try {
             String image = existing.getImage();
-            Path path = Path.of(baseDirectory + image);
+            Path path = Path.of(baseDirectory, "products", image)
+                    .toAbsolutePath()
+                    .normalize();
             Files.delete(path);
 
             existing.setImage(null);
