@@ -14,22 +14,20 @@ import jakarta.persistence.PreUpdate;
 import lombok.Data;
 
 import com.mfano.mpos.config.CustomUserDetails;
-import com.mfano.mpos.models.security.User;
 
 @Data
 @MappedSuperclass
 public abstract class BaseObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt;
-    
-    private String createdBy;
+    protected LocalDateTime createdAt = LocalDateTime.now();
+    protected LocalDateTime updatedAt;
+    protected String createdBy;
 
     @PrePersist
-    protected void onCreate() {
+    private void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = createdAt;
 
@@ -42,7 +40,7 @@ public abstract class BaseObject {
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    private void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 

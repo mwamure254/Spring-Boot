@@ -16,17 +16,22 @@ import com.mfano.mpos.repositories.security.RoleRepository;
 import com.mfano.mpos.repositories.security.UserRepository;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 
 @Component
-@RequiredArgsConstructor
 @Transactional
 public class Initializer implements CommandLineRunner {
-
     private final UserRepository userRepository;
     private final RoleRepository roleRepo;
     private final PasswordEncoder passwordEncoder;
     private final BranchRepository branchRepo;
+
+    public Initializer(UserRepository userRepository, RoleRepository roleRepo, PasswordEncoder passwordEncoder,
+            BranchRepository branchRepo) {
+        this.userRepository = userRepository;
+        this.roleRepo = roleRepo;
+        this.passwordEncoder = passwordEncoder;
+        this.branchRepo = branchRepo;
+    }
 
     @Value("${app.admin.email}")
     private String adminEmail;

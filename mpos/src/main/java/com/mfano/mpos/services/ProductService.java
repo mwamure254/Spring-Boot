@@ -15,14 +15,15 @@ import com.mfano.mpos.dtos.ProductDto;
 import com.mfano.mpos.models.Product;
 import com.mfano.mpos.repositories.ProductRepository;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class ProductService {
-    private Product product, existing;
     private final ProductRepository productRepo;
-    private final String baseDirectory = "src/main/resources/static/image/products/";
+    private Product product, existing;
+    private String baseDirectory = "src/main/resources/static/image/products/";
+
+    public ProductService(ProductRepository productRepo){
+        this.productRepo=productRepo;
+    }
 
     public Product getById(long id) {
         return productRepo.findById(id).orElse(null);
@@ -42,7 +43,7 @@ public class ProductService {
 
     public void toggleActive(Long id) {
         existing = getById(id);
-        existing.setActive(!Boolean.TRUE.equals(existing.getActive()));
+        existing.setActive(!Boolean.TRUE.equals(existing.isActive()));
         save(existing);
     }
 

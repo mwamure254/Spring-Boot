@@ -7,12 +7,13 @@ import org.springframework.stereotype.Service;
 import com.mfano.mpos.models.security.AuditEntry;
 import com.mfano.mpos.repositories.security.AuditRepository;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class AuditService {
-     private final AuditRepository repo;
+    private final AuditRepository repo;
+
+    public AuditService(AuditRepository repo) {
+        this.repo = repo;
+    }
 
     public void record(String action, String details) {
         AuditEntry entry = new AuditEntry();
@@ -45,7 +46,7 @@ public class AuditService {
         AuditEntry existingEntry = repo.findById(id).orElse(null);
         if (existingEntry != null) {
             existingEntry.setAction(updatedEntry.getAction());
-            existingEntry.setPerformedBy(updatedEntry.getPerformedBy());
+            existingEntry.setCreatedBy(updatedEntry.getCreatedBy());
             existingEntry.setDetails(updatedEntry.getDetails());
             repo.save(existingEntry);
         }
@@ -57,7 +58,7 @@ public class AuditService {
 
     public List<AuditEntry> findByPerformedBy(String performedBy) {
         return repo.findAll().stream()
-                .filter(entry -> entry.getPerformedBy().equals(performedBy))
+                .filter(entry -> entry.getCreatedBy().equals(performedBy))
                 .toList();
     }
 
@@ -69,7 +70,7 @@ public class AuditService {
 
     public List<AuditEntry> findByActionAndPerformedBy(String action, String performedBy) {
         return repo.findAll().stream()
-                .filter(entry -> entry.getAction().equals(action) && entry.getPerformedBy().equals(performedBy))
+                .filter(entry -> entry.getAction().equals(action) && entry.getCreatedBy().equals(performedBy))
                 .toList();
     }
 

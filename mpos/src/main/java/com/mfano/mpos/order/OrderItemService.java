@@ -7,15 +7,17 @@ import com.mfano.mpos.repositories.ProductRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class OrderItemService {
-
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
+
+    public OrderItemService(OrderItemRepository orderItemRepository, ProductRepository productRepository) {
+        this.orderItemRepository = orderItemRepository;
+        this.productRepository = productRepository;
+    }
 
     public OrderItem addItem(
             Order order,

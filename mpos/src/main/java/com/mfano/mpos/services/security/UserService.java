@@ -20,12 +20,9 @@ import com.mfano.mpos.services.BranchService;
 import com.mfano.mpos.utils.mail.MailService;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     // private final ProfileService profileService;
@@ -37,6 +34,16 @@ public class UserService {
 
     @Value("${app.base-url}")
     private String appBaseUrl;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, BranchService branchService,
+            RoleService roleService, TokenRepository tokenRepository, MailService emailService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.branchService = branchService;
+        this.roleService = roleService;
+        this.tokenRepository = tokenRepository;
+        this.emailService = emailService;
+    }
 
     @Transactional
     public void registerUser(UserDto userDto) {
@@ -55,13 +62,13 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEnabled(true);
         user.setFin(userDto.getFin());
-        user.setLan(userDto.getLan());             
-        user.setGender(userDto.getGender());  
+        user.setLan(userDto.getLan());
+        user.setGender(userDto.getGender());
 
         user.setBranch(branchService.findById(userDto.getBranch()));
         user.setRoles(Set.of(roleService.findById(userDto.getRole())));
         save(user);
-        createAndSendToken(user);
+        // createAndSendToken(user);
 
     }
 
@@ -69,17 +76,18 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void update(Long id, UserDto userDto){
+    public void update(Long id, UserDto userDto) {
         User existing = findById(id);
 
         existing.setFin(userDto.getFin());
-        existing.setLan(userDto.getLan());                     
-        existing.setGender(userDto.getGender());  
-
-        existing.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        existing.setLan(userDto.getLan());
+        existing.setGender(userDto.getGender());
+        if (userDto.getPassword() != null && !userDto.getPassword().isBlank()) {
+            existing.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
         existing.setEnabled(true);
         existing.setBranch(branchService.findById(userDto.getBranch()));
-        //existing.setRoles(Set.of(roleService.findById(userDto.getRole())));
+        // existing.setRoles(Set.of(roleService.findById(userDto.getRole())));
         existing.getRoles().add(roleService.findById(userDto.getRole()));
         save(existing);
     }
@@ -185,7 +193,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    //To Do
+    // To Do
     public void assignRoleToUser(Long userId, Long roleId) {
         User user = findById(userId);
         Role role = roleService.findById(roleId);
@@ -193,10 +201,10 @@ public class UserService {
         save(user);
     }
 
-     public void removeRoleFromUser(Long userId, Long roleId) {
+    public void removeRoleFromUser(Long userId, Long roleId) {
         User user = findById(userId);
         Role role = roleService.findById(roleId);
-        user.getRoles().removeIf(r->r.getId().equals(role.getId()));
+        user.getRoles().removeIf(r -> r.getId().equals(role.getId()));
         save(user);
     }
 }

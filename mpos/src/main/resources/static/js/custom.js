@@ -25,13 +25,13 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // PRODUCT SEARCH
-document.getElementById("productSearch")
+document.getElementById("tableSearch")
     .addEventListener("keyup", function () {
 
         let search = this.value.toLowerCase();
 
         document
-            .querySelectorAll("#productTable tbody tr")
+            .querySelectorAll("#table tbody tr")
             .forEach(function (row) {
 
                 let text = row.innerText.toLowerCase();

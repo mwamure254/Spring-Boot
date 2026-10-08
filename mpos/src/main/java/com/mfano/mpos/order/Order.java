@@ -21,18 +21,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "orders")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class Order extends BaseObject{
     @Column(nullable = false, unique = true, updatable = false)
@@ -60,6 +56,17 @@ public class Order extends BaseObject{
         return items.stream()
                 .map(OrderItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public Order(String orderNumber, String pm, User user, OrderStatus status, List<OrderItem> items) {
+        this.orderNumber = orderNumber;
+        this.pm = pm;
+        this.user = user;
+        this.status = status;
+        this.items = items;
+    }
+
+    public Order() {
     }
 
     @PrePersist

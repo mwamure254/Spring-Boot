@@ -27,12 +27,6 @@
                 <i class="bi bi-people"></i>
                 Users
             </h1>
-            <nav>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    <li class="breadcrumb-item active">Users</li>
-                </ol>
-            </nav>
         </div><!-- End Page Title -->
 
         <section class="section dashboard">
@@ -45,7 +39,7 @@
                     </p>
                 </div>
 
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addModal">
 
                     <i class="bi bi-person"></i>
                     Add User
@@ -61,14 +55,14 @@
                         <i class="bi bi-search"></i>
                     </span>
 
-                    <input type="text" id="userSearch" class="form-control" placeholder="Search users...">
+                    <input type="text" id="tableSearch" class="form-control" placeholder="Search users...">
 
                 </div>
 
                 <!-- USERS TABLE -->
                 <div class="card border-0 shadow-sm">
                     <div class="table-responsive p-2" style="max-height: 500px; overflow-y: auto;">
-                        <table class="table table-hover align-middle mb-0" id="productTable">
+                        <table class="table table-hover align-middle mb-0" id="table">
                             <thead class="table-light sticky-top">
                                 <tr>
                                     <th>#</th>
@@ -198,119 +192,159 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </td>
 
-                                        <!-- EDIT USER MODAL -->
-                                        <div class="modal fade" th:id="'editModal' + ${u.id}" tabindex="-1"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog modal-md modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <form th:action="@{/admin/users/update/{id}(id=${u.id})}"
-                                                        method="post">
-                                                        <!-- HEADER -->
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">
-                                                                <i class="bi bi-pencil-square"></i>
-                                                                Edit User
-                                                            </h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal">
-                                                            </button>
+                                    <!-- EDIT USER MODAL -->
+                                    <div class="modal fade" th:id="'editModal' + ${u.id}" tabindex="-1"
+                                        aria-hidden="true">
+
+                                        <div class="modal-dialog modal-md modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <form th:action="@{/admin/users/update/{id}(id=${u.id})}" method="post">
+                                                    <!-- HEADER -->
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                            Edit User
+                                                        </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- BODY -->
+                                                    <div class="modal-body">
+                                                        <!-- EMAIL -->
+                                                        <div class="mb-3">
+                                                            <label class="form-label">
+                                                                Email
+                                                            </label>
+
+                                                            <input type="email" name="email" class="form-control"
+                                                                placeholder="Email" th:value="${u.email}" required>
                                                         </div>
 
-                                                        <!-- BODY -->
-                                                        <div class="modal-body">
-                                                            <!-- EMAIL -->
-                                                            <div class="col-md-8">
+                                                        <div class="row">
+                                                            <!-- FIRST NAME -->
+                                                            <div class="mb-3 col-6">
                                                                 <label class="form-label">
-                                                                    Email
+                                                                    First Name
                                                                 </label>
-                                                                <input name="email" class="form-control" type="email"
-                                                                    placeholder="Email" th:value="${u.email}"
-                                                                    required />
-                                                            </div>
-                                                            <!-- FIN -->
-                                                            <div class="col-md-8">
-                                                                <label class="form-label">
-                                                                    First name
-                                                                </label>
+
                                                                 <input type="text" name="fin" class="form-control"
                                                                     placeholder="First name" th:value="${u.fin}"
                                                                     required>
                                                             </div>
-                                                            <!-- LAN -->
-                                                            <div class="col-md-8">
+
+                                                            <!-- LAST NAME -->
+                                                            <div class="mb-3 col-6">
                                                                 <label class="form-label">
-                                                                    Last name
+                                                                    Last Name
                                                                 </label>
-                                                                <div class="input-group">
-                                                                    <input type="text" name="lan" class="form-control"
-                                                                        placeholder="Last name" th:value="${u.lan}"
-                                                                        required>
-                                                                </div>
+                                                                <input type="text" name="lan" class="form-control"
+                                                                    placeholder="Last name" th:value="${u.lan}"
+                                                                    required>
                                                             </div>
-                                                            <!-- PASSWORD -->
-                                                            <div class="col-md-8">
-                                                                <label class="form-label">
-                                                                    Password
-                                                                </label>
+                                                        </div>
+
+                                                        <!-- PASSWORD -->
+                                                        <div class="mb-3">
+                                                            <label class="form-label">
+                                                                Password
+                                                            </label>
+
+                                                            <div class="input-group">
                                                                 <input name="password" class="form-control"
                                                                     th:value="${u.password}" type="password"
-                                                                    placeholder="Password" required />
+                                                                    th:id="'password' + ${u.id}"
+                                                                    placeholder="Leave blank to keep current password">
+
+                                                                <button class="btn btn-outline-secondary" type="button"
+                                                                    th:onclick="'togglePassword(\'password' + ${u.id} + '\', this)'">
+
+                                                                    <i class="bi bi-eye"></i>
+                                                                </button>
                                                             </div>
-                                                            <!-- Gender- -->
-                                                            <div class="col-md-8">
+                                                            <small class="text-muted">
+                                                                Leave blank if you do not want to change the password.
+                                                            </small>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <!-- GENDER -->
+                                                            <div class="mb-3 col-4">
                                                                 <label class="form-label">
                                                                     Gender
                                                                 </label>
                                                                 <select class="form-control" name="gender" required>
-                                                                    <option value="">--Gender--</option>
-                                                                    <option value="Male">Male</option>
-                                                                    <option value="Female">Female</option>
+                                                                    <option value="" disabled>
+                                                                        SELECT
+                                                                    </option>
+
+                                                                    <option value="Male"
+                                                                        th:selected="${u.gender == 'Male'}">
+                                                                        Male
+                                                                    </option>
+
+                                                                    <option value="Female"
+                                                                        th:selected="${u.gender == 'Female'}">
+                                                                        Female
+                                                                    </option>
                                                                 </select>
                                                             </div>
-                                                            <!-- ROLE- -->
-                                                            <div class="col-md-8">
+
+                                                            <!-- ROLE -->
+                                                            <div class="mb-3 col-4">
                                                                 <label class="form-label">
-                                                                    User role
+                                                                    Role
                                                                 </label>
                                                                 <select class="form-control" name="role" required>
-                                                                    <option value="">-- Role --</option>
+                                                                    <option value="" disabled>
+                                                                        SELECT
+                                                                    </option>
+
                                                                     <option th:each="r : ${roles}" th:value="${r.id}"
-                                                                        th:text="${r.name}" required>
+                                                                        th:selected="${u.roles.contains(r)}"
+                                                                        th:text="${r.name}">
                                                                     </option>
                                                                 </select>
                                                             </div>
-                                                            <!-- BRANCH- -->
-                                                            <div class="col-md-8">
+
+                                                            <!-- BRANCH -->
+                                                            <div class="mb-3 col-4">
                                                                 <label class="form-label">
-                                                                    User branch
+                                                                    Branch
                                                                 </label>
+
                                                                 <select class="form-control" name="branch" required>
-                                                                    <option value="">-- Branch --</option>
+                                                                    <option value="" disabled>
+                                                                        SELECT
+                                                                    </option>
+
                                                                     <option th:each="s : ${stores}" th:value="${s.id}"
-                                                                        th:text="${s.name}" required>
+                                                                        th:selected="${u.branch != null and u.branch.id == s.id}"
+                                                                        th:text="${s.name}">
                                                                     </option>
                                                                 </select>
                                                             </div>
-
                                                         </div>
+                                                    </div>
 
-                                                        <!-- FOOTER -->
-                                                        <div class="modal-footer">
-                                                            <button type="reset" class="btn btn-warning"
-                                                                data-bs-dismiss="modal">
-                                                                Clear
-                                                            </button>
-                                                            <button type="submit" class="btn btn-primary">
-                                                                <i class="bi bi-save"></i>
-                                                                Save
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                                    <!-- FOOTER -->
+                                                    <div class="modal-footer">
+                                                        <button type="reset" class="btn btn-warning"
+                                                            data-bs-dismiss="modal">
+                                                            Clear
+                                                        </button>
+
+                                                        <button type="submit" class="btn btn-primary">
+                                                            <i class="bi bi-save"></i>
+                                                            Save
+                                                        </button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
-                                    </td>
+                                    </div>
                                 </tr>
 
                                 <!-- EMPTY -->
@@ -346,73 +380,84 @@
 
                                 <div class="modal-body">
                                     <!-- EMAIL -->
-                                    <div class="col-md-8">
+                                    <div class="mb-3 col-md-12">
                                         <label class="form-label">
                                             Email
                                         </label>
                                         <input name="email" class="form-control" type="email" placeholder="Email"
                                             required />
                                     </div>
-                                    <!-- FIN -->
-                                    <div class="col-md-8">
-                                        <label class="form-label">
-                                            First name
-                                        </label>
-                                        <input type="text" name="fin" class="form-control" placeholder="First name"
-                                            required>
-                                    </div>
-                                    <!-- LAN -->
-                                    <div class="col-md-8">
-                                        <label class="form-label">
-                                            Last name
-                                        </label>
-                                        <div class="input-group">
-                                            <input type="text" name="lan" class="form-control" placeholder="Last name"
+                                    <div class="row">
+                                        <!-- FIN -->
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">
+                                                First name
+                                            </label>
+                                            <input type="text" name="fin" class="form-control" placeholder="First name"
                                                 required>
+                                        </div>
+                                        <!-- LAN -->
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">
+                                                Last name
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="lan" class="form-control"
+                                                    placeholder="Last name" required>
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- PASSWORD -->
-                                    <div class="col-md-8">
+                                    <div class="mb-3 col-md-12">
                                         <label class="form-label">
                                             Password
                                         </label>
-                                        <input name="password" class="form-control" type="password"
-                                            placeholder="Password" required />
+                                        <di class="input-group">
+                                            <input name="password" class="form-control" type="password"
+                                                placeholder="Password" id="password1" required />
+
+                                            <button class="input-group-text btn btn-outline-secondary" type="button"
+                                                onclick="togglePassword('password1', this)">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </di>
                                     </div>
-                                    <!-- GENDER- -->
-                                    <div class="col-md-8">
-                                        <label class="form-label">
-                                            Gender
-                                        </label>
-                                        <select class="form-control" name="gender" required>
-                                            <option value="">-- Gender --</option>
-                                            <option value="Male">Male</option>
-                                            <option>Female</option>
-                                        </select>
-                                    </div>
-                                    <!-- ROLE- -->
-                                    <div class="col-md-8">
-                                        <label class="form-label">
-                                            User role
-                                        </label>
-                                        <select class="form-control" name="role" required>
-                                            <option value="">-- Role --</option>
-                                            <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.name}"
-                                                required>
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <!-- BRANCH- -->
-                                    <div class="col-md-8">
-                                        <label class="form-label">
-                                            User branch
-                                        </label>
-                                        <select class="form-control" name="branch" required>
-                                            <option value="">-- Branch --</option>
-                                            <option th:each="s : ${stores}" th:value="${s.id}" th:text="${s.name}"
-                                                required>
-                                            </option>
-                                        </select>
+                                    <div class="row">
+                                        <!-- GENDER- -->
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">
+                                                Gender
+                                            </label>
+                                            <select class="form-control" name="gender" required>
+                                                <option value="">SELECT</option>
+                                                <option value="Male">Male</option>
+                                                <option>Female</option>
+                                            </select>
+                                        </div>
+                                        <!-- ROLE- -->
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">
+                                                Role
+                                            </label>
+                                            <select class="form-control" name="role" required>
+                                                <option value="" disabled>SELECT</option>
+                                                <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.name}"
+                                                    required>
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <!-- BRANCH- -->
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">
+                                                Branch
+                                            </label>
+                                            <select class="form-control" name="branch" required>
+                                                <option value="" disabled>SELECT</option>
+                                                <option th:each="s : ${stores}" th:value="${s.id}" th:text="${s.name}"
+                                                    required>
+                                                </option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
 

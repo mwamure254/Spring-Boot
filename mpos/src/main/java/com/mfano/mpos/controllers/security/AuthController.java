@@ -28,27 +28,30 @@ import com.mfano.mpos.services.security.ProfileService;
 import com.mfano.mpos.services.security.RoleService;
 import com.mfano.mpos.services.security.UserService;
 
-import lombok.RequiredArgsConstructor;
-
 @Controller
-@RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
     private final RoleService roleService;
     private final ProfileService profileService;
-
+    private final AuditService auditService;
     private final PasswordEncoder passwordEncoder;
     private String msg = "security/message";
-    private final String login = "redirect:/login?error";
+    private String login = "redirect:/login?error";
 
-    private final AuditService auditService;
+    public AuthController(UserService userService, RoleService roleService, ProfileService profileService,
+            AuditService auditService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.roleService = roleService;
+        this.profileService = profileService;
+        this.auditService = auditService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     // guest user
     @GetMapping("/")
     public String redirectAfterLogin(@AuthenticationPrincipal CustomUserDetails auth, RedirectAttributes model) {
 
         if (auth == null) {
-            model.addFlashAttribute("error", "User not authenticated, login to proceed.");
             return "redirect:/login";
         }
 

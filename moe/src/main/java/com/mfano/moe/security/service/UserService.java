@@ -24,7 +24,7 @@ public class UserService {
 
     private final RoleService roleService;
     private final UserRepository userRepository;
-    private final VerificationTokenRepository tokenRepository;
+    private final TokenRepository tokenRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;

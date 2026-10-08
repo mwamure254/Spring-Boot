@@ -1,5 +1,6 @@
 package com.mfano.mpos.services.security;
 
+import com.mfano.mpos.repositories.ProductRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,14 +13,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.mfano.mpos.models.security.Profile;
 import com.mfano.mpos.repositories.security.ProfileRepository;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class ProfileService {
-    private Profile profile,existing;
     private final ProfileRepository profileRepository;
-    private final String baseDirectory = "src/main/resources/static/image/profile/";
+    private Profile profile,existing;
+    private String baseDirectory = "src/main/resources/static/image/profile/";
+
+    public ProfileService(ProfileRepository profileRepository){
+        this.profileRepository=profileRepository; 
+    }
 
     // Get All Profiles
     public List<Profile> findAll() {

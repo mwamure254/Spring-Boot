@@ -15,7 +15,6 @@ import jakarta.persistence.PreUpdate;
 import lombok.Data;
 
 import com.mfano.mpos.config.CustomUserDetails;
-import com.mfano.mpos.models.security.User;
 
 @Data
 @MappedSuperclass
@@ -23,26 +22,25 @@ public abstract class CommonObject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
-    private String createdBy;
+    protected String createdBy;
     @Column(nullable = false)
-    private boolean active;
+    protected boolean active;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    protected LocalDateTime createdAt;
+    protected LocalDateTime updatedAt;
 
     @Column(unique = true, nullable = false)
-    private String name;
-
-    private String description;
+    protected String name;
+    protected String description;
 
     public void setName(String name) {
         this.name = name.toUpperCase();
     }
 
     @PrePersist
-    protected void onCreate() {
+    private void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = createdAt;
         this.active = true;
@@ -55,7 +53,7 @@ public abstract class CommonObject {
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    private void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 }

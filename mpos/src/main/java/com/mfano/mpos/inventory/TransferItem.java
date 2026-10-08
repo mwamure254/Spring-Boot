@@ -15,7 +15,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,9 +24,8 @@ import lombok.Setter;
 @Table(name = "transfer_items")
 @Setter
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
+@Builder 
 public class TransferItem{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,4 +63,15 @@ public class TransferItem{
     protected void calculateSubtotal() {
         subtotal = getSubtotal();
     }
+
+    public TransferItem(Long id, Transfer transfer, Product product, Integer quantity, BigDecimal unitPrice,
+            BigDecimal subtotal) {
+        this.id = id;
+        this.transfer = transfer;
+        this.product = product;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.subtotal = subtotal;
+    }
+
 }

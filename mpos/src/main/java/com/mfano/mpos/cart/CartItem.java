@@ -14,7 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +32,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class CartItem {
      @Id
@@ -53,5 +51,12 @@ public class CartItem {
 
     public BigDecimal getSubtotal() {
         return product.getPrice().multiply(BigDecimal.valueOf(quantity));
+    }
+
+    public CartItem(Long id, Cart cart, Product product, Integer quantity) {
+        this.id = id;
+        this.cart = cart;
+        this.product = product;
+        this.quantity = quantity;
     }
 }

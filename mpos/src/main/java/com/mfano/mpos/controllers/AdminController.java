@@ -1,8 +1,6 @@
 package com.mfano.mpos.controllers;
 
 import java.io.IOException;
-import java.util.Set;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -24,17 +22,14 @@ import com.mfano.mpos.models.security.Profile;
 import com.mfano.mpos.services.BranchService;
 import com.mfano.mpos.services.security.AuditService;
 import com.mfano.mpos.services.security.ProfileService;
-import com.mfano.mpos.services.ProductService;
 import com.mfano.mpos.services.security.RoleService;
 import com.mfano.mpos.services.security.UserService;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 
 @Controller
 @PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/admin")
-@RequiredArgsConstructor
 public class AdminController {
     private final UserService userService;
     // private final PostService postService;
@@ -43,7 +38,16 @@ public class AdminController {
     private final RoleService roleService;
     private final BranchService storeService;
 
-     // manage /GET/*  module
+     public AdminController(UserService userService, ProfileService profileService, AuditService auditService,
+            RoleService roleService, BranchService storeService) {
+        this.userService = userService;
+        this.profileService = profileService;
+        this.auditService = auditService;
+        this.roleService = roleService;
+        this.storeService = storeService;
+    }
+
+    // manage /GET/*  module
     @GetMapping("/{option}")
     public String manage(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable String option, Model red) {
         red.addAttribute("profile", profileService.checkProfile(auth.getId()));

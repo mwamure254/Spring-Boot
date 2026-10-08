@@ -1,0 +1,53 @@
+package com.mfano.zuru.auth.services;
+
+import java.util.List;
+import org.springframework.stereotype.Service;
+
+import com.mfano.zuru.auth.models.Branch;
+import com.mfano.zuru.auth.repositories.BranchRepository;
+
+@Service
+public class BranchService {
+    private final BranchRepository branchRepository;
+
+    public BranchService(BranchRepository branchRepository){
+        this.branchRepository=branchRepository;
+    }
+
+    public void createBranch(Branch branch) {
+        branchRepository.save(branch);
+    }
+
+    public Branch getBranchById(Long id) {
+        return branchRepository.findById(id).orElse(null);
+    }
+
+    public void deleteBranch(Long id) {
+        branchRepository.deleteById(id);
+    }
+
+    public void updateBranch(Long id, Branch updatedBranch) {
+        Branch existingBranch = branchRepository.findById(id).orElse(null);
+        if (existingBranch != null) {
+            existingBranch.setName(updatedBranch.getName());
+            existingBranch.setLocation(updatedBranch.getLocation());
+            branchRepository.save(existingBranch);
+        }
+    }
+
+    public List<Branch> getAllBranches() {
+        return branchRepository.findAll();
+    }
+
+    public List<Branch> findAll() {
+        return branchRepository.findAll();
+    }
+
+    public Branch findById(Long id) {
+        return branchRepository.findById(id).orElse(null);
+    }
+
+    public Branch findByName(String name) {
+        return branchRepository.findByName(name);
+    }
+}

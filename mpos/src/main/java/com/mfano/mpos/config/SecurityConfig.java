@@ -11,14 +11,16 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.mfano.mpos.services.security.CustomDetailService;
 
-import lombok.RequiredArgsConstructor;
-
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
         private final CustomDetailService customDetailService;
         private final PasswordEncoder passwordEncoder;
+
+        public SecurityConfig(CustomDetailService customDetailService, PasswordEncoder passwordEncoder) {
+                this.customDetailService = customDetailService;
+                this.passwordEncoder = passwordEncoder;
+        }
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http, AuthHandler authHandler) throws Exception {
@@ -41,7 +43,7 @@ public class SecurityConfig {
                                                 // .loginProcessingUrl("/login")
                                                 .successHandler(authHandler)
                                                 .failureHandler(authHandler)
-                                                //.defaultSuccessUrl("/", true)
+                                                // .defaultSuccessUrl("/", true)
                                                 // .successForwardUrl("/dashboard")
                                                 .permitAll())
 

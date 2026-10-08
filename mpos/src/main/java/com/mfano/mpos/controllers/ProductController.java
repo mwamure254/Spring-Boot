@@ -22,15 +22,17 @@ import com.mfano.mpos.services.ProductService;
 import com.mfano.mpos.services.security.ProfileService;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/products")
-@RequiredArgsConstructor
 public class ProductController {
-
     private final ProductService productService;
     private final ProfileService profileService;
+
+    public ProductController(ProductService productService, ProfileService profileService) {
+        this.productService = productService;
+        this.profileService = profileService;
+    }
 
     @GetMapping
     public String products(@AuthenticationPrincipal CustomUserDetails auth, Model model) {

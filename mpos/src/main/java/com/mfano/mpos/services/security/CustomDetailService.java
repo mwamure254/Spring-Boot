@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 import com.mfano.mpos.config.CustomUserDetails;
 import com.mfano.mpos.models.security.User;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class CustomDetailService implements UserDetailsService {
     private final UserService userRepo;
+
+    public CustomDetailService(UserService userRepo){
+        this.userRepo=userRepo;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -22,7 +23,7 @@ public class CustomDetailService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        
+
         return new CustomUserDetails(user);
     }
 }

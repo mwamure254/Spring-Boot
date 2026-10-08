@@ -12,14 +12,16 @@ import com.mfano.mpos.models.Branch;
 import com.mfano.mpos.services.security.ProfileService;
 import com.mfano.mpos.services.security.UserService;
 
-import lombok.RequiredArgsConstructor;
-
 @Controller
 @RequestMapping("/manager")
-@RequiredArgsConstructor
 public class ManagerController {
     private final UserService userService;
     private final ProfileService profileService;
+
+    public ManagerController(UserService userService, ProfileService profileService) {
+        this.userService = userService;
+        this.profileService = profileService;
+    }
 
     @GetMapping("/dashboard")
     public String dashboard(@AuthenticationPrincipal CustomUserDetails auth, RedirectAttributes red) {

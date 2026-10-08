@@ -15,8 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,9 +23,7 @@ import lombok.Setter;
 @Table(name = "tranfers")
 @Setter
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Transfer extends BaseObject {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, unique = true)

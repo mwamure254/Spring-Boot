@@ -7,8 +7,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,8 +19,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Product extends CommonObject {
     @Column(nullable = false, unique = true, length = 50)
     private String sku;
@@ -31,15 +27,10 @@ public class Product extends CommonObject {
     private BigDecimal price;
 
     @Column(nullable = false)
-    @Builder.Default
-    private Integer stockQuantity = 0;
+    private Integer stockQuantity;
 
     @Column(length = 500)
     private String image;
-
-    @Column(nullable = false)
-    @Builder.Default
-    private Boolean active = true;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "branch_id", nullable = false)

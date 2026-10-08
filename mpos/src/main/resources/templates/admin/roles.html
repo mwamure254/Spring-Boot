@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <th:block th:replace="~{partials/_header :: common_header(~{::title/text()},~{::link},~{::meta})}">
@@ -27,12 +27,6 @@
                 <i class="bi bi-person-badge"></i>
                 Roles
             </h1>
-            <nav>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item active">Roles</li>
-                </ol>
-            </nav>
         </div><!-- End Page Title -->
 
         <section class="section dashboard">
@@ -45,7 +39,7 @@
                     </p>
                 </div>
 
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addModal">
 
                     <i class="bi bi-plus-lg"></i>
                     Add Role
@@ -61,13 +55,13 @@
                         <i class="bi bi-search"></i>
                     </span>
 
-                    <input type="text" id="roleSearch" class="form-control" placeholder="Search roles...">
+                    <input type="text" id="tableSearch" class="form-control" placeholder="Search roles...">
                 </div>
 
                 <!-- ROLES TABLE -->
                 <div class="card border-0 shadow-sm">
                     <div class="table-responsive p-2">
-                        <table class="table table-hover align-middle mb-0" id="roleTable">
+                        <table class="table table-hover align-middle mb-0" id="table">
                             <thead class="table-light">
                                 <tr>
                                     <th>#</th>
@@ -109,7 +103,7 @@
                                     </td>
                                     <!-- CREATED BY -->
                                     <td th:text="${r.createdBy}">
-                                               PERSON
+                                        PERSON
                                     </td>
                                     <!-- STATUS -->
                                     <td>
@@ -188,67 +182,66 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </td>
 
-                                        <!-- EDIT ROLE MODAL -->
-                                        <div class="modal fade" th:id="'editModal' + ${r.id}" tabindex="-1"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog modal-lg modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <form th:action="@{/admin/roles/update/{id}(id=${r.id})}" method="post"
-                                                        enctype="multipart/form-data">
-                                                        <!-- HEADER -->
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">
-                                                                <i class="bi bi-pencil-square"></i>
-                                                                Edit role
-                                                            </h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal">
-                                                            </button>
-                                                        </div>
+                                    <!-- EDIT ROLE MODAL -->
+                                    <div class="modal fade" th:id="'editModal' + ${r.id}" tabindex="-1"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <form th:action="@{/admin/roles/update/{id}(id=${r.id})}" method="post">
+                                                    <!-- HEADER -->
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                            Edit Role
+                                                        </h5>
 
-                                                        <!-- BODY -->
-                                                        <div class="modal-body">
-                                                            <div class="row g-3">
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                                        </button>
+                                                    </div>
 
-                                                                <!-- NAME -->
-                                                                <div class="col-md-8">
-                                                                    <label for="name" class="form-label">
-                                                                        Role Name
-                                                                    </label>
-                                                                    <input type="text" id="name" class="form-control"
-                                                                        name="name" placeholder="Role name"
-                                                                        th:value="${r.name}" required>
-                                                                </div>
-                                                                <!-- DESCRIPTION -->
-                                                                <div class="col-md-8">
-                                                                    <label class="form-label">
-                                                                        Description
-                                                                    </label>
-                                                                    <input type="text" id="description" class="form-control"
-                                                                        name="description" placeholder="description"
-                                                                        th:value="${r.description}" required>
-                                                                </div>
+                                                    <!-- BODY -->
+                                                    <div class="modal-body">
+                                                        <div class="row g-3">
+                                                            <!-- NAME -->
+                                                            <div class="col-md-12">
+                                                                <label class="form-label">
+                                                                    Role Name
+                                                                </label>
+                                                                <input type="text" class="form-control" name="name"
+                                                                    placeholder="Role name" th:value="${r.name}"
+                                                                    required>
+                                                            </div>
 
+                                                            <!-- DESCRIPTION -->
+                                                            <div class="col-md-12">
+                                                                <label class="form-label">
+                                                                    Description
+                                                                </label>
+                                                                <textarea rows="3" maxlength="200" class="form-control"
+                                                                    name="description" placeholder="Description"
+                                                                    required th:text="${r.description}"></textarea>
                                                             </div>
                                                         </div>
+                                                    </div>
 
-                                                        <!-- FOOTER -->
-                                                        <div class="modal-footer">
-                                                            <button type="reset" class="btn btn-warning"
-                                                                data-bs-dismiss="modal">
-                                                                Clear
-                                                            </button>
-                                                            <button type="submit" class="btn btn-primary">
-                                                                <i class="bi bi-save"></i>
-                                                                Save
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                                    <!-- FOOTER -->
+                                                    <div class="modal-footer">
+                                                        <button type="reset" class="btn btn-warning"
+                                                            data-bs-dismiss="modal">
+                                                            Clear
+                                                        </button>
+
+                                                        <button type="submit" class="btn btn-primary">
+                                                            <i class="bi bi-save"></i>
+                                                            Save
+                                                        </button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
-                                    </td>
+                                    </div>
                                 </tr>
 
                                 <!-- EMPTY -->
@@ -298,8 +291,8 @@
                                         <label class="form-label">
                                             Description
                                         </label>
-                                        <input type="text" name="description" class="form-control" placeholder="description"
-                                            required>
+                                        <input type="text" name="description" class="form-control"
+                                            placeholder="description" required>
                                     </div>
                                 </div>
                             </div>

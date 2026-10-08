@@ -5,7 +5,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.mfano.moe.security.model.VerificationToken;
-import com.mfano.moe.security.repository.VerificationTokenRepository;
+import com.mfano.moe.security.repository.TokenRepository;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TokenCleanupScheduler {
 
-    private final VerificationTokenRepository tokenRepo;
+    private final TokenRepository tokenRepo;
 
     @Scheduled(cron = "0 0 2 * * *") // daily at 2 AM
     public void deleteExpiredTokens() {

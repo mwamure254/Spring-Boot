@@ -9,12 +9,13 @@ import com.mfano.mpos.models.security.Role;
 import com.mfano.mpos.models.security.User;
 import com.mfano.mpos.repositories.security.RoleRepository;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class RoleService {
     private final RoleRepository roleRepository;
+
+    public RoleService(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
 
     // Get All Roles
     public List<Role> findAll() {
@@ -41,12 +42,12 @@ public class RoleService {
     public void save(Role role) {
         roleRepository.save(role);
     }
-    
-    public void update(Long id, Role role){
+
+    public void update(Long id, Role role) {
         Role existing = findById(id);
 
         existing.setName(role.getName());
-        existing.setDescription(role.getDescription());        
+        existing.setDescription(role.getDescription());
 
         save(existing);
     }
@@ -58,6 +59,7 @@ public class RoleService {
     public Set<Role> getUserRoles(User user) {
         return user.getRoles();
     }
+
     public Role findByName(String name) {
         return roleRepository.findByName(name).orElse(null);
     }

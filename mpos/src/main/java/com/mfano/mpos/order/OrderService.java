@@ -10,29 +10,31 @@ import com.mfano.mpos.cart.CartRepository;
 import com.mfano.mpos.dtos.OrderStatus;
 import com.mfano.mpos.models.security.User;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 
-@RequiredArgsConstructor
 @Transactional
 @Service
+@Builder 
 public class OrderService {
-
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
 
+    public OrderService(OrderRepository orderRepository, CartRepository cartRepository) {
+        this.orderRepository = orderRepository;
+        this.cartRepository = cartRepository;
+    }
+
     public Order checkout(User user, String pm) {
         Cart cart = cartRepository.findByUser(user)
-                .orElseThrow(() ->
-                        new IllegalStateException("Cart not found"));
+                .orElseThrow(() -> new IllegalStateException("Cart not found"));
 
         if (cart.getItems().isEmpty()) {
             throw new IllegalStateException(
-                    "Cannot checkout an empty cart"
-            );
+                    "Cannot checkout an empty cart");
         }
 
         Order order = Order.builder()
-                //.createdBy(user.getEmail())
+                // .createdBy(user.getEmail())
                 .user(user)
                 .pm(pm)
                 .status(OrderStatus.PENDING)
@@ -43,9 +45,8 @@ public class OrderService {
 
             if (product.getStockQuantity() < cartItem.getQuantity()) {
                 throw new IllegalStateException(
-                    "Insufficient stock for product: "
-                            + product.getName()
-                );
+                        "Insufficient stock for product: "
+                                + product.getName());
             }
 
             OrderItem orderItem = OrderItem.builder()
@@ -59,9 +60,8 @@ public class OrderService {
 
             // Reduce stock
             product.setStockQuantity(
-                product.getStockQuantity()
-                        - cartItem.getQuantity()
-            );
+                    product.getStockQuantity()
+                            - cartItem.getQuantity());
         }
 
         Order savedOrder = orderRepository.save(order);
@@ -72,7 +72,7 @@ public class OrderService {
         return savedOrder;
     }
 
-     public Order getById(Long id) {
+    public Order getById(Long id) {
         return orderRepository.findById(id).orElse(null);
     }
 }

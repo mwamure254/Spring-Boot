@@ -33,7 +33,6 @@ build/
 .vscode/
 
 ##Property files
-application-local.properties
 .env
 .env.*
 !.env.example

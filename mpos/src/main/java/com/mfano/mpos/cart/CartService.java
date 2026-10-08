@@ -9,15 +9,19 @@ import com.mfano.mpos.services.security.UserService;
 import com.mfano.mpos.repositories.ProductRepository;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 
 @Transactional
-@RequiredArgsConstructor
 @Service
 public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final UserService userService;
+
+    public CartService(CartRepository cartRepository, ProductRepository productRepository, UserService userService) {
+        this.cartRepository = cartRepository;
+        this.productRepository = productRepository;
+        this.userService = userService;
+    }
 
     public Cart getCart(User user) {
         return cartRepository.findByUser(user)

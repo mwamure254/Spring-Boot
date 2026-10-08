@@ -18,18 +18,23 @@ import com.mfano.mpos.services.ProductService;
 import com.mfano.mpos.services.security.UserService;
 import com.mfano.mpos.services.security.ProfileService;
 
-import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
-
 @Controller
 @RequestMapping("/pos")
-@RequiredArgsConstructor
 public class PosController {
     private final ProductService productService;
     private final OrderService orderService;
     private final CartService cartService;
     private final ProfileService profileService;
     private final UserService userService;
+
+    public PosController(ProductService productService, OrderService orderService, CartService cartService,
+            ProfileService profileService, UserService userService) {
+        this.productService = productService;
+        this.orderService = orderService;
+        this.cartService = cartService;
+        this.profileService = profileService;
+        this.userService = userService;
+    }
 
     @GetMapping
     public String posPage(@AuthenticationPrincipal CustomUserDetails auth, Model model) {

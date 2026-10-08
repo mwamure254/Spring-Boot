@@ -15,7 +15,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,10 +25,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Builder 
 public class OrderItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -57,6 +54,16 @@ public class OrderItem {
      */
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal subtotal;
+
+    public OrderItem(Long id, Order order, Product product, Integer quantity, BigDecimal unitPrice,
+            BigDecimal subtotal) {
+        this.id = id;
+        this.order = order;
+        this.product = product;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.subtotal = subtotal;
+    }
 
     @PrePersist
     @PreUpdate
