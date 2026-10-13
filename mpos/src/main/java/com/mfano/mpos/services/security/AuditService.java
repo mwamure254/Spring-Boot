@@ -15,9 +15,10 @@ public class AuditService {
         this.repo = repo;
     }
 
-    public void record(String action, String details) {
+    public void record(String action, String actionType, String details) {
         AuditEntry entry = new AuditEntry();
         entry.setAction(action);
+        entry.setActionType(actionType);
         entry.setDetails(details);
         repo.save(entry);
     }
@@ -68,7 +69,13 @@ public class AuditService {
                 .toList();
     }
 
-    public List<AuditEntry> findByActionAndPerformedBy(String action, String performedBy) {
+    public List<AuditEntry> findByActionContaining(String keyword) {
+        return repo.findAllByOrderByCreatedAtDesc().stream()
+                .filter(entry -> entry.getAction() != null && entry.getAction().contains(keyword))
+                .toList();
+    }
+
+    public List<AuditEntry> findByActionAndCreatedBy(String action, String performedBy) {
         return repo.findAll().stream()
                 .filter(entry -> entry.getAction().equals(action) && entry.getCreatedBy().equals(performedBy))
                 .toList();

@@ -39,7 +39,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/manager/**").hasRole("MANAGER")
                                 .requestMatchers("/cashier/**").hasRole("CASHIER")
-                                .requestMatchers("/procurement/**").hasRole("PROCUREMENT")
+                                .requestMatchers("/inventory/**").hasRole("PROCUREMENT")
                                 .requestMatchers("/", "/register", "/login", "/verify", "/forgot", "/reset-password",
                                                 "/resend", "/error/403", "/profile", "/css/**", "/js/**", "/vendor/**",
                                                 "/image/**")

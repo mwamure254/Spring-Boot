@@ -3,10 +3,10 @@
 
 <th:block th:replace="~{partials/_header :: common_header(~{::title/text()},~{::link},~{::meta})}">
   <!-- Custom meta data for this template-->
-  <meta name="description" content="meo home page">
+  <meta name="description" content="mpos dashboard page">
   <meta name="author" content="mfano">
   <!-- Custom title for this page-->
-  <title>MPOS | Management</title>
+  <title>MPOS | Dashboard</title>
   <!-- Custom styles for this page-->
 </th:block>
 
@@ -24,12 +24,6 @@
 
     <div class="pagetitle">
       <h1>Dashboard</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item active">Dashboard</li>
-        </ol>
-      </nav>
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
@@ -64,9 +58,7 @@
                       <i class="bi bi-cart"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>145</h6>
-                      <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-
+                      <h6 th:text="${todaySales}">0</h6>
                     </div>
                   </div>
                 </div>
@@ -96,12 +88,13 @@
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-currency-dollar"></i>
+                      <i class="bi">Ksh</i>
                     </div>
                     <div class="ps-3">
-                      <h6>$3,264</h6>
-                      <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-
+                      <h6 th:text="${#numbers.formatDecimal(
+    monthlyRevenue, 1, 'COMMA', 2, 'POINT')}">
+                        0.00
+                      </h6>
                     </div>
                   </div>
                 </div>
@@ -112,8 +105,7 @@
             <!-- Customers Card -->
             <div class="col-xxl-4 col-xl-12">
 
-              <div class="card info-card customers-card">
-
+              <div class="card info-card customer-card">
                 <div class="filter">
                   <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -135,9 +127,7 @@
                       <i class="bi bi-people"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>1244</h6>
-                      <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
-
+                      <h6 th:text="${todayOrders}">1244</h6>
                     </div>
                   </div>
 
@@ -145,6 +135,162 @@
               </div>
 
             </div><!-- End Customers Card -->
+
+            <!-- Stock Card -->
+            <div class="col-xxl-6 col-xl-12">
+              <div class="card info-card stock-card">
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Foods</a></li>
+                    <li><a class="dropdown-item" href="#">Beverages</a></li>
+                    <li><a class="dropdown-item" href="#">Clothings</a></li>
+                    <li><a class="dropdown-item" href="#">Beddings</a></li>
+                    <li><a class="dropdown-item" href="#">Drinks</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Stock</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-box-seam"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>
+                        <span class="text-success small pt-1 fw-bold" th:text="${inStockProducts}"></span>
+                        <span class="text-muted small pt-2 ps-1">Product(s) : </span>
+                            
+                      <span class="text-success small pt-1 fw-bold" th:text="${totalStockQuantity}"></span> <span
+                        class="text-muted small pt-2 ps-1"> Item(s)</span>
+                      </h6>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- End Stock Card -->
+
+            <!-- Staff Card -->
+            <div class="col-xxl-6 col-xl-12">
+              <div class="card info-card customer-card">
+                <div class="card-body">
+                  <h5 class="card-title">Staff</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>1244</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- End Staff Card -->
+
+
+            <!-- Sales :Revenue Report -->
+            <div class="col-12">
+              <div class="card  overflow-auto">
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body pb-0">
+                  <h5 class="card-title">Sales : Revenue <span>| This Month</span></h5>
+
+                  <div id="paymentMethodChart" style="min-height: 350px;"></div>
+
+                  <script th:inline="javascript">
+                    document.addEventListener("DOMContentLoaded", () => {
+
+                      const reports = /*[[${ paymentMethodReports }]]*/[];
+
+                      const categories = reports.map(r => r.paymentMethod);
+                      const sales = reports.map(r => Number(r.sales ?? 0));
+                      const revenue = reports.map(r => Number(r.revenue ?? 0));
+
+                      const chart = new ApexCharts(
+                        document.querySelector("#paymentMethodChart"),
+                        {
+                          series: [
+                            {
+                              type: "bar",
+                              name: "Sales",
+                              data: sales
+                            },
+                            {
+                              type: "line",
+                              name: "Revenue",
+                              data: revenue
+                            }
+                          ],
+                          chart: {
+                            height: 350,
+                            toolbar: {
+                              show: false
+                            }
+                          },
+                          plotOptions: {
+                            bar: {
+                              horizontal: false,
+                              columnWidth: "50%",
+                              borderRadius: 4
+                            }
+                          },
+                          dataLabels: {
+                            enabled: false
+                          },
+                          xaxis: {
+                            categories: categories,
+                            title: {
+                              text: "Payment Method"
+                            }
+                          },
+                          yaxis: {
+                            labels: {
+                              formatter: value =>
+                                Number(value).toLocaleString()
+                            }
+                          },
+                          tooltip: {
+                            y: {
+                              formatter: value =>
+                                Number(value).toLocaleString()
+                            }
+                          },
+                          legend: {
+                            position: "top"
+                          },
+                          noData: {
+                            text: "No payment data available"
+                          }
+                        }
+                      );
+
+                      chart.render();
+                    });
+                  </script>
+
+                </div>
+              </div>
+            </div><!-- End Budget Report -->
 
             <!-- Reports -->
             <div class="col-12">
@@ -164,35 +310,63 @@
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title">Reports <span>/Today</span></h5>
+                  <h5 class="card-title">Reports <span> | Today</span></h5>
 
-                  <!-- Line Chart -->
-                  <div id="reportsChart"></div>
+                  <!-- Reports Area Chart -->
+                  <div id="reportsChart" style="min-height: 350px;"></div>
 
-                  <script>
+                  <script th:inline="javascript">
                     document.addEventListener("DOMContentLoaded", () => {
-                      new ApexCharts(document.querySelector("#reportsChart"), {
-                        series: [{
-                          name: 'Sales',
-                          data: [31, 40, 28, 51, 42, 82, 56],
-                        }, {
-                          name: 'Revenue',
-                          data: [11, 32, 45, 32, 34, 52, 41]
-                        }, {
-                          name: 'Customers',
-                          data: [15, 11, 32, 18, 9, 24, 11]
-                        }],
+
+                      const chartElement = document.querySelector("#reportsChart");
+
+                      // Data supplied by Spring Boot / Thymeleaf
+                      const reportData = /*[[${ reportsChartData }]]*/[];
+
+                      const dates = reportData.map(item => item.date);
+
+                      const sales = reportData.map(
+                        item => Number(item.sales ?? 0)
+                      );
+
+                      const revenue = reportData.map(
+                        item => Number(item.revenue ?? 0)
+                      );
+
+                      const customers = reportData.map(
+                        item => Number(item.customers ?? 0)
+                      );
+
+                      const reportsChart = new ApexCharts(chartElement, {
+                        series: [
+                          {
+                            name: "Sales",
+                            data: sales
+                          },
+                          {
+                            name: "Revenue",
+                            data: revenue
+                          },
+                          {
+                            name: "Customers",
+                            data: customers
+                          }
+                        ],
+
                         chart: {
                           height: 350,
-                          type: 'area',
+                          type: "area",
                           toolbar: {
                             show: false
-                          },
+                          }
                         },
+
                         markers: {
                           size: 4
                         },
-                        colors: ['#4154f1', '#2eca6a', '#ff771d'],
+
+                        colors: ["#4154f1", "#2eca6a", "#ff771d"],
+
                         fill: {
                           type: "gradient",
                           gradient: {
@@ -202,23 +376,44 @@
                             stops: [0, 90, 100]
                           }
                         },
+
                         dataLabels: {
                           enabled: false
                         },
+
                         stroke: {
-                          curve: 'smooth',
+                          curve: "smooth",
                           width: 2
                         },
+
                         xaxis: {
-                          type: 'datetime',
-                          categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+                          type: "datetime",
+                          categories: dates
                         },
+
+                        yaxis: {
+                          labels: {
+                            formatter: value =>
+                              Number(value).toLocaleString()
+                          }
+                        },
+
                         tooltip: {
                           x: {
-                            format: 'dd/MM/yy HH:mm'
+                            format: "dd/MM/yy"
                           },
+                          y: {
+                            formatter: value =>
+                              Number(value).toLocaleString()
+                          }
+                        },
+
+                        noData: {
+                          text: "No report data available"
                         }
-                      }).render();
+                      });
+
+                      reportsChart.render();
                     });
                   </script>
                   <!-- End Line Chart -->
@@ -227,80 +422,6 @@
 
               </div>
             </div><!-- End Reports -->
-
-            <!-- Recent Sales -->
-            <div class="col-12">
-              <div class="card recent-sales overflow-auto">
-
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
-                <div class="card-body">
-                  <h5 class="card-title">Recent Sales <span>| Today</span></h5>
-
-                  <table class="table table-borderless datatable">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row"><a href="#">#2457</a></th>
-                        <td>Brandon Jacob</td>
-                        <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                        <td>$64</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2147</a></th>
-                        <td>Bridie Kessler</td>
-                        <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
-                        <td>$47</td>
-                        <td><span class="badge bg-warning">Pending</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2049</a></th>
-                        <td>Ashleigh Langosh</td>
-                        <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
-                        <td>$147</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Angus Grady</td>
-                        <td><a href="#" class="text-primary">Ut voluptatem id earum et</a></td>
-                        <td>$67</td>
-                        <td><span class="badge bg-danger">Rejected</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Raheem Lehner</td>
-                        <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                        <td>$165</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                </div>
-
-              </div>
-            </div><!-- End Recent Sales -->
 
             <!-- Top Selling -->
             <div class="col-12">
@@ -322,51 +443,46 @@
                 <div class="card-body pb-0">
                   <h5 class="card-title">Top Selling <span>| Today</span></h5>
 
-                  <table class="table table-borderless">
+                  <table class="table table-striped">
                     <thead>
                       <tr>
                         <th scope="col">Preview</th>
                         <th scope="col">Product</th>
-                        <th scope="col">Price</th>
+                        <th scope="col">Price(Ksh)</th>
                         <th scope="col">Sold</th>
-                        <th scope="col">Revenue</th>
+                        <th scope="col">Revenue(Ksh)</th>
+                        <th scope="col">Branch</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <th scope="row"><a href="#"><img src="image/product-1.jpg" alt=""></a></th>
-                        <td><a href="#" class="text-primary fw-bold">Ut inventore ipsa voluptas nulla</a></td>
-                        <td>$64</td>
-                        <td class="fw-bold">124</td>
-                        <td>$5,828</td>
+                      <tr th:each="p : ${topSellingProducts}">
+                        <td>
+                          <img th:src="${p.image == null or p.image.isEmpty()}
+            ? @{/image/product-2.jpg}
+            : @{/products/{product}(product=${p.image})}" th:alt="${p.name()}"
+                            style="width:45px;height:45px;object-fit:cover">
+
+                        </td>
+                        <td>
+                          <span class="fw-bold text-primary" th:text="${p.name()}">Product</span>
+                          <small class="d-block text-muted" th:text="${p.sku()}">SKU</small>
+                        </td>
+                        <td th:text="${#numbers.formatDecimal(
+            p.price(), 1, 'COMMA', 2, 'POINT')}">KES 0.00</td>
+                        <td th:text="${p.quantitySold()}">0</td>
+                        <td><span th:text="${#numbers.formatDecimal(
+                p.revenue(), 1, 'COMMA', 2, 'POINT'
+            )}">0.00</span>
+                        </td>
+                        <td>
+                          Store
+                        </td>
                       </tr>
-                      <tr>
-                        <th scope="row"><a href="#"><img src="image/product-2.jpg" alt=""></a></th>
-                        <td><a href="#" class="text-primary fw-bold">Exercitationem similique doloremque</a></td>
-                        <td>$46</td>
-                        <td class="fw-bold">98</td>
-                        <td>$4,508</td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#"><img src="image/product-3.jpg" alt=""></a></th>
-                        <td><a href="#" class="text-primary fw-bold">Doloribus nisi exercitationem</a></td>
-                        <td>$59</td>
-                        <td class="fw-bold">74</td>
-                        <td>$4,366</td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#"><img src="image/product-4.jpg" alt=""></a></th>
-                        <td><a href="#" class="text-primary fw-bold">Officiis quaerat sint rerum error</a></td>
-                        <td>$32</td>
-                        <td class="fw-bold">63</td>
-                        <td>$2,016</td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#"><img src="image/product-5.jpg" alt=""></a></th>
-                        <td><a href="#" class="text-primary fw-bold">Sit unde debitis delectus repellendus</a></td>
-                        <td>$79</td>
-                        <td class="fw-bold">41</td>
-                        <td>$3,239</td>
+
+                      <tr th:if="${#lists.isEmpty(topSellingProducts)}">
+                        <div class="text-center text-muted">
+                          No sales recorded this month.
+                        </div>
                       </tr>
                     </tbody>
                   </table>
@@ -376,11 +492,147 @@
               </div>
             </div><!-- End Top Selling -->
 
+            <!-- Recent Sales -->
+            <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                  <h5 class="card-title">Recent Sales</h5>
+
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">Order</th>
+                        <th scope="col">Payment</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:each="o : ${recentSales}">
+                        <td th:text="${o.orderNumber}">Order</td>
+                        <td th:text="${o.pm}">Payment</td>
+                        <td th:text="${'Ksh ' + #numbers.formatDecimal(
+            o.total, 1, 'COMMA', 2, 'POINT')}">KES 0.00</td>
+                        <td th:text="${o.status}">PENDING</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Recent Sales -->
+
           </div>
         </div><!-- End Left side columns -->
 
         <!-- Right side columns -->
         <div class="col-lg-4">
+
+          <!-- Payment method Traffic -->
+          <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body pb-0">
+              <h5 class="card-title">Payment Method <span>| Today</span></h5>
+
+              <!-- Payment Method Revenue Chart -->
+              <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+
+              <script th:inline="javascript">
+                document.addEventListener("DOMContentLoaded", () => {
+
+                  const chartElement = document.querySelector("#trafficChart");
+                  const trafficChart = echarts.init(chartElement);
+
+                  // Data supplied by the Spring Boot controller
+                  const paymentData = /*[[${paymentMethodReports}]]*/[];
+
+                  const chartData = paymentData.map(item => ({
+                    name: item.paymentMethod,
+                    value: Number(item.revenue ?? 0)
+                  }));
+
+                  trafficChart.setOption({
+                    tooltip: {
+                      trigger: "item",
+                      formatter: params =>
+                        `${params.name}<br/>Revenue : ${Number(params.value).toLocaleString()} (${params.percent}%)`
+                    },
+
+                    legend: {
+                      top: "5%",
+                      left: "center",
+                      orient: "horizontal"
+                    },
+
+                    series: [{
+                      name: "Revenue by Payment Method",
+                      type: "pie",
+                      radius: ["40%", "70%"],
+                      avoidLabelOverlap: false,
+
+                      itemStyle: {
+                        borderRadius: 6,
+                        borderColor: "#fff",
+                        borderWidth: 2
+                      },
+
+                      label: {
+                        show: false,
+                        position: "center"
+                      },
+
+                      emphasis: {
+                        label: {
+                          show: true,
+                          fontSize: 18,
+                          fontWeight: "bold",
+                          formatter: "{b}\n{d}%"
+                        }
+                      },
+
+                      labelLine: {
+                        show: false
+                      },
+
+                      data: chartData
+                    }],
+
+                    // Display a message if there are no payment records
+                    graphic: chartData.length === 0 ? [{
+                      type: "text",
+                      left: "center",
+                      top: "middle",
+                      style: {
+                        text: "No payment data available",
+                        fontSize: 14,
+                        fill: "#999"
+                      }
+                    }] : []
+                  });
+
+                  window.addEventListener("resize", () => {
+                    trafficChart.resize();
+                  });
+                });
+              </script>
+              <!-- End Payment Method Revenue Chart -->
+
+            </div>
+          </div><!-- End Website Traffic -->
 
           <!-- Recent Activity -->
           <div class="card">
@@ -402,264 +654,26 @@
 
               <div class="activity">
 
-                <div class="activity-item d-flex">
-                  <div class="activite-label">32 min</div>
-                  <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
-                  <div class="activity-content">
-                    Quia quae rerum <a href="#" class="fw-bold text-dark">explicabo officiis</a> beatae
-                  </div>
-                </div><!-- End activity item-->
+                <div class="activity-item d-flex" th:each="entry : ${logActivities}">
 
-                <div class="activity-item d-flex">
-                  <div class="activite-label">56 min</div>
-                  <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
-                  <div class="activity-content">
-                    Voluptatem blanditiis blanditiis eveniet
+                  <div class="activite-label" th:text="${#temporals.format(entry.createdAt, 'dd MMM yyyy HH:mm')}">
                   </div>
-                </div><!-- End activity item-->
+                  <i class="bi bi-circle-fill activity-badge align-self-start" th:classappend="${entry.details != null and #strings.containsIgnoreCase(entry.details, 'failed')} 
+           ? ' text-danger' 
+           : (${entry.action == 'USER_LOGIN'} 
+               ? ' text-success' 
+               : (${entry.action == 'USER_LOGOUT'} 
+                   ? ' text-warning' 
+                   : ' text-secondary'))">
+                  </i>
 
-                <div class="activity-item d-flex">
-                  <div class="activite-label">2 hrs</div>
-                  <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
                   <div class="activity-content">
-                    Voluptates corrupti molestias voluptatem
+                    <span th:text="${entry.details}"></span>
                   </div>
-                </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">1 day</div>
-                  <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
-                  <div class="activity-content">
-                    Tempore autem saepe <a href="#" class="fw-bold text-dark">occaecati voluptatem</a> tempore
-                  </div>
-                </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">2 days</div>
-                  <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
-                  <div class="activity-content">
-                    Est sit eum reiciendis exercitationem
-                  </div>
-                </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">4 weeks</div>
-                  <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
-                  <div class="activity-content">
-                    Dicta dolorem harum nulla eius. Ut quidem quidem sit quas
-                  </div>
-                </div><!-- End activity item-->
-
+                </div>
               </div>
-
             </div>
           </div><!-- End Recent Activity -->
-
-          <!-- Budget Report -->
-          <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div>
-
-            <div class="card-body pb-0">
-              <h5 class="card-title">Budget Report <span>| This Month</span></h5>
-
-              <div id="budgetChart" style="min-height: 400px;" class="echart"></div>
-
-              <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                  var budgetChart = echarts.init(document.querySelector("#budgetChart")).setOption({
-                    legend: {
-                      data: ['Allocated Budget', 'Actual Spending']
-                    },
-                    radar: {
-                      // shape: 'circle',
-                      indicator: [{
-                          name: 'Sales',
-                          max: 6500
-                        },
-                        {
-                          name: 'Administration',
-                          max: 16000
-                        },
-                        {
-                          name: 'Information Technology',
-                          max: 30000
-                        },
-                        {
-                          name: 'Customer Support',
-                          max: 38000
-                        },
-                        {
-                          name: 'Development',
-                          max: 52000
-                        },
-                        {
-                          name: 'Marketing',
-                          max: 25000
-                        }
-                      ]
-                    },
-                    series: [{
-                      name: 'Budget vs spending',
-                      type: 'radar',
-                      data: [{
-                          value: [4200, 3000, 20000, 35000, 50000, 18000],
-                          name: 'Allocated Budget'
-                        },
-                        {
-                          value: [5000, 14000, 28000, 26000, 42000, 21000],
-                          name: 'Actual Spending'
-                        }
-                      ]
-                    }]
-                  });
-                });
-              </script>
-
-            </div>
-          </div><!-- End Budget Report -->
-
-          <!-- Website Traffic -->
-          <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div>
-
-            <div class="card-body pb-0">
-              <h5 class="card-title">Website Traffic <span>| Today</span></h5>
-
-              <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
-
-              <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                  echarts.init(document.querySelector("#trafficChart")).setOption({
-                    tooltip: {
-                      trigger: 'item'
-                    },
-                    legend: {
-                      top: '5%',
-                      left: 'center'
-                    },
-                    series: [{
-                      name: 'Access From',
-                      type: 'pie',
-                      radius: ['40%', '70%'],
-                      avoidLabelOverlap: false,
-                      label: {
-                        show: false,
-                        position: 'center'
-                      },
-                      emphasis: {
-                        label: {
-                          show: true,
-                          fontSize: '18',
-                          fontWeight: 'bold'
-                        }
-                      },
-                      labelLine: {
-                        show: false
-                      },
-                      data: [{
-                          value: 1048,
-                          name: 'Search Engine'
-                        },
-                        {
-                          value: 735,
-                          name: 'Direct'
-                        },
-                        {
-                          value: 580,
-                          name: 'Email'
-                        },
-                        {
-                          value: 484,
-                          name: 'Union Ads'
-                        },
-                        {
-                          value: 300,
-                          name: 'Video Ads'
-                        }
-                      ]
-                    }]
-                  });
-                });
-              </script>
-
-            </div>
-          </div><!-- End Website Traffic -->
-
-          <!-- News & Updates Traffic -->
-          <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div>
-
-            <div class="card-body pb-0">
-              <h5 class="card-title">News &amp; Updates <span>| Today</span></h5>
-
-              <div class="news">
-                <div class="post-item clearfix">
-                  <img src="image/news-1.jpg" alt="">
-                  <h4><a href="#">Nihil blanditiis at in nihil autem</a></h4>
-                  <p>Sit recusandae non aspernatur laboriosam. Quia enim eligendi sed ut harum...</p>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="image/news-2.jpg" alt="">
-                  <h4><a href="#">Quidem autem et impedit</a></h4>
-                  <p>Illo nemo neque maiores vitae officiis cum eum turos elan dries werona nande...</p>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="image/news-3.jpg" alt="">
-                  <h4><a href="#">Id quia et et ut maxime similique occaecati ut</a></h4>
-                  <p>Fugiat voluptas vero eaque accusantium eos. Consequuntur sed ipsam et totam...</p>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="image/news-4.jpg" alt="">
-                  <h4><a href="#">Laborum corporis quo dara net para</a></h4>
-                  <p>Qui enim quia optio. Eligendi aut asperiores enim repellendusvel rerum cuder...</p>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="image/news-5.jpg" alt="">
-                  <h4><a href="#">Et dolores corrupti quae illo quod dolor</a></h4>
-                  <p>Odit ut eveniet modi reiciendis. Atque cupiditate libero beatae dignissimos eius...</p>
-                </div>
-
-              </div><!-- End sidebar recent posts-->
-
-            </div>
-          </div><!-- End News & Updates -->
 
         </div><!-- End Right side columns -->
 

@@ -1,5 +1,6 @@
 package com.mfano.mpos.inventory;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class TransferService {
     private final TransferRepository transferRepository;
     private final CartRepository cartRepository;
     private final UserService userService;
+    Transfer transfer, existing, savedTransfer;
 
     public TransferService(TransferRepository transferRepository, CartRepository cartRepository,
             UserService userService) {
@@ -32,7 +34,7 @@ public class TransferService {
     public Transfer checkout(CustomUserDetails user, String pm, Long tt, RedirectAttributes red) {
         User staff = userService.findById(user.getId());
         Cart cart = cartRepository.findByUser(staff)
-                .orElseThrow(() ->  new IllegalStateException("Cart not found"));
+                .orElseThrow(() -> new IllegalStateException("Cart not found"));
 
         if (cart.getItems().isEmpty()) {
             red.addFlashAttribute(
@@ -40,7 +42,7 @@ public class TransferService {
                     "Cannot checkout an empty cart");
         }
 
-        Transfer transfer = Transfer.builder()
+        transfer = Transfer.builder()
                 .fromStoreId(staff.getBranch().getId())
                 .toStoreId(tt)
                 .comment(pm)
@@ -53,9 +55,9 @@ public class TransferService {
             Product product = cartItem.getProduct();
 
             if (product.getStockQuantity() < cartItem.getQuantity()) {
-            red.addFlashAttribute(
-                    "error",
-                    "Insufficient stock for product: "
+                red.addFlashAttribute(
+                        "error",
+                        "Insufficient stock for product: "
                                 + product.getName());
             }
 
@@ -74,7 +76,7 @@ public class TransferService {
                             - cartItem.getQuantity());
         }
 
-        Transfer savedTransfer = transferRepository.save(transfer);
+        savedTransfer = transferRepository.save(transfer);
 
         cart.getItems().clear();
         cartRepository.save(cart);
@@ -92,5 +94,16 @@ public class TransferService {
 
     public void deleteById(Long id) {
         transferRepository.deleteById(id);
+    }
+
+    public void update(Long id, Long tost, String men) throws IOException {
+        existing = getById(id);
+
+        if (existing != null) {
+            existing.setToStoreId(tost);
+            existing.setComment(men);
+        }
+
+        transferRepository.save(existing);
     }
 }

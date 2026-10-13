@@ -3,7 +3,7 @@ package com.mfano.mpos.controllers;
 import com.mfano.mpos.config.CustomUserDetails;
 import com.mfano.mpos.models.Branch;
 import com.mfano.mpos.services.BranchService;
-import com.mfano.mpos.services.security.ProfileService;
+import com.mfano.mpos.services.security.UserService;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -15,16 +15,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/branches")
 public class BranchController {
         private final BranchService branchService;
-        private final ProfileService profileService;
+        private final UserService userService;
 
-        public BranchController(BranchService branchService, ProfileService profileService) {
+        public BranchController(BranchService branchService, UserService userService) {
                 this.branchService = branchService;
-                this.profileService = profileService;
+                this.userService = userService;
         }
 
         @GetMapping
         public String index(@AuthenticationPrincipal CustomUserDetails auth, Model model) {
-                model.addAttribute("profile", profileService.checkProfile(auth.getId()));
+                userService.getPrices(auth,model);
                 model.addAttribute("branches", branchService.findAll());
                 model.addAttribute("branch", new Branch());
 

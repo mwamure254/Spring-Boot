@@ -1,6 +1,7 @@
 package com.mfano.mpos.repositories;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,6 @@ public interface BranchRepository extends JpaRepository<Branch, Long> {
     boolean existsByNameIgnoreCase(String name);
 
     boolean existsByCodeIgnoreCase(String code);
+
+    List<Branch> findByNameContainingIgnoreCase(String keyword);
 }

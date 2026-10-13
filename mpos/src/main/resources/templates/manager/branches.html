@@ -45,17 +45,6 @@
                 </button>
             </div>
 
-            <!-- Alerts -->
-            <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
-                <span th:text="${success}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-
-            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
-                <span th:text="${error}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-
             <!-- Search -->
             <div class="card border-0 shadow-sm mb-3">
                 <div class="input-group p-2">
@@ -84,7 +73,7 @@
 
                         <tbody>
                             <tr th:each="b, stat : ${branches}">
-                                <td th:text="${stat.count}">1</td>
+                                <td th:text="${stat.count}" th:id="'b-' + ${b.id}">1</td>
 
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -123,7 +112,7 @@
                                 <td class="text-end">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="modal" th:data-bs-target="'#editBranchModal' + ${b.id}"
+                                            data-bs-toggle="modal" th:data-bs-target="'#editModal' + ${b.id}"
                                             title="Edit">
                                             <i class="bi bi-pencil"></i>
                                         </button>
@@ -136,8 +125,118 @@
                                             : 'bi bi-toggle-off'"></i>
                                             </button>
                                         </form>
+
+                                        <!-- DELETE -->
+                                        <a class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                            th:data-bs-target="'#deleteModal' + ${b.id}" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
                                     </div>
                                 </td>
+
+                                <!-- DELETE MODAL -->
+                                <div class="modal fade" th:id="'deleteModal' + ${b.id}" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">
+                                                    Delete Branch
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body text-start">
+                                                Are you sure you want to delete
+                                                <strong th:text="${b.name}">
+                                                    User
+                                                </strong>?
+                                                <br>
+                                                <small class="text-danger">
+                                                    This action cannot be undone.
+                                                </small>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Cancel
+                                                </button>
+                                                <form th:action="@{/branches/delete/{id}(id=${b.id})}" method="post">
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="bi bi-trash"></i>
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--END DELETE MODAL-->
+
+                                <!--UPDATE MODAL-->
+                                <div class="modal fade" th:id="'editModal' + ${b.id}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                        <div class="modal-content">
+
+                                            <form th:action="@{/branches/update/{id}(id=${b.id})}" method="post">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">
+                                                        <i class="bi bi-building-add"></i> Update Branch
+                                                    </h5>
+                                                    <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <div class="row g-3">
+
+                                                        <div class="col-md-8">
+                                                            <label class="form-label">Branch Name</label>
+                                                            <input type="text" name="name" th:value="${b.name}" class="form-control"
+                                                                placeholder="Main Branch" required>
+                                                        </div>
+
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Branch Code</label>
+                                                            <input type="text" name="code" th:value="${b.code}" class="form-control"
+                                                                placeholder="HQ" required>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">Location</label>
+                                                            <input type="text" name="location" th:value="${b.location}"
+                                                                class="form-control" placeholder="Nairobi">
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">Phone</label>
+                                                            <input type="tel" name="phone" th:value="${b.phone}" class="form-control"
+                                                                placeholder="07XXXXXXXX">
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <label class="form-label">Email</label>
+                                                            <input type="email" name="email" th:value="${b.email}" class="form-control"
+                                                                placeholder="branch@example.com">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="reset" class="btn btn-warning"
+                                                        data-bs-dismiss="modal">
+                                                        Clear
+                                                    </button>
+
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="bi bi-save"></i> Update Branch
+                                                    </button>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div><!--END ADD MODAL-->
                             </tr>
 
                             <tr th:if="${#lists.isEmpty(branches)}">

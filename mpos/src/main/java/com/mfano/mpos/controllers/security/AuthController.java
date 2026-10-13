@@ -23,6 +23,7 @@ import com.mfano.mpos.config.CustomUserDetails;
 import com.mfano.mpos.dtos.UserDto;
 import com.mfano.mpos.models.security.Profile;
 import com.mfano.mpos.models.security.User;
+import com.mfano.mpos.services.GlobalSearchService;
 import com.mfano.mpos.services.security.AuditService;
 import com.mfano.mpos.services.security.ProfileService;
 import com.mfano.mpos.services.security.RoleService;
@@ -35,16 +36,17 @@ public class AuthController {
     private final ProfileService profileService;
     private final AuditService auditService;
     private final PasswordEncoder passwordEncoder;
-    private String msg = "security/message";
-    private String login = "redirect:/login?error";
+    private final GlobalSearchService searchService;
+    private String login = "redirect:/login";
 
     public AuthController(UserService userService, RoleService roleService, ProfileService profileService,
-            AuditService auditService, PasswordEncoder passwordEncoder) {
+            AuditService auditService, PasswordEncoder passwordEncoder, GlobalSearchService searchService) {
         this.userService = userService;
         this.roleService = roleService;
         this.profileService = profileService;
         this.auditService = auditService;
         this.passwordEncoder = passwordEncoder;
+        this.searchService = searchService;
     }
 
     // guest user
@@ -69,24 +71,18 @@ public class AuthController {
             model.addFlashAttribute("error", "Contact the system admin for account verification.");
             return login;
         }
-        model.addFlashAttribute("profile", profileService.checkProfile(auth.getId()));
-        auditService.record(
-                "user_login",
-                "User " + auth.getUsername() + " logged in successfully.");
-
         // Redirect based on role priority
-        if (roles.contains("ROLE_ADMIN"))
-        {
+        if (roles.contains("ROLE_ADMIN")) {
             return "redirect:/admin/dashboard";
         } else if (roles.contains("ROLE_MANAGER")) {
             return "redirect:/manager/dashboard";
         } else if (roles.contains("ROLE_CASHIER")) {
             return "redirect:/cashier/dashboard";
         } else if (roles.contains("ROLE_PROCUREMENT")) {
-            return "redirect:/procurement/dashboard";
+            return "redirect:/inventory/dashboard";
         } else if (roles.contains("ROLE_USER")) {
             return "redirect:/guest/dashboard";
-        }else {
+        } else {
             model.addFlashAttribute("error", "Please contact the system admin for role mapping.");
             return login;
         }
@@ -95,7 +91,6 @@ public class AuthController {
 
     @GetMapping("/register")
     public String registerForm(Model model) {
-
         model.addAttribute("roles", roleService.findAll());
         model.addAttribute("userDto", new UserDto());
         return "security/register";
@@ -121,7 +116,7 @@ public class AuthController {
 
         return "security/login"; // Return login view
     }
-    
+
     @GetMapping("/error/403")
     public String forbidden() {
         return "error/403";
@@ -133,12 +128,11 @@ public class AuthController {
         if (auth == null) {
             model.addAttribute("error", "User not authenticated, login to proceed.");
             return login;
-        }
-        model.addAttribute("profile", profileService.checkProfile(auth.getId()));
-        // Add user info to model (for Thymeleaf dashboard pages)
-        model.addAttribute("user", userService.findById(auth.getId()));
+        } else {
+            userService.getPrices(auth, model);
 
-        return "security/profile";
+            return "security/profile";
+        }
     }
 
     // profile/update @PreAuthorize("isAuthenticated()")
@@ -148,7 +142,7 @@ public class AuthController {
             @ModelAttribute("profile") Profile profile) {
 
         profileService.update(auth.getId(), profile);
-        auditService.record("update_profile", "user id=" + auth.getId() + "Updated their profile");
+        auditService.record("update_profile", "SUCCESS", "user id=" + auth.getId() + "Updated their profile");
         return "redirect:/profile";
     }
 
@@ -162,7 +156,7 @@ public class AuthController {
         } catch (IOException e) {
             red.addFlashAttribute("error", e.getMessage());
         }
-        auditService.record("update_image", "user id=" + userid + "Updated their profile image");
+        auditService.record("update_image", "SUCCESS", "user id=" + userid + "Updated their profile image");
         red.addFlashAttribute("message", "Image updated successfully.");
         return "redirect:/profile";
     }
@@ -176,7 +170,7 @@ public class AuthController {
         } catch (IOException e) {
             red.addFlashAttribute("error", e.getMessage());
         }
-        auditService.record("delete_image", "user id=" + userid + "Deleted their profile image");
+        auditService.record("delete_image", "SUCCESS", "user id=" + userid + "Deleted their profile image");
         red.addFlashAttribute("message", "Image deleted successfully.");
         return "redirect:/profile";
     }
@@ -187,19 +181,30 @@ public class AuthController {
         return "redirect:/login?logout";
     }
 
+    @GetMapping("/search")
+    public String search(
+            @RequestParam(defaultValue = "") String query,
+            @AuthenticationPrincipal CustomUserDetails auth, Model model) {
+        userService.getPrices(auth, model);
+        model.addAttribute("query", query);
+        model.addAttribute("results", searchService.search(query));
+
+        return "security/search";
+    }
+
     @GetMapping("/verify")
     public String verify(@RequestParam("token") String token, Model model) {
         String result = userService.validateVerificationToken(token);
         if ("valid".equals(result)) {
             model.addAttribute("message", "Email verified! You can now login.");
-            return msg;
+
         } else if ("expired".equals(result)) {
             model.addAttribute("error", "Token expired. Please register again.");
-            return msg;
+
         } else {
             model.addAttribute("error", "Invalid token.");
-            return msg;
         }
+        return login;
     }
 
     @GetMapping("/resend")
@@ -213,15 +218,14 @@ public class AuthController {
         if (user == null) {
             model.addAttribute("error", "No account with that email.");
             return "security/resend";
-        }
-
-        if (user.isEnabled()) {
+        } else if (user.isEnabled()) {
             model.addAttribute("message", "Email already verified. You can login.");
-            return msg;
+            return login;
+        } else {
+            userService.createAndSendToken(user);
+            model.addAttribute("message", "Verification email resent. Check your inbox.");
+            return login;
         }
-        userService.createAndSendToken(user);
-        model.addAttribute("message", "Verification email resent. Check your inbox.");
-        return msg;
     }
 
     // Forgot/reset endpoints
@@ -256,10 +260,10 @@ public class AuthController {
             return "security/reset-password";
         } else if ("expired".equals(res)) {
             model.addAttribute("error", "Token expired.");
-            return msg;
+            return login;
         } else {
             model.addAttribute("error", "Invalid token.");
-            return msg;
+            return login;
         }
     }
 
@@ -269,21 +273,21 @@ public class AuthController {
         var optUser = userService.getUserByPasswordResetToken(token);
         if (optUser.isEmpty()) {
             model.addAttribute("error", "Invalid token.");
-            return msg;
+            return login;
         }
         userService.changePassword(optUser.get(), password);
         model.addAttribute("message", "Password changed. You can now login.");
-        return msg;
+        return login;
     }
 
     // logged user change password
     // Reset user password
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/reset")
-    public String resetPassword(Authentication auth, @RequestParam String password, @RequestParam String NP,
+    public String resetPassword(@AuthenticationPrincipal CustomUserDetails auth, @RequestParam String password,
+            @RequestParam String NP,
             RedirectAttributes red) {
-        CustomUserDetails u = (CustomUserDetails) auth.getPrincipal();
-        User user = userService.findById(u.getId());
+        User user = userService.findById(auth.getId());
         if (!NP.equals(password) || NP.isEmpty() || password.isEmpty()) {
             red.addFlashAttribute("error", "Passwords do not match");
             return "redirect:/profile";
@@ -292,7 +296,7 @@ public class AuthController {
         if (user != null) {
             user.setPassword(passwordEncoder.encode(password));
             userService.save(user);
-            auditService.record("reset_password", "user id=" + user.getId() + "Reset password");
+            auditService.record("reset_password", "SUCCESS", "user id=" + user.getId() + "Reset password");
             red.addFlashAttribute("message", "Password reset successful");
             return "redirect:/profile";
         } else {

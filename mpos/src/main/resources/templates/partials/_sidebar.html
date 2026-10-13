@@ -10,27 +10,27 @@
         </a>
       </li><!-- End Dashboard Nav -->
 
-      <li class="nav-item" sec:authorize="hasAnyRole('MANAGER', 'PROCUREMENT', 'CASHIER')">
-        <a class="nav-link collapsed" href="/products">
+      <li class="nav-item" sec:authorize="hasRole('PROCUREMENT')">
+        <a class="nav-link collapsed" href="/inventory/products">
           <i class="bi bi-box-seam"></i>
           <span>Products</span>
         </a>
       </li><!-- End Products Page Nav -->
-      <li class="nav-item" sec:authorize="hasAnyRole('MANAGER', 'PROCUREMENT')">
-        <a class="nav-link collapsed" href="/procurement/transfers">
+      <li class="nav-item" sec:authorize="hasRole('PROCUREMENT')">
+        <a class="nav-link collapsed" href="/inventory/transfers">
           <i class="bi bi-arrow-repeat"></i>
           <span>Transfers</span>
         </a>
       </li><!-- End Transfers Page Nav -->
 
-      <li class="nav-item" sec:authorize="hasAnyRole('ADMIN')">
+      <li class="nav-item" sec:authorize="hasRole('ADMIN')">
         <a class="nav-link collapsed" href="/admin/users">
           <i class="bi bi-person"></i>
           <span>Users</span>
         </a>
       </li><!-- End Users Page Nav -->
 
-      <li class="nav-item" sec:authorize="hasAnyRole('ADMIN')">
+      <li class="nav-item" sec:authorize="hasRole('ADMIN')">
         <a class="nav-link collapsed" href="/admin/roles">
           <i class="bi bi-question-circle"></i>
           <span>Roles</span>

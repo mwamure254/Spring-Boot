@@ -44,6 +44,9 @@ public class AuthHandler implements AuthenticationSuccessHandler,
         // log activity info
         if (authentication != null &&
                 authentication.getPrincipal() instanceof CustomUserDetails user) {
+            auditService.record(
+                    "USER_LOGIN", "SUCCESS",
+                    "User " + user.getEmail() + " Logged In.");
             response.sendRedirect("/");
             return;
         }
@@ -55,6 +58,19 @@ public class AuthHandler implements AuthenticationSuccessHandler,
             HttpServletRequest request,
             HttpServletResponse response,
             AuthenticationException exception) throws IOException {
+
+        // Capture the email submitted on the login form
+        String email = request.getParameter("username");
+
+        // If your login form uses name="email", use:
+        // String email = request.getParameter("email");
+        if (email == null || email.isBlank()) {
+            email = "UNKNOWN";
+        }
+
+        auditService.record(
+                "USER_LOGIN", "FAIL",
+                "User " + email + " Failed to Login.");
 
         if (exception instanceof DisabledException) {
             message = "Your account is disabled";
@@ -89,8 +105,8 @@ public class AuthHandler implements AuthenticationSuccessHandler,
                 authentication.getPrincipal() instanceof CustomUserDetails user) {
 
             auditService.record(
-                    "user_logout",
-                    "User " + user.getUsername() + " logged out");
+                    "USER_LOGOUT", "SUCCESS",
+                    "User " + user.getEmail() + " Logged Out.");
         }
     }
 }

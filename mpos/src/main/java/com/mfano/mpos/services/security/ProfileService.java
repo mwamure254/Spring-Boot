@@ -39,8 +39,8 @@ public class ProfileService {
     }
 
     // Get Profile By Id
-    public Profile findByUser_Id(Long userId) {
-        return profileRepository.findByUserId(userId);
+    public Profile findByUser(Long user) {
+        return profileRepository.findByUser(user);
     }
 
     // Delete Profile
@@ -55,7 +55,7 @@ public class ProfileService {
 
     // Update Profile
     public void update(Long userid, Profile profile) {
-        existing = findByUser_Id(userid);
+        existing = findByUser(userid);
 
         // update only editable fields
         existing.setFin(profile.getFin());
@@ -79,7 +79,7 @@ public class ProfileService {
 
     // Update Profile Image
     public void updateProfileImage(Long userid, MultipartFile file, RedirectAttributes red) throws IOException {
-        existing = findByUser_Id(userid);
+        existing = findByUser(userid);
         try {
             Path path = Paths.get(baseDirectory, "profiles", file.getOriginalFilename())
                     .toAbsolutePath()
@@ -99,7 +99,7 @@ public class ProfileService {
 
     // Update Profile Image
     public void deleteProfileImage(Long userid, RedirectAttributes red) throws IOException {
-        existing = findByUser_Id(userid);
+        existing = findByUser(userid);
         try {
             String image = existing.getImage();
             Path path = Path.of(baseDirectory, "profiles", image)
@@ -117,10 +117,10 @@ public class ProfileService {
 
     // check profile
     public Profile checkProfile(Long userid) {
-        profile = findByUser_Id(userid);
+        profile = findByUser(userid);
         if (profile == null) {
             profile = new Profile();
-            profile.setUserid(userid);
+            profile.setUser(userid);
             save(profile);
 
         }

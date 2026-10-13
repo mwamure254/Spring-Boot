@@ -78,23 +78,12 @@
                             <tbody>
                                 <tr th:each="r, stat : ${roles}">
                                     <!-- ID -->
-                                    <td th:text="${stat.count}">
+                                    <td th:text="${stat.count}" th:id="'r-' + ${r.id}">
                                         1
                                     </td>
                                     <!-- ROLE -->
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <!-- ROLE name -->
-                                            <span class="fw-semibold text-truncate d-inline-block flex-shrink-1"
-                                                th:text="${r.name}" style="max-width: 120px;">
-                                                ROLE name
-                                            </span>
-
-                                            <!-- More -->
-                                            <a href="#" class="ms-2">
-                                                show more
-                                            </a>
-                                        </div>
+                                    <td th:text="${r.name}">
+                                        ROLE name
                                     </td>
 
                                     <!-- DESCRIPTION -->
@@ -182,6 +171,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!--END DELETE MODAL-->
                                     </td>
 
                                     <!-- EDIT ROLE MODAL -->
@@ -235,7 +225,7 @@
 
                                                         <button type="submit" class="btn btn-primary">
                                                             <i class="bi bi-save"></i>
-                                                            Save
+                                                            Update
                                                         </button>
                                                     </div>
                                                 </form>
@@ -279,7 +269,7 @@
                             <div class="modal-body">
                                 <div class="row g-3">
                                     <!-- NAME -->
-                                    <div class="col-md-8">
+                                    <div class="col-md-12">
                                         <label class="form-label">
                                             Role Name
                                         </label>
@@ -287,12 +277,13 @@
                                             required>
                                     </div>
                                     <!-- SKU -->
-                                    <div class="col-md-8">
+                                    <div class="col-md-12">
                                         <label class="form-label">
                                             Description
                                         </label>
-                                        <input type="text" name="description" class="form-control"
-                                            placeholder="description" required>
+                                        <textarea rows="3" maxlength="200" name="description" class="form-control"
+                                            placeholder="Description of the role" required>
+                                        </textarea>
                                     </div>
                                 </div>
                             </div>

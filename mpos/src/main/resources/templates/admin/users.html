@@ -78,7 +78,7 @@
                             </thead>
 
                             <tbody>
-                                <tr th:each="u, stat : ${users}">
+                                <tr th:each="u, stat : ${users}" th:id="'u-' + ${u.id}">
                                     <!-- ID -->
                                     <td th:text="${stat.count}">
                                         1

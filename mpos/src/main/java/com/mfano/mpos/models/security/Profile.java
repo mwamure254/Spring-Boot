@@ -25,6 +25,7 @@ public class Profile extends BaseObject{
     private String other;
     private String SN;
     private String phone;
+    private String email;
     // TSC or PF Number
     private String image;
     private String gender;
@@ -38,9 +39,6 @@ public class Profile extends BaseObject{
     private String linkedin;
     private String instagram;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid", nullable = true, insertable=false, updatable=false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
-    private Long userid;
+    @JoinColumn(name = "user_id", unique = true)
+    private Long user;
 }

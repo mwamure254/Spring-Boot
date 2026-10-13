@@ -44,3 +44,30 @@ document.getElementById("tableSearch")
             });
 
     });
+
+    // POS PRODUCT SEARCH
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('tableSearch');
+    const products = document.querySelectorAll('.product-item');
+    const noResults = document.getElementById('noProductsFound');
+
+    searchInput.addEventListener('input', function () {
+        const query = this.value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        products.forEach(function (product) {
+            const name = (product.dataset.name || '').toLowerCase();
+            const sku = (product.dataset.sku || '').toLowerCase();
+
+            const matches = name.includes(query) || sku.includes(query);
+
+            product.style.display = matches ? '' : 'none';
+
+            if (matches) {
+                visibleCount++;
+            }
+        });
+
+        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+});

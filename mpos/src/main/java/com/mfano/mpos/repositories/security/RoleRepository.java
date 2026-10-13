@@ -17,4 +17,5 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
     @Query(value = "SELECT * FROM roles WHERE id IN (SELECT role_id FROM user_roles WHERE user_id = ?1)", nativeQuery = true)
     List<Role> getUserRoles(Long userId);
+    List<Role> findByNameContainingIgnoreCase(String keyword);
 }

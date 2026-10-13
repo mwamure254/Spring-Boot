@@ -28,7 +28,7 @@
         <div class="pagetitle">
           <h1 class="fw-bold mb-1">
             <i class="bi bi-shop"></i>
-            POS
+            MPOS
           </h1>
         </div>
         <!-- End Page Title -->
@@ -36,22 +36,31 @@
         <div class="row align-items-start">
           <!-- Product Grid -->
           <div class="col-lg-8 col-md-7">
-            <h1 class="h3 fw-bold mb-4">Products</h1>
-
             <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg- g-3">
-              <div class="col" th:each="p : ${products}">
+
+              <div class="input-group p-2">
+                <span class="input-group-text">
+                  <i class="bi bi-search"></i>
+                </span>
+
+                <input type="text" id="tableSearch" class="form-control" placeholder="Search products...">
+              </div>
+
+              <div id="productsGrid" class="col product-item" th:each="p : ${products}"
+                th:attr="data-name=${p.name},data-sku=${p.sku}">
                 <div class="card h-100 shadow-sm border-0 product-card" style="cursor:pointer;"
                   th:onclick="'document.getElementById(\'form-' + ${p.id} + '\').submit()'">
 
                   <img th:src="${p.image == null or p.image.isEmpty()}
                                 ? @{/image/product-2.jpg}
                                 : @{/products/{product}(product=${p.image})}" class="card-img-top"
-                    style="height:140px; object-fit:cover;" alt="Product">
+                    style="height:150px; object-fit:cover;" alt="Product">
 
                   <div class="card-body p-3">
                     <h6 class="card-title text-truncate mb-1" th:text="${p.name}">
                     </h6>
-                    <p class="text-success text-sm mb-0" th:text="'KES: ' + ${#numbers.formatDecimal(p.price, 1, 'COMMA', 2, 'POINT')}">
+                    <p class="text-success text-sm mb-0"
+                      th:text="'KES: ' + ${#numbers.formatDecimal(p.price, 1, 'COMMA', 2, 'POINT')}">
                     </p>
                   </div>
 
@@ -60,6 +69,12 @@
                   </form>
                 </div>
               </div>
+            </div>
+
+            <!-- No results -->
+            <div id="noProductsFound" class="text-center text-muted py-4" style="display:none;">
+              <i class="bi bi-search fs-3"></i>
+              <p class="mb-0">No products found.</p>
             </div>
 
             <!-- EMPTY -->
@@ -103,6 +118,19 @@
               <span class="fs-4 text-sm text-success"
                 th:text="'Ksh ' + ${#numbers.formatDecimal(cart.getTotal(), 1, 'COMMA', 2, 'POINT')}"></span>
               </span>
+            </div>
+
+            <!-- EMPTY -->
+            <div th:if="${cart.items.isEmpty()}">
+              <div class="text-center py-5">
+                <i class="bi bi-box-seam fs-1 text-muted"></i>
+                <h5 class="mt-3">
+                  No items found in cart.
+                </h5>
+                <p class="text-muted">
+                  Add your first item to get started.
+                </p>
+              </div>
             </div>
 
             <!-- Checkout -->

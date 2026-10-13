@@ -38,7 +38,7 @@ public class AdminController {
     private final RoleService roleService;
     private final BranchService storeService;
 
-     public AdminController(UserService userService, ProfileService profileService, AuditService auditService,
+    public AdminController(UserService userService, ProfileService profileService, AuditService auditService,
             RoleService roleService, BranchService storeService) {
         this.userService = userService;
         this.profileService = profileService;
@@ -47,10 +47,10 @@ public class AdminController {
         this.storeService = storeService;
     }
 
-    // manage /GET/*  module
+    // manage /GET/* module
     @GetMapping("/{option}")
     public String manage(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable String option, Model red) {
-        red.addAttribute("profile", profileService.checkProfile(auth.getId()));
+        userService.getPrices(auth, red);
 
         String dir = "redirect";
         switch (option) {
@@ -88,18 +88,19 @@ public class AdminController {
                 red.addAttribute("roles", roleService.findAll());
                 red.addAttribute("stores", storeService.findAll());
                 dir = "admin/roles";
-                break;    
+                break;
         }
 
         return dir;
     }
 
-    //Role saving
+    // Role saving
     @PostMapping("/roles/save")
-    public String saveRole(@AuthenticationPrincipal CustomUserDetails auth, @ModelAttribute Role role, RedirectAttributes red) {
+    public String saveRole(@AuthenticationPrincipal CustomUserDetails auth, @ModelAttribute Role role,
+            RedirectAttributes red) {
         try {
             roleService.save(role);
-            auditService.record("CREATE_ROLE", auth.getEmail() + " Created role: " + role.getName());
+            auditService.record("CREATE_ROLE", "SUCCESS", auth.getEmail() + " Created role: " + role.getName());
             red.addFlashAttribute("message", "Role created successfully!");
         } catch (Exception e) {
             red.addAttribute("error", e.getMessage());
@@ -107,26 +108,25 @@ public class AdminController {
         return "redirect:/admin/roles";
     }
 
-    //Role update
+    // Role update
     @PostMapping("/roles/update/{id}")
     public String updateRole(
             @PathVariable Long id,
             @Valid Role role,
-            RedirectAttributes redirectAttributes){
+            RedirectAttributes redirectAttributes) {
 
         roleService.update(id, role);
 
         redirectAttributes.addFlashAttribute(
                 "message",
-                "Role updated successfully."
-        );
+                "Role updated successfully.");
 
         return "redirect:/admin/roles";
     }
 
-    // manage /roles/*  module
+    // manage /roles/* module
     @PostMapping("/roles/{option}/{id}")
-    public String manage(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable String option, 
+    public String manage(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable String option,
             @PathVariable Long id,
             RedirectAttributes redirectAttributes) {
 
@@ -134,34 +134,33 @@ public class AdminController {
         switch (option) {
             case "delete":
                 roleService.deleteById(id);
-                auditService.record("delete_role", auth.getEmail() + " Deleted role id=" + id);
+                auditService.record("delete_role", "SUCCESS", auth.getEmail() + " Deleted role id=" + id);
                 redirectAttributes.addFlashAttribute(
-                    "message",
-                    "Role deleted successfully."
-                 );
+                        "message",
+                        "Role deleted successfully.");
                 dir = "redirect:/admin/roles";
                 break;
 
             case "toggle":
                 roleService.toggleActive(id);
-                auditService.record("toggle_role", auth.getEmail() + " toggled role id=" + id);
+                auditService.record("toggle_role", "SUCCESS", auth.getEmail() + " toggled role id=" + id);
                 redirectAttributes.addFlashAttribute(
-                    "message",
-                    "Role toggled successfully."
-                );
+                        "message",
+                        "Role toggled successfully.");
                 dir = "redirect:/admin/roles";
-                break;   
+                break;
         }
 
         return dir;
     }
 
-    //save user
+    // save user
     @PostMapping("/users/save")
-    public String saveUser(@AuthenticationPrincipal CustomUserDetails auth, @ModelAttribute UserDto userDto, RedirectAttributes red) {
+    public String saveUser(@AuthenticationPrincipal CustomUserDetails auth, @ModelAttribute UserDto userDto,
+            RedirectAttributes red) {
         try {
             userService.registerUser(userDto);
-            auditService.record("CREATE_USER", auth.getEmail() + " Created user: " + userDto.getEmail());
+            auditService.record("CREATE_USER", "SUCCESS", auth.getEmail() + " Created user: " + userDto.getEmail());
             red.addFlashAttribute("message", "User created successfully!");
         } catch (Exception e) {
             red.addAttribute("error", e.getMessage());
@@ -169,19 +168,18 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    //update user
+    // update user
     @PostMapping("/users/update/{id}")
     public String updateUser(@AuthenticationPrincipal CustomUserDetails auth,
             @PathVariable Long id,
             @Valid UserDto userDto,
-            RedirectAttributes redirectAttributes){
+            RedirectAttributes redirectAttributes) {
 
         userService.update(id, userDto);
-        auditService.record("UPDATE_USER", auth.getEmail() + " Updated user: " + userDto.getEmail());
+        auditService.record("UPDATE_USER", "SUCCESS", auth.getEmail() + " Updated user: " + userDto.getEmail());
         redirectAttributes.addFlashAttribute(
                 "message",
-                "User updated successfully."
-        );
+                "User updated successfully.");
 
         return "redirect:/admin/users";
     }
@@ -189,27 +187,27 @@ public class AdminController {
     @GetMapping("/manage/{id}")
     public String manageProfile(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable Long id, Model model) {
         User user = userService.findById(id);
-        model.addAttribute("profile", profileService.checkProfile(auth.getId()));
+        userService.getPrices(auth, model);
         model.addAttribute("user", user);
         model.addAttribute("userRoles", roleService.getUserRoles(user));
         model.addAttribute("userNotRoles", roleService.getUserNotRoles(user));
         return "admin/user-roles";
     }
 
-     // manage /user route
+    // manage /user route
     @PostMapping("/users/{option}/{id}")
-    public String manageGetter(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable String option, @PathVariable Long id, 
-        Model model, RedirectAttributes red) {
+    public String manageGetter(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable String option,
+            @PathVariable Long id,
+            Model model, RedirectAttributes red) {
 
         User user = userService.findById(id);
-        model.addAttribute("user", user);
 
         String dir = "redirect";
         switch (option) {
 
             case "profile":
                 // Add user info to model (for Thymeleaf dashboard pages)
-                model.addAttribute("profile", profileService.checkProfile(auth.getId()));
+                userService.getPrices(auth, model);
                 model.addAttribute("profile1", profileService.checkProfile(user.getId()));
                 dir = "admin/user-profile";
                 break;
@@ -218,11 +216,11 @@ public class AdminController {
             case "resend":
                 if (user != null && !user.isEnabled()) {
                     userService.createAndSendToken(user);
-                    auditService.record("RESEND_VERIFICATION", auth.getEmail() + " Resent token to user id=" + id);
+                    auditService.record("RESEND_VERIFICATION", "SUCCESS",
+                            auth.getEmail() + " Resent token to user id=" + id);
                     red.addFlashAttribute("message", "Link resent to user");
                     dir = "redirect:/admin/users";
-                }
-                else{
+                } else {
                     red.addFlashAttribute("error", "Sorry! Failed to send link.");
                     dir = "redirect:/admin/users";
                 }
@@ -232,7 +230,7 @@ public class AdminController {
             case "delete":
                 try {
                     userService.deleteById(id);
-                    auditService.record("delete_user", auth.getEmail() + " Deleted user id=" + id);
+                    auditService.record("delete_user", "SUCCESS", auth.getEmail() + " Deleted user id=" + id);
                     red.addFlashAttribute("message", "user successfully deleted");
                     dir = "redirect:/admin/users";
                 } catch (Exception e) {
@@ -244,14 +242,13 @@ public class AdminController {
             // Toggle user
             case "toggle":
                 if (user != null) {
-                    user.setEnabled(!user.isEnabled());
-                    
                     userService.toggleActive(id);
-                    auditService.record("toggle_user",auth.getEmail() + " Toggled user: " + user.getEmail() + " to enabled=" + user.isEnabled());
+                    auditService.record("toggle_user",
+                            "SUCCESS",
+                            auth.getEmail() + " Toggled user: " + user.getEmail() + " to enabled=" + user.isEnabled());
                     red.addFlashAttribute("message", "Toggled user successfully");
                     dir = "redirect:/admin/users";
-                }
-                else{
+                } else {
                     red.addFlashAttribute("error", "Sorry! Failed to toggle user");
                     dir = "redirect:/admin/users";
                 }
@@ -263,67 +260,66 @@ public class AdminController {
 
     // profile/update @PreAuthorize("isAuthenticated()")
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/profile/update/{userid}")
-    public String userProfileUpdate(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable Long userid,
+    @PostMapping("/profile/update/{id}")
+    public String userProfileUpdate(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable Long id,
             @ModelAttribute("profile") Profile profile, RedirectAttributes red) {
-        red.addAttribute("profile", profileService.checkProfile(auth.getId()));
-
-        profileService.update(userid, profile);
-        auditService.record("update_profile", auth.getEmail() + " Updated the profile of user id=" + userid);
+        profileService.update(id, profile);
+        auditService.record("update_profile", "SUCCESS", auth.getEmail() + " Updated the profile of user id = " + id);
         red.addFlashAttribute("message", "Profile updated successfully");
-        return "redirect:/admin/profile/{userid}";
+        return "redirect:/admin/users";
     }
 
     // Update profile image
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/image/update/{userid}")
-    public String imageUpdate(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable Long userid,
+    @PostMapping("/image/update/{user}")
+    public String imageUpdate(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable Long user,
             @RequestParam("image") MultipartFile file, RedirectAttributes red) {
-        red.addAttribute("profile", profileService.checkProfile(auth.getId()));
         try {
-            profileService.updateProfileImage(userid, file, red);
-            auditService.record("update_image", auth.getEmail() + " Updated the profile image  of user id=" + userid);
-            red.addFlashAttribute("message", "Image updated successfully");
+            profileService.updateProfileImage(user, file, red);
+            auditService.record("update_image", "SUCCESS",
+                    auth.getEmail() + " Updated the profile image  of user id = " + user);
         } catch (IOException e) {
             red.addFlashAttribute("error", e.getMessage());
         }
 
-        return "redirect:/admin/profile/{userid}";
+        return "redirect:/admin/users";
     }
 
     // Delete profile image
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/image/delete/{userid}")
-    public String imageDelete(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable Long userid, RedirectAttributes red) {
-        
-        red.addAttribute("profile", profileService.checkProfile(auth.getId()));
+    @PostMapping("/image/delete/{user}")
+    public String imageDelete(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable Long user,
+            RedirectAttributes red) {
+
         try {
-            profileService.deleteProfileImage(userid, red);
-            auditService.record("delete_image", auth.getEmail() + " Deleted the profile image of user id=" + userid);
-            red.addFlashAttribute("message", "Image deleted successfully");
+            profileService.deleteProfileImage(user, red);
+            auditService.record("delete_image", "SUCCESS",
+                    auth.getEmail() + " Deleted the profile image of user id = " + user);
         } catch (IOException e) {
             red.addFlashAttribute("error", e.getMessage());
         }
 
-        return "redirect:/admin/profile/{userid}";
+        return "redirect:/admin/users";
     }
 
     // Assign Remove roles
     @PostMapping("/{option}/{userId}/{roleId}")
-    public String userRole(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable Long userId, @PathVariable String option,
+    public String userRole(@AuthenticationPrincipal CustomUserDetails auth, @PathVariable Long userId,
+            @PathVariable String option,
             @PathVariable Long roleId, RedirectAttributes red) {
-        red.addAttribute("profile", profileService.checkProfile(auth.getId()));
 
         switch (option) {
             case "assign-role":
                 userService.assignRoleToUser(userId, roleId);
-                auditService.record("update_role", auth.getEmail() + " Assigned user id=" + userId + " role id=" + roleId);
+                auditService.record("update_role",
+                        "SUCCESS", auth.getEmail() + " Assigned user id=" + userId + " role id=" + roleId);
                 red.addFlashAttribute("message", "Action successful");
                 break;
 
             case "remove-role":
                 userService.removeRoleFromUser(userId, roleId);
-                auditService.record("update_role", auth.getEmail() + " Revoked role id=" + roleId + " from user id=" + userId);
+                auditService.record("update_role",
+                        "SUCCESS", auth.getEmail() + " Revoked role id=" + roleId + " from user id=" + userId);
                 red.addFlashAttribute("message", "Action successful");
                 break;
 

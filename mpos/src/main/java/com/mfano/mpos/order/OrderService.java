@@ -20,6 +20,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final UserService userService;
+    Order savedOrder, order;
 
     public OrderService(OrderRepository orderRepository, CartRepository cartRepository,
             UserService userService) {
@@ -36,45 +37,47 @@ public class OrderService {
         if (cart.getItems().isEmpty()) {
             red.addFlashAttribute(
                     "error", "Cannot checkout an empty cart");
-                    
-        }
 
-        Order order = Order.builder()
-                .pm(pm)
-                .status(OrderStatus.PENDING)
-                .build();
+        } else {
 
-       order.setCreatedBy(user.getEmail());
-
-        for (CartItem cartItem : cart.getItems()) {
-            Product product = cartItem.getProduct();
-
-            if (product.getStockQuantity() < cartItem.getQuantity()) {
-            red.addFlashAttribute(
-                    "error", "Insufficient stock for product: "
-                                + product.getName());
-            }
-
-            OrderItem orderItem = OrderItem.builder()
-                    .product(cartItem.getProduct())
-                    .quantity(cartItem.getQuantity())
-                    .unitPrice(cartItem.getProduct().getPrice())
+            order = Order.builder()
+                    .pm(pm)
+                    .status(OrderStatus.PENDING)
                     .build();
 
-            order.addItem(orderItem);
-            order.setStatus(OrderStatus.COMPLETED);
+            order.setCreatedBy(user.getEmail());
 
-            // Reduce stock
-            product.setStockQuantity(
-                    product.getStockQuantity()
-                            - cartItem.getQuantity());
+            for (CartItem cartItem : cart.getItems()) {
+                Product product = cartItem.getProduct();
+
+                if (product.getStockQuantity() < cartItem.getQuantity()) {
+                    red.addFlashAttribute(
+                            "error", "Insufficient stock for product: "
+                                    + product.getName());
+                } else {
+
+                    OrderItem orderItem = OrderItem.builder()
+                            .product(cartItem.getProduct())
+                            .quantity(cartItem.getQuantity())
+                            .unitPrice(cartItem.getProduct().getPrice())
+                            .build();
+
+                    order.addItem(orderItem);
+                    order.setStatus(OrderStatus.COMPLETED);
+
+                    // Reduce stock
+                    product.setStockQuantity(
+                            product.getStockQuantity()
+                                    - cartItem.getQuantity());
+                }
+            }
+
+            savedOrder = orderRepository.save(order);
+
+            cart.getItems().clear();
+            cartRepository.save(cart);
+
         }
-
-        Order savedOrder = orderRepository.save(order);
-
-        cart.getItems().clear();
-        cartRepository.save(cart);
-
         return savedOrder;
     }
 

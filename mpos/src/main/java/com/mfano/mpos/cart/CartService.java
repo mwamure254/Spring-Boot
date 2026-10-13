@@ -37,38 +37,39 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public Cart addToCart(CustomUserDetails auth, Long productId, int quantity, RedirectAttributes red) {
+    public void addToCart(CustomUserDetails auth, Long productId, int quantity, RedirectAttributes red) {
         if (quantity <= 0) {
             red.addFlashAttribute(
                     "error", "Quantity must be greater than zero");
+        } else {
+
+            User user = userService.findById(auth.getId());
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+            Cart cart = getCart(user);
+
+            // Check existing quantity in cart
+            int existingQuantity = cart.getItems().stream()
+                    .filter(item -> item.getProduct().getId().equals(productId))
+                    .mapToInt(CartItem::getQuantity)
+                    .findFirst()
+                    .orElse(0);
+
+            int newQuantity = existingQuantity + quantity;
+            if (newQuantity > product.getStockQuantity()) {
+                red.addFlashAttribute(
+                        "error",
+                        "Stock is not enough. Available: "
+                                + product.getStockQuantity()
+                                + ", already in cart: "
+                                + existingQuantity);
+            } else {
+
+                cart.addItem(product, quantity);
+                cartRepository.save(cart);
+            }
         }
-
-        User user = userService.findById(auth.getId());
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
-
-        Cart cart = getCart(user);
-
-        // Check existing quantity in cart
-        int existingQuantity = cart.getItems().stream()
-                .filter(item -> item.getProduct().getId().equals(productId))
-                .mapToInt(CartItem::getQuantity)
-                .findFirst()
-                .orElse(0);
-
-        int newQuantity = existingQuantity + quantity;
-
-        if (newQuantity > product.getStockQuantity()) {
-            red.addFlashAttribute(
-                    "error",
-                    "Stock is not enough. Available: "
-                            + product.getStockQuantity()
-                            + ", already in cart: "
-                            + existingQuantity);
-        }
-
-        cart.addItem(product, quantity);
-        return cartRepository.save(cart);
     }
 
     public void removeFromCart(CustomUserDetails auth, Long id) {

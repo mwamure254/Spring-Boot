@@ -9,7 +9,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
+import com.mfano.mpos.config.CustomUserDetails;
 import com.mfano.mpos.dtos.UserDto;
 import com.mfano.mpos.models.security.User;
 import com.mfano.mpos.models.security.Role;
@@ -17,6 +19,7 @@ import com.mfano.mpos.models.security.VerificationToken;
 import com.mfano.mpos.repositories.security.TokenRepository;
 import com.mfano.mpos.repositories.security.UserRepository;
 import com.mfano.mpos.services.BranchService;
+import com.mfano.mpos.services.DashboardAnalytics;
 import com.mfano.mpos.utils.mail.MailService;
 
 import jakarta.transaction.Transactional;
@@ -29,20 +32,27 @@ public class UserService {
     private final BranchService branchService;
     private final RoleService roleService;
 
+    private final AuditService auditService;
     private final TokenRepository tokenRepository;
     private final MailService emailService;
+    private final ProfileService profileService;
+    private final DashboardAnalytics analyticsService;
 
     @Value("${app.base-url}")
     private String appBaseUrl;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, BranchService branchService,
-            RoleService roleService, TokenRepository tokenRepository, MailService emailService) {
+            RoleService roleService, TokenRepository tokenRepository, MailService emailService,
+            ProfileService profileService, DashboardAnalytics analyticsService, AuditService auditService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.branchService = branchService;
         this.roleService = roleService;
         this.tokenRepository = tokenRepository;
         this.emailService = emailService;
+        this.profileService = profileService;
+        this.analyticsService = analyticsService;
+        this.auditService = auditService;
     }
 
     @Transactional
@@ -69,7 +79,6 @@ public class UserService {
         user.setRoles(Set.of(roleService.findById(userDto.getRole())));
         save(user);
         // createAndSendToken(user);
-
     }
 
     public User save(User user) {
@@ -117,7 +126,7 @@ public class UserService {
 
     public void createAndSendToken(User user) {
         String token = UUID.randomUUID().toString();
-        LocalDateTime expiry = LocalDateTime.now().plusHours(24);
+        LocalDateTime expiry = LocalDateTime.now().plusMinutes(20);
         VerificationToken vt = new VerificationToken();
         vt.setToken(token);
         vt.setExpiryDate(expiry);
@@ -125,9 +134,9 @@ public class UserService {
         tokenRepository.save(vt);
         String link = appBaseUrl + "/verify?token=" + token;
         String subject = "Please verify your email";
-        String body = "Hi " + (user.getEmail() == null ? "" : user.getEmail()) + "\n\n"
+        String body = "Hi " + (user.getEmail() == null ? "" : user.getFin()) + "\n\n"
                 + "Please click the link to verify your email:\n" + link + "\n\n"
-                + "This link will expire in 24 hours.\n\nThanks!";
+                + "This link will expire in 20 minutes.\n\nThanks!";
         emailService.sendSimpleMessage(user.getEmail(), subject, body);
     }
 
@@ -206,5 +215,27 @@ public class UserService {
         Role role = roleService.findById(roleId);
         user.getRoles().removeIf(r -> r.getId().equals(role.getId()));
         save(user);
+    }
+
+    // Expose user and profile
+    public Model getPrices(CustomUserDetails auth, Model red) {
+        red.addAttribute("todayOrders", analyticsService.getTodaySales());
+        red.addAttribute("todaySales", analyticsService.getTodayItemsSold());
+        red.addAttribute("todayRevenue", analyticsService.getTodayRevenue());
+        red.addAttribute("monthlyRevenue", analyticsService.getMonthlyRevenue());
+        red.addAttribute("yearlyRevenue", analyticsService.getYearlyRevenue());
+        red.addAttribute("recentSales", analyticsService.getRecentSales());
+        red.addAttribute("topSellingProducts", analyticsService.getTopSellingProducts());
+        red.addAttribute("reportsChartData", analyticsService.getReportsChartData());
+        red.addAttribute("budgetChartData", analyticsService.getBudgetChartData());
+        red.addAttribute("paymentMethodReports", analyticsService.getSalesAndRevenueByPaymentMethod());
+        red.addAttribute("inStockProducts", analyticsService.getInStockProductsCount());
+        red.addAttribute("totalStockQuantity", analyticsService.getTotalInStockQuantity());
+        red.addAttribute("logActivities", auditService.findByActionContaining("USER_LOG"));
+
+        red.addAttribute("profile", profileService.checkProfile(auth.getId()));
+        red.addAttribute("author", findByEmail(auth.getEmail()));
+
+        return red;
     }
 }

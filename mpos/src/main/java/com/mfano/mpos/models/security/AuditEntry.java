@@ -15,5 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AuditEntry extends BaseObject {
     private String action;
+    private String actionType;
     private String details;
 }
