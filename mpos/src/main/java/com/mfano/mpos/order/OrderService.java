@@ -12,25 +12,24 @@ import com.mfano.mpos.cart.CartRepository;
 import com.mfano.mpos.config.CustomUserDetails;
 import com.mfano.mpos.dtos.OrderStatus;
 import com.mfano.mpos.models.security.User;
-import com.mfano.mpos.services.security.UserService;
 
 @Transactional
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
-    private final UserService userService;
+    private final UserRepository userService;
     Order savedOrder, order;
 
     public OrderService(OrderRepository orderRepository, CartRepository cartRepository,
-            UserService userService) {
+            UserRepository userService) {
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
         this.userService = userService;
     }
 
     public Order checkout(CustomUserDetails user, String pm, RedirectAttributes red) {
-        User staff = userService.findById(user.getId());
+        User staff = userService.findById(user.getId()).orElse(null);
         Cart cart = cartRepository.findByUser(staff)
                 .orElseThrow(() -> new IllegalStateException("Cart not found"));
 
