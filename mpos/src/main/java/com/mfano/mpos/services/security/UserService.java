@@ -1,5 +1,6 @@
 package com.mfano.mpos.services.security;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -220,7 +221,7 @@ public class UserService {
     // Expose user and profile
     public Model getPrices(CustomUserDetails auth, Model red) {
         red.addAttribute("todayOrders", analyticsService.getTodaySales());
-        red.addAttribute("todaySales", analyticsService.getTodayItemsSold());
+        red.addAttribute("todaySales", analyticsService.getTodayItemsSold(LocalDate.now()));
         red.addAttribute("todayRevenue", analyticsService.getTodayRevenue());
         red.addAttribute("monthlyRevenue", analyticsService.getMonthlyRevenue());
         red.addAttribute("yearlyRevenue", analyticsService.getYearlyRevenue());

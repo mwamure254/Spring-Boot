@@ -66,8 +66,8 @@ public class DashboardAnalytics {
                 OrderStatus.COMPLETED);
     }
 
-    public long getTodayItemsSold() {
-        LocalDate today = LocalDate.now();
+    public long getTodayItemsSold(LocalDate today) {
+        //LocalDate today = LocalDate.now();
 
         return orderRepository.countItemsBetween(
                 today.atStartOfDay(),
@@ -139,7 +139,6 @@ public class DashboardAnalytics {
     public List<ReportsChart> getReportsChartData() {
 
         List<Order> orders = orderRepository.findAll();
-
         Map<LocalDate, List<Order>> grouped = new TreeMap<>();
 
         for (Order order : orders) {
@@ -155,14 +154,13 @@ public class DashboardAnalytics {
 
         grouped.forEach((date, dailyOrders) -> {
 
-            long sales = getTodayItemsSold();
+            long sales = getTodayItemsSold(date);
 
             BigDecimal revenue = dailyOrders.stream()
                     .map(Order::getTotal)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            // Replace getCustomer().getId() with the actual
             // customer relationship in your Order entity.
             long customers = dailyOrders.stream()
                     .map(Order::getPm)

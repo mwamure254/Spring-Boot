@@ -77,7 +77,7 @@ public class InventoryController {
         }
         return dir;
     }
-    
+
     @PostMapping("/products/save")
     public String save(
             @Valid @ModelAttribute("product1") ProductDto productDto,
@@ -86,19 +86,27 @@ public class InventoryController {
             @AuthenticationPrincipal CustomUserDetails auth) {
 
         if (result.hasErrors()) {
-            return "redirect:/products";
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Sorry an error occured.");
+            return "redirect:/inventory/products";
+        }
+        if (productService.getBySku(productDto.getSku()) != null) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Product SKU already exists.");
+            return "redirect:/inventory/products";
         }
 
         productService.create(productDto, auth);
 
         redirectAttributes.addFlashAttribute(
                 "message",
-                "Product added successfully."
-        );
+                "Product added successfully.");
 
         return "redirect:/inventory/products";
     }
-    
+
     @PostMapping("/products/update/{id}")
     public String update(
             @PathVariable Long id,
@@ -110,8 +118,7 @@ public class InventoryController {
 
         redirectAttributes.addFlashAttribute(
                 "message",
-                "Product updated successfully."
-        );
+                "Product updated successfully.");
 
         return "redirect:/inventory/products";
     }
@@ -125,8 +132,7 @@ public class InventoryController {
 
         redirectAttributes.addFlashAttribute(
                 "message",
-                "Product deleted successfully."
-        );
+                "Product deleted successfully.");
 
         return "redirect:/inventory/products";
     }
@@ -140,8 +146,7 @@ public class InventoryController {
 
         redirectAttributes.addFlashAttribute(
                 "message",
-                "Product status updated."
-        );
+                "Product status updated.");
 
         return "redirect:/inventory/products";
     }

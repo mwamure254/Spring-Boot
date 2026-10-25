@@ -134,4 +134,8 @@ public class ProductService {
         }
 
     }
+
+    public Product getBySku(String sku) {
+        return productRepo.findBySku(sku);
+    }
 }

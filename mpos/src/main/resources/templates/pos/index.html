@@ -21,51 +21,119 @@
 
   <main id="main" class="main">
 
-    <section class="section dashboard">
+    <section class="section dashboard d-flex flex-column min-vh-100">
       <div class="container-fluid">
+        <!-- PAGE HEADER -->
+        <div class="pagetitle d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h1 class="fw-bold mb-1">
+              <i class="bi bi-shop"></i>
+              MPOS
+            </h1>
+          </div>
 
-        <!--PAGE TITLE-->
-        <div class="pagetitle">
-          <h1 class="fw-bold mb-1">
-            <i class="bi bi-shop"></i>
-            MPOS
-          </h1>
-        </div>
-        <!-- End Page Title -->
+          <!-- Breadcrumb -->
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a th:href="@{/}">
+                  <i class="bi bi-house-door me-1"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li class="breadcrumb-item">
+                <a th:href="@{/}">Cashier</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">POS</li>
+            </ol>
+          </nav>
+        </div><!-- End Page Title -->
 
         <div class="row align-items-start">
           <!-- Product Grid -->
           <div class="col-lg-8 col-md-7">
-            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg- g-3">
+            <!-- Search and Filter -->
+            <div class="row mb-4 justify-content-between">
 
-              <div class="input-group p-2">
-                <span class="input-group-text">
-                  <i class="bi bi-search"></i>
-                </span>
+              <!-- Search -->
+              <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-6 col-sm-7">
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="bi bi-search"></i>
+                  </span>
 
-                <input type="text" id="tableSearch" class="form-control" placeholder="Search products...">
+                  <input type="text" id="tableSearch" class="form-control" placeholder="Search products..."
+                    autocomplete="off">
+                </div>
               </div>
 
-              <div id="productsGrid" class="col product-item" th:each="p : ${products}"
+              <!-- Filter -->
+              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-5 text-end">
+                <div class="dropdown">
+                  <button type="button" class="btn btn-outline-warning dropdown-toggle" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="bi bi-filter me-1"></i> Filter
+                  </button>
+
+                  <div class="dropdown-menu dropdown-menu-end shadow">
+                    <h6 class="dropdown-header">Filter By Category</h6>
+
+                    <a class="dropdown-item" th:href="@{/records/documents(filter='today')}">
+                      Today
+                    </a>
+
+                    <a class="dropdown-item" th:href="@{/records/documents(filter='month')}">
+                      This Month
+                    </a>
+
+                    <a class="dropdown-item" th:href="@{/records/documents(filter='year')}">
+                      This Year
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item" th:href="@{/records/documents}">
+                      All Categories
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Products -->
+            <div class="row" id="productsGrid">
+
+              <div class="col-6 col-sm-4 col-lg-3 mb-3 product-item" th:each="p : ${products}"
                 th:attr="data-name=${p.name},data-sku=${p.sku}">
-                <div class="card h-100 shadow-sm border-0 product-card" style="cursor:pointer;"
-                  th:onclick="'document.getElementById(\'form-' + ${p.id} + '\').submit()'">
 
+                <div class="card h-100 border-0 shadow-sm product-card" role="button" tabindex="0"
+                  style="cursor: pointer;" th:onclick="|document.getElementById('form-${p.id}').requestSubmit()|"
+                  onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); this.click(); }">
+
+                  <!-- Product Image -->
                   <img th:src="${p.image == null or p.image.isEmpty()}
-                                ? @{/image/product-2.jpg}
-                                : @{/products/{product}(product=${p.image})}" class="card-img-top"
-                    style="height:150px; object-fit:cover;" alt="Product">
+                             ? @{/image/product-2.jpg}
+                             : @{/products/{product}(product=${p.image})}" class="card-img-top"
+                    style="height: 150px; object-fit: cover;" th:alt="${p.name}">
 
-                  <div class="card-body p-3">
-                    <h6 class="card-title text-truncate mb-1" th:text="${p.name}">
-                    </h6>
-                    <p class="text-success text-sm mb-0"
-                      th:text="'KES: ' + ${#numbers.formatDecimal(p.price, 1, 'COMMA', 2, 'POINT')}">
+                  <!-- Product Details -->
+                  <div class="card-body">
+                    <p class="card-title text-truncate" th:text="${p.name}"></p>
+
+                    <p class="text-success fw-bold mb-1">
+                      Ksh
+                      <span th:text="${#numbers.formatDecimal(p.price, 1, 'COMMA', 2, 'POINT')}"></span>
                     </p>
+
+                    <small class="text-muted text-truncate d-block" th:text="${p.sku}"></small>
                   </div>
 
-                  <form th:id="'form-' + ${p.id}" th:action="@{/pos/cart/add}" method="post">
+                  <!-- Add to Cart -->
+                  <form th:id="|form-${p.id}|" th:action="@{/pos/cart/add}" method="post">
                     <input type="hidden" name="productId" th:value="${p.id}">
+
+                    <input type="hidden" name="quantity" value="1">
+
                   </form>
                 </div>
               </div>
